@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <title>შეკვეთის დამატება</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: auto; padding: 20px; }
+    input, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <h2>შეკვეთის დამატება</h2>
+  <input type="text" id="name" placeholder="სახელი" required />
+  <input type="tel" id="phone" placeholder="ტელეფონი" required />
+  <button onclick="placeOrder()">დამატება</button>
+
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDIXs2pxX8x8QjhtjnD6T1xVJ5RDKSOKVg",
+      authDomain: "zippy-cart.firebaseapp.com",
+      databaseURL: "https://zippy-cart-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "zippy-cart",
+      storageBucket: "zippy-cart.appspot.com",
+      messagingSenderId: "940094965410",
+      appId: "1:940094965410:web:2e8a39eceff8a70a25f9fb"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function placeOrder() {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!name || !phone) {
+        alert('გთხოვთ, შეავსეთ ორივე ველი');
+        return;
+      }
+
+      db.ref('orders').push({
+        name,
+        phone,
+        status: 'pending',
+        courier: ''
+      }).then(() => {
+        alert('შეკვეთა წარმატებით დაემატა!');
+        document.getElementById('name').value = '';
+        document.getElementById('phone').value = '';
+      }).catch(error => {
+        alert('შეცდომა შეკვეთის დამატებისას: ' + error.message);
+      });
+    }
+  </script>
+</body>
+</html>
