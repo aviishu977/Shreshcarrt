@@ -3,307 +3,599 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>მობილური ჩატი</title>
+  <title>Veoo Social - სოციალური ქსელი</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     /* Reset */
-    *, *::before, *::after {
-      box-sizing: border-box;
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
     }
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(135deg, #3a3a6e, #1f1f2f);
+      color: #f0f0f5;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      overflow: hidden;
+      align-items: center;
+      padding: 1rem;
     }
-    h1 {
-      background-color: #4a90e2;
-      color: white;
+    header {
+      background: #5a4de0;
+      padding: 1.5rem 2rem;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 12px;
       text-align: center;
-      padding: 16px 0;
+      font-size: 2rem;
       font-weight: 700;
-      font-size: 1.5rem;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(90, 77, 224, 0.5);
+      position: sticky;
+      top: 0;
+      z-index: 10;
       user-select: none;
     }
-    #chatBox {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      background-color: #e9ebee;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      scroll-behavior: smooth;
+    main {
+      background: #2c2c44;
+      max-width: 700px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
-    .message {
-      max-width: 75%;
-      padding: 12px 16px;
-      border-radius: 20px;
-      word-wrap: break-word;
-      font-size: 1rem;
-      line-height: 1.3;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      position: relative;
-      user-select: text;
-    }
-    .message .username {
+    h2, h3 {
       font-weight: 600;
-      margin-bottom: 6px;
-      color: #333;
+      margin-bottom: 1rem;
+      color: #dcdcff;
     }
-    .message .text {
-      white-space: pre-wrap;
+    input, button, textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin: 0.6rem 0 1rem 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 400;
+      transition: all 0.3s ease;
+      background: #3a3a6e;
+      color: #e6e6ff;
+      box-shadow: inset 0 0 5px rgba(255,255,255,0.1);
     }
-    .message .meta {
-      font-size: 0.75rem;
-      color: #666;
-      margin-top: 6px;
+    input:focus, textarea:focus {
+      outline: none;
+      background: #4a4ad0;
+      box-shadow: 0 0 8px #7f7fff;
+      color: #fff;
+    }
+    button {
+      background: #6e63e8;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(110, 99, 232, 0.7);
+      user-select: none;
+    }
+    button:hover:not(:disabled) {
+      background: #8a7ff5;
+      box-shadow: 0 6px 18px rgba(138, 127, 245, 0.9);
+    }
+    button:disabled {
+      background: #555566;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .section {
+      margin-bottom: 2.5rem;
+    }
+    .friend-request, .friend, .chat-message {
+      background: #45456f;
+      padding: 0.75rem 1rem;
+      margin: 0.4rem 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 1.05rem;
     }
-    /* Incoming messages */
-    .message.incoming {
-      background-color: white;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-      color: #111;
+    .friend-request button, .friend button {
+      background: #7a72f2;
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
     }
-    /* Outgoing messages */
-    .message.outgoing {
-      background-color: #4a90e2;
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
+    .friend-request button:hover, .friend button:hover {
+      background: #9a94ff;
     }
-    /* Delete button */
-    .delete-btn {
-      background: transparent;
-      border: none;
-      color: #bbb;
-      font-weight: 700;
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-left: 8px;
-      transition: color 0.2s ease;
-      user-select: none;
+    .chat-container {
+      max-height: 320px;
+      overflow-y: auto;
+      background: #1f1f3f;
+      padding: 1rem;
+      border-radius: 16px;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
+      margin-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: #6e63e8 #2c2c44;
     }
-    .delete-btn:hover {
-      color: #e74c3c;
-    }
-    /* Input area */
-    #inputArea {
-      display: flex;
-      padding: 12px 16px;
-      background-color: white;
-      border-top: 1px solid #ccc;
-    }
-    #username {
-      flex: 1 0 100px;
-      margin-right: 8px;
-      padding: 10px 14px;
-      border: 1px solid #ccc;
-      border-radius: 25px;
-      font-size: 1rem;
-      outline-offset: 2px;
-      transition: border-color 0.3s ease;
-    }
-    #username:focus {
-      border-color: #4a90e2;
-    }
-    #messageInput {
-      flex: 3;
-      padding: 10px 14px;
-      border: 1px solid #ccc;
-      border-radius: 25px;
-      font-size: 1rem;
-      outline-offset: 2px;
-      transition: border-color 0.3s ease;
-    }
-    #messageInput:focus {
-      border-color: #4a90e2;
-    }
-    #sendBtn {
-      margin-left: 8px;
-      background-color: #4a90e2;
-      border: none;
-      color: white;
-      padding: 0 20px;
-      border-radius: 25px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    #sendBtn:disabled {
-      background-color: #a0c4ff;
-      cursor: not-allowed;
-    }
-    #sendBtn:hover:not(:disabled) {
-      background-color: #357ABD;
-    }
-    /* Scrollbar styling */
-    #chatBox::-webkit-scrollbar {
+    .chat-container::-webkit-scrollbar {
       width: 8px;
     }
-    #chatBox::-webkit-scrollbar-thumb {
-      background-color: rgba(0,0,0,0.1);
-      border-radius: 4px;
+    .chat-container::-webkit-scrollbar-track {
+      background: #2c2c44;
+      border-radius: 10px;
     }
-    #chatBox::-webkit-scrollbar-track {
-      background: transparent;
+    .chat-container::-webkit-scrollbar-thumb {
+      background: #6e63e8;
+      border-radius: 10px;
+    }
+    .chat-message {
+      max-width: 70%;
+      padding: 0.6rem 1rem;
+      margin: 0.3rem 0;
+      border-radius: 20px;
+      word-wrap: break-word;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    .chat-message.right {
+      background: #7a72f2;
+      color: white;
+      margin-left: auto;
+      box-shadow: 0 2px 8px rgba(122, 114, 242, 0.8);
+    }
+    .chat-message.left {
+      background: #5a5a9a;
+      color: #ddd;
+    }
+    .chat-input {
+      display: flex;
+      gap: 0.8rem;
+    }
+    .chat-input textarea {
+      flex-grow: 1;
+      height: 70px;
+      resize: none;
+      border-radius: 16px;
+      font-size: 1rem;
+      padding: 1rem;
+      background: #3a3a6e;
+      color: #e6e6ff;
+      box-shadow: inset 0 0 5px rgba(255,255,255,0.1);
+      transition: background 0.3s ease;
+    }
+    .chat-input textarea:focus {
+      background: #4a4ad0;
+      box-shadow: 0 0 8px #7f7fff;
+      outline: none;
+    }
+    .chat-input button {
+      width: 120px;
+      border-radius: 16px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(110, 99, 232, 0.7);
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    .chat-input button:disabled {
+      background: #555566;
+      box-shadow: none;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-  <h1>ჩატი</h1>
 
-  <div id="chatBox" aria-live="polite" aria-relevant="additions"></div>
+<header>Veoo Social</header>
 
-  <form id="inputArea" aria-label="ჩატის შეტყობინების ფორმა">
-    <input type="text" id="username" placeholder="შეიყვანე სახელი" aria-label="სახელი" autocomplete="off" />
-    <input type="text" id="messageInput" placeholder="შეტყობინება..." aria-label="შეტყობინება" autocomplete="off" />
-    <button id="sendBtn" type="submit" disabled>გაგზავნა</button>
-  </form>
+<main>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove, query, limitToLast } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+  <!-- ავტორიზაცია -->
+  <section id="auth-section" class="section">
+    <h2>რეგისტრაცია / შესვლა</h2>
+    <input type="email" id="email" placeholder="მეილი" autocomplete="username" />
+    <input type="password" id="password" placeholder="პაროლი (მინ. 6 სიმბოლო)" autocomplete="current-password" />
+    <input type="text" id="displayName" placeholder="სახელი" />
+    <button id="registerBtn">რეგისტრაცია</button>
+    <button id="loginBtn">შესვლა</button>
+    <div id="authError" style="color:#f88; min-height: 1.2em;"></div>
+  </section>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyChpCuDHZVEbWQ4Uw_NoVr5xyUvXtUtGZA",
-      authDomain: "test-a79ec.firebaseapp.com",
-      databaseURL: "https://test-a79ec-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "test-a79ec",
-      storageBucket: "test-a79ec.firebasestorage.app",
-      messagingSenderId: "966991665801",
-      appId: "1:966991665801:web:5d6f25671bca9022b0c458"
-    };
+  <!-- მთავარი აპლიკაცია -->
+  <section id="app-section" class="section" style="display:none;">
+    <div style="font-size:1.2rem; margin-bottom: 0.5rem;">
+      გამარჯობა, <strong><span id="userNameDisplay"></span></strong> (#<strong><span id="userUniqueId"></span></strong>)
+    </div>
+    <button id="logoutBtn" style="margin: 0.5rem 0 1.5rem 0;">გასვლა</button>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const chatRef = ref(db, "messages/");
+    <hr style="border-color:#555; margin-bottom: 1.5rem;" />
 
-    const sendBtn = document.getElementById("sendBtn");
-    const messageInput = document.getElementById("messageInput");
-    const usernameInput = document.getElementById("username");
-    const chatBox = document.getElementById("chatBox");
-    const inputArea = document.getElementById("inputArea");
+    <!-- მეგობრის ძებნა -->
+    <div class="section">
+      <h3>მეგობრის ძებნა ID-ით</h3>
+      <input type="text" id="searchFriendId" placeholder="ჩაწერეთ 3 ციფრიანი ID" maxlength="3" />
+      <button id="sendFriendRequestBtn" disabled>მეგობრობის მოთხოვნის გაგზავნა</button>
+      <div id="searchError" style="color:#f88; min-height: 1.2em;"></div>
+      <div id="searchSuccess" style="color:#8f8; min-height: 1.2em;"></div>
+    </div>
 
-    // Enable send button only if message input is not empty
-    function toggleSendButton() {
-      sendBtn.disabled = messageInput.value.trim() === "";
+    <!-- მეგობრობის მოთხოვნები -->
+    <div class="section">
+      <h3>მეგობრობის მოთხოვნები</h3>
+      <div id="friendRequestsList"></div>
+    </div>
+
+    <!-- მეგობრები -->
+    <div class="section">
+      <h3>მეგობრები</h3>
+      <div id="friendsList"></div>
+    </div>
+
+    <!-- ჩატი -->
+    <div class="section" id="chatSection" style="display:none;">
+      <h3>ჩატი: <span id="chatFriendName"></span></h3>
+      <div class="chat-container" id="chatMessages"></div>
+      <div class="chat-input">
+        <textarea id="chatInput" placeholder="წერეთ შეტყობინება..."></textarea>
+        <button id="sendChatBtn" disabled>გაგზავნა</button>
+      </div>
+    </div>
+  </section>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+  import { getDatabase, ref, set, get, push, onValue, update, query, orderByChild } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+  // Firebase კონფიგურაცია
+  const firebaseConfig = {
+    apiKey: "AIzaSyBGmwPbXIKLaaeFBFUf9fGbdTykvI4b4rs",
+    authDomain: "veoo-46056.firebaseapp.com",
+    databaseURL: "https://veoo-46056-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "veoo-46056",
+    storageBucket: "veoo-46056.appspot.com",
+    messagingSenderId: "149451051323",
+    appId: "1:149451051323:web:5f9ae2286384e71e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+
+  // ელემენტები
+  const authSection = document.getElementById('auth-section');
+  const appSection = document.getElementById('app-section');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const displayNameInput = document.getElementById('displayName');
+  const registerBtn = document.getElementById('registerBtn');
+  const loginBtn = document.getElementById('loginBtn');
+  const authError = document.getElementById('authError');
+
+  const userNameDisplay = document.getElementById('userNameDisplay');
+  const userUniqueIdDisplay = document.getElementById('userUniqueId');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const searchFriendIdInput = document.getElementById('searchFriendId');
+  const sendFriendRequestBtn = document.getElementById('sendFriendRequestBtn');
+  const searchError = document.getElementById('searchError');
+  const searchSuccess = document.getElementById('searchSuccess');
+
+  const friendRequestsList = document.getElementById('friendRequestsList');
+  const friendsList = document.getElementById('friendsList');
+
+  const chatSection = document.getElementById('chatSection');
+  const chatFriendName = document.getElementById('chatFriendName');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const sendChatBtn = document.getElementById('sendChatBtn');
+
+  let currentUser = null;
+  let currentChatFriendUid = null;
+
+  // უნიკალური 3 ციფრიანი ID-ის გენერაცია
+  async function generateUniqueId() {
+    let id;
+    let exists = true;
+    while (exists) {
+      id = Math.floor(Math.random() * 900) + 100; // 100-999
+      const snapshot = await get(ref(db, `userIds/${id}`));
+      exists = snapshot.exists();
+    }
+    return id.toString();
+  }
+
+  // რეგისტრაცია
+  registerBtn.onclick = async () => {
+    authError.textContent = "";
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const displayName = displayNameInput.value.trim();
+
+    if (!email || !password || !displayName) {
+      authError.textContent = "გთხოვთ შეავსოთ ყველა ველი.";
+      return;
+    }
+    if (password.length < 6) {
+      authError.textContent = "პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.";
+      return;
     }
 
-    messageInput.addEventListener("input", toggleSendButton);
-    usernameInput.addEventListener("input", toggleSendButton);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
 
-    // Format time nicely
-    function formatTime(timestamp) {
-      const now = new Date();
-      const diff = (now - timestamp) / 1000; // seconds
+      const uniqueId = await generateUniqueId();
 
-      if (diff < 10) return "ახლახანს";
-      if (diff < 60) return `${Math.floor(diff)} წთ წინ`;
-      if (diff < 3600) return `${Math.floor(diff / 60)} წთ წინ`;
+      // მომხმარებლის მონაცემების შენახვა DB-ში
+      await set(ref(db, `users/${uid}`), {
+        email,
+        displayName,
+        uniqueId,
+        friends: {}
+      });
+      await set(ref(db, `userIds/${uniqueId}`), uid);
 
-      // Show HH:MM
-      return timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+      // ავტორიზაციის შემდეგ UI-ის განახლება
+      emailInput.value = passwordInput.value = displayNameInput.value = "";
+    } catch (e) {
+      if (e.code === 'auth/email-already-in-use') authError.textContent = "მეილი უკვე გამოყენებულია.";
+      else if (e.code === 'auth/invalid-email') authError.textContent = "არასწორი მეილი.";
+      else authError.textContent = "შეცდომა: " + e.message;
+    }
+  };
+
+  // შესვლა
+  loginBtn.onclick = async () => {
+    authError.textContent = "";
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    if (!email || !password) {
+      authError.textContent = "გთხოვთ შეავსოთ მეილი და პაროლი.";
+      return;
+    }
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      emailInput.value = passwordInput.value = "";
+    } catch (e) {
+      if (e.code === 'auth/wrong-password') authError.textContent = "არასწორი პაროლი.";
+      else if (e.code === 'auth/user-not-found') authError.textContent = "მომხმარებელი ვერ მოიძებნა.";
+      else authError.textContent = "შეცდომა: " + e.message;
+    }
+  };
+
+  // ავტორიზაციის მდგომარეობის კონტროლი
+  onAuthStateChanged(auth, async user => {
+    if (user) {
+      currentUser = user;
+      authSection.style.display = "none";
+      appSection.style.display = "block";
+
+      const userSnap = await get(ref(db, `users/${user.uid}`));
+      if (!userSnap.exists()) {
+        authError.textContent = "მომხმარებლის მონაცემები ვერ მოიძებნა.";
+        return;
+      }
+      const userData = userSnap.val();
+      userNameDisplay.textContent = userData.displayName;
+      userUniqueIdDisplay.textContent = userData.uniqueId;
+
+      loadFriendRequests();
+      loadFriends();
+      closeChat();
+    } else {
+      currentUser = null;
+      authSection.style.display = "block";
+      appSection.style.display = "none";
+    }
+  });
+
+  // გასვლა
+  logoutBtn.onclick = () => {
+    signOut(auth);
+  };
+
+  // მეგობრის ძებნა და მეგობრობის მოთხოვნის გაგზავნა
+  searchFriendIdInput.addEventListener('input', () => {
+    const val = searchFriendIdInput.value.trim();
+    sendFriendRequestBtn.disabled = !(val.length === 3 && /^[0-9]{3}$/.test(val));
+    searchError.textContent = "";
+    searchSuccess.textContent = "";
+  });
+
+  sendFriendRequestBtn.onclick = async () => {
+    searchError.textContent = "";
+    searchSuccess.textContent = "";
+    const friendId = searchFriendIdInput.value.trim();
+    if (friendId === "") return;
+
+    if (friendId === userUniqueIdDisplay.textContent) {
+      searchError.textContent = "არ შეგიძლიათ გაგზავნოთ მოთხოვნა საკუთარ თავს.";
+      return;
     }
 
-    // Scroll chat to bottom
-    function scrollToBottom() {
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
+    try {
+      const toUidSnap = await get(ref(db, `userIds/${friendId}`));
+      if (!toUidSnap.exists()) {
+        searchError.textContent = "მომხმარებელი ვერ მოიძებნა.";
+        return;
+      }
+      const toUid = toUidSnap.val();
 
-    // Escape HTML to prevent XSS
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // Add message to chat box
-    function addMessage(id, msg, currentUser) {
-      const div = document.createElement("div");
-      div.classList.add("message");
-      const isCurrentUser = msg.user === currentUser;
-      div.classList.add(isCurrentUser ? "outgoing" : "incoming");
-      div.setAttribute("data-id", id);
-
-      // Timestamp as Date object
-      const msgTime = new Date(msg.time);
-
-      // Message HTML with delete button if current user
-      div.innerHTML = `
-        <div class="username">${escapeHtml(msg.user)}</div>
-        <div class="text">${escapeHtml(msg.text)}</div>
-        <div class="meta">
-          <time datetime="${msg.time}">${formatTime(msgTime)}</time>
-          ${isCurrentUser ? '<button class="delete-btn" title="წაშლა" aria-label="შეტყობინების წაშლა">×</button>' : ''}
-        </div>
-      `;
-
-      // Add delete event
-      if (isCurrentUser) {
-        const deleteBtn = div.querySelector(".delete-btn");
-        deleteBtn.addEventListener("click", () => {
-          if (confirm("გსურთ შეტყობინების წაშლა?")) {
-            remove(ref(db, "messages/" + id));
-          }
-        });
+      // შეამოწმეთ უკვე მეგობრები არიან თუ არა
+      const friendsSnap = await get(ref(db, `users/${currentUser.uid}/friends/${toUid}`));
+      if (friendsSnap.exists()) {
+        searchError.textContent = "ეს მომხმარებელი უკვე თქვენი მეგობარია.";
+        return;
       }
 
-      chatBox.appendChild(div);
-    }
-
-    // Load last 100 messages
-    const recentMessagesQuery = query(chatRef, limitToLast(100));
-
-    onValue(recentMessagesQuery, (snapshot) => {
-      chatBox.innerHTML = "";
-      const currentUser = usernameInput.value.trim() || "უცნობი";
-
-      snapshot.forEach(child => {
-        const msg = child.val();
-        addMessage(child.key, msg, currentUser);
+      // შეამოწმეთ უკვე გაგზავნილია მოთხოვნა
+      const requestsSnap = await get(ref(db, 'friendRequests'));
+      let alreadySent = false;
+      requestsSnap.forEach(reqSnap => {
+        const req = reqSnap.val();
+        if (req.fromUid === currentUser.uid && req.toUid === toUid && req.status === 'pending') {
+          alreadySent = true;
+        }
       });
-      scrollToBottom();
-    });
+      if (alreadySent) {
+        searchError.textContent = "მოთხოვნა უკვე გაგზავნილია.";
+        return;
+      }
 
-    // Send message on form submit or Enter key
-    inputArea.addEventListener("submit", (e) => {
-      e.preventDefault();
-      sendMessage();
-    });
-
-    function sendMessage() {
-      const message = messageInput.value.trim();
-      const username = usernameInput.value.trim() || "უცნობი";
-
-      if (!message) return;
-
-      const now = new Date();
-      push(chatRef, {
-        user: username,
-        text: message,
-        time: now.toISOString()
+      // მოთხოვნის გაგზავნა
+      await push(ref(db, 'friendRequests'), {
+        fromUid: currentUser.uid,
+        toUid,
+        status: 'pending',
+        timestamp: Date.now()
       });
 
-      messageInput.value = "";
-      toggleSendButton();
+      searchSuccess.textContent = "მოთხოვნა წარმატებით გაიგზავნა.";
+      searchFriendIdInput.value = "";
+      sendFriendRequestBtn.disabled = true;
+    } catch (e) {
+      searchError.textContent = "შეცდომა: " + e.message;
     }
+  };
 
-    // Initialize send button state
-    toggleSendButton();
-  </script>
+  // მეგობრობის მოთხოვნების ჩამოტვირთვა და ჩვენება
+  function loadFriendRequests() {
+    const requestsRef = query(ref(db, 'friendRequests'), orderByChild('toUid'));
+    onValue(requestsRef, snapshot => {
+      friendRequestsList.innerHTML = '';
+      snapshot.forEach(reqSnap => {
+        const req = reqSnap.val();
+        if (req.toUid === currentUser.uid && req.status === 'pending') {
+          const div = document.createElement('div');
+          div.className = 'friend-request';
+          // მეგობრის სახელის წამოღება
+          get(ref(db, `users/${req.fromUid}`)).then(friendSnap => {
+            const friendName = friendSnap.exists() ? friendSnap.val().displayName : req.fromUid;
+            div.textContent = `მეგობრობის მოთხოვნა: ${friendName}`;
+            // ღილაკები
+            const acceptBtn = document.createElement('button');
+            acceptBtn.textContent = 'მიღება';
+            acceptBtn.onclick = () => respondFriendRequest(reqSnap.key, true, req.fromUid);
+            const rejectBtn = document.createElement('button');
+            rejectBtn.textContent = 'უარყოფა';
+            rejectBtn.onclick = () => respondFriendRequest(reqSnap.key, false, req.fromUid);
+            div.appendChild(acceptBtn);
+            div.appendChild(rejectBtn);
+          });
+          friendRequestsList.appendChild(div);
+        }
+      });
+    });
+  }
+
+  // მეგობრობის მოთხოვნის პასუხი
+  async function respondFriendRequest(requestId, accept, fromUid) {
+    const reqRef = ref(db, `friendRequests/${requestId}`);
+    if (accept) {
+      const updates = {};
+      updates[`users/${currentUser.uid}/friends/${fromUid}`] = true;
+      updates[`users/${fromUid}/friends/${currentUser.uid}`] = true;
+      updates[`friendRequests/${requestId}/status`] = 'accepted';
+      await update(ref(db), updates);
+    } else {
+      await update(reqRef, { status: 'rejected' });
+    }
+  }
+
+  // მეგობრების ჩამოტვირთვა და ჩვენება
+  function loadFriends() {
+    const friendsRef = ref(db, `users/${currentUser.uid}/friends`);
+    onValue(friendsRef, async snapshot => {
+      friendsList.innerHTML = '';
+      const friends = snapshot.val() || {};
+      for (const friendUid in friends) {
+        const friendSnap = await get(ref(db, `users/${friendUid}`));
+        const friendData = friendSnap.val();
+        const div = document.createElement('div');
+        div.className = 'friend';
+        div.textContent = friendData ? friendData.displayName : friendUid;
+
+        const chatBtn = document.createElement('button');
+        chatBtn.textContent = 'ჩატი';
+        chatBtn.onclick = () => openChat(friendUid, friendData ? friendData.displayName : friendUid);
+        div.appendChild(chatBtn);
+
+        friendsList.appendChild(div);
+      }
+    });
+  }
+
+  // ჩატის გახსნა
+  function openChat(friendUid, friendName) {
+    currentChatFriendUid = friendUid;
+    chatFriendName.textContent = friendName;
+    chatSection.style.display = 'block';
+    chatMessages.innerHTML = '';
+    loadChatMessages();
+  }
+
+  // ჩატის დახურვა
+  function closeChat() {
+    currentChatFriendUid = null;
+    chatSection.style.display = 'none';
+    chatMessages.innerHTML = '';
+    chatInput.value = '';
+    sendChatBtn.disabled = true;
+  }
+
+  // ჩატის შეტყობინებების ჩატვირთვა
+  function loadChatMessages() {
+    if (!currentChatFriendUid) return;
+    const chatId = getChatId(currentUser.uid, currentChatFriendUid);
+    const messagesRef = ref(db, `chats/${chatId}/messages`);
+    onValue(messagesRef, snapshot => {
+      chatMessages.innerHTML = '';
+      snapshot.forEach(msgSnap => {
+        const msg = msgSnap.val();
+        const div = document.createElement('div');
+        div.className = 'chat-message';
+        div.classList.add(msg.senderUid === currentUser.uid ? 'right' : 'left');
+        div.textContent = msg.text;
+        chatMessages.appendChild(div);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  }
+
+  // შეტყობინების გაგზავნა
+  chatInput.addEventListener('input', () => {
+    sendChatBtn.disabled = chatInput.value.trim() === '';
+  });
+
+  sendChatBtn.onclick = async () => {
+    if (!currentChatFriendUid) return;
+    const text = chatInput.value.trim();
+    if (text === '') return;
+
+    const chatId = getChatId(currentUser.uid, currentChatFriendUid);
+    const messagesRef = ref(db, `chats/${chatId}/messages`);
+    await push(messagesRef, {
+      senderUid: currentUser.uid,
+      text,
+      timestamp: Date.now()
+    });
+    chatInput.value = '';
+    sendChatBtn.disabled = true;
+  };
+
+  // უნიკალური ჩატის ID-ს გენერაცია
+  function getChatId(uid1, uid2) {
+    return [uid1, uid2].sort().join('_');
+  }
+
+</script>
+
+</main>
+
 </body>
 </html>
