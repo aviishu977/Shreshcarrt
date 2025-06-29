@@ -1,21 +1,206 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>გლობალური ჩატი</title>
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    h1 {
+      background: #4a90e2;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      user-select: none;
+    }
+
+    #chatBox {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: #e9ebee;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      position: relative;
+      word-wrap: break-word;
+      font-size: 0.9rem;
+      line-height: 1.3;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      user-select: text;
+    }
+
+    .message .meta {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .message .username {
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Incoming messages */
+    .message.incoming {
+      background: white;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    /* Outgoing messages */
+    .message.outgoing {
+      background: #4a90e2;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* Delete button */
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-left: 8px;
+      transition: color 0.2s ease;
+    }
+
+    .delete-btn:hover {
+      color: #e74c3c;
+    }
+
+    /* Input area */
+    #inputArea {
+      display: flex;
+      padding: 12px 16px;
+      background: white;
+      border-top: 1px solid #ccc;
+    }
+
+    #username {
+      flex: 1 0 120px;
+      margin-right: 8px;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 1rem;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+
+    #username:focus {
+      border-color: #4a90e2;
+    }
+
+    #messageInput {
+      flex: 3;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 1rem;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+
+    #messageInput:focus {
+      border-color: #4a90e2;
+    }
+
+    #sendBtn {
+      margin-left: 8px;
+      background: #4a90e2;
+      border: none;
+      color: white;
+      padding: 0 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    #sendBtn:disabled {
+      background: #a0c4ff;
+      cursor: not-allowed;
+    }
+
+    #sendBtn:hover:not(:disabled) {
+      background: #357ABD;
+    }
+
+    /* Scrollbar styling */
+    #chatBox::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #chatBox::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+
+    #chatBox::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      body {
+        border: none;
+        border-radius: 0;
+      }
+      #username {
+        flex: 1 0 100px;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>ჩატი</h1>
 
-  <input type="text" id="username" placeholder="შეიყვანე შენი სახელი" />
-  <input type="text" id="messageInput" placeholder="შეტყობინება..." />
-  <button id="sendBtn">გაგზავნა</button>
+  <div id="chatBox" aria-live="polite" aria-relevant="additions"></div>
 
-  <div id="chatBox" style="margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;"></div>
+  <form id="inputArea" aria-label="ჩატის შეტყობინების ფორმა">
+    <input type="text" id="username" placeholder="შეიყვანე შენი სახელი" aria-label="სახელი" autocomplete="off" />
+    <input type="text" id="messageInput" placeholder="შეტყობინება..." aria-label="შეტყობინება" autocomplete="off" />
+    <button id="sendBtn" type="submit" disabled>გაგზავნა</button>
+  </form>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getDatabase, ref, push, onValue, remove, query, limitToLast } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyChpCuDHZVEbWQ4Uw_NoVr5xyUvXtUtGZA",
@@ -35,30 +220,130 @@
     const messageInput = document.getElementById("messageInput");
     const usernameInput = document.getElementById("username");
     const chatBox = document.getElementById("chatBox");
+    const inputArea = document.getElementById("inputArea");
 
-    sendBtn.addEventListener("click", () => {
+    // Enable send button only if message input is not empty
+    function toggleSendButton() {
+      sendBtn.disabled = messageInput.value.trim() === "";
+    }
+
+    messageInput.addEventListener("input", toggleSendButton);
+    usernameInput.addEventListener("input", toggleSendButton);
+
+    // Format time nicely
+    function formatTime(timestamp) {
+      const now = new Date();
+      const diff = (now - timestamp) / 1000; // seconds
+
+      if (diff < 10) return "ახლახანს";
+      if (diff < 60) return `${Math.floor(diff)} წთ წინ`;
+      if (diff < 3600) return `${Math.floor(diff / 60)} წთ წინ`;
+
+      // Show HH:MM
+      return timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    }
+
+    // Scroll chat to bottom
+    function scrollToBottom() {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Add message to chat box
+    function addMessage(id, msg, currentUser) {
+      const div = document.createElement("div");
+      div.classList.add("message");
+      const isCurrentUser = msg.user === currentUser;
+      div.classList.add(isCurrentUser ? "outgoing" : "incoming");
+      div.setAttribute("data-id", id);
+
+      // Timestamp as Date object
+      const msgTime = new Date(msg.time);
+
+      // Message HTML with delete button if current user
+      div.innerHTML = `
+        <div class="username">${msg.user}</div>
+        <div class="text">${escapeHtml(msg.text)}</div>
+        <div class="meta">
+          <time datetime="${msg.time}">${formatTime(msgTime)}</time>
+          ${isCurrentUser ? '<button class="delete-btn" title="წაშლა" aria-label="შეტყობინების წაშლა">×</button>' : ''}
+        </div>
+      `;
+
+      // Add delete event
+      if (isCurrentUser) {
+        const deleteBtn = div.querySelector(".delete-btn");
+        deleteBtn.addEventListener("click", () => {
+          if (confirm("გსურთ შეტყობინების წაშლა?")) {
+            remove(ref(db, "messages/" + id));
+          }
+        });
+      }
+
+      chatBox.appendChild(div);
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Load last 100 messages
+    const recentMessagesQuery = query(chatRef, limitToLast(100));
+
+    onValue(recentMessagesQuery, (snapshot) => {
+      chatBox.innerHTML = "";
+      const currentUser = usernameInput.value.trim() || "უცნობი";
+
+      snapshot.forEach(child => {
+        const msg = child.val();
+        addMessage(child.key, msg, currentUser);
+      });
+      scrollToBottom();
+    });
+
+    // Send message on form submit or Enter key
+    inputArea.addEventListener("submit", (e) => {
+      e.preventDefault();
+      sendMessage();
+    });
+
+    function sendMessage() {
       const message = messageInput.value.trim();
       const username = usernameInput.value.trim() || "უცნობი";
 
-      if (message) {
-        push(chatRef, {
-          user: username,
-          text: message,
-          time: new Date().toLocaleTimeString()
-        });
-        messageInput.value = "";
+      if (!message) return;
+
+      const now = new Date();
+      push(chatRef, {
+        user: username,
+        text: message,
+        time: now.toISOString()
+      });
+
+      messageInput.value = "";
+      toggleSendButton();
+    }
+
+    // Auto-scroll on new message added by others
+    let isUserScrolling = false;
+    chatBox.addEventListener('scroll', () => {
+      const threshold = 50; // px from bottom
+      const position = chatBox.scrollTop + chatBox.clientHeight;
+      const height = chatBox.scrollHeight;
+      isUserScrolling = height - position > threshold;
+    });
+
+    // Scroll to bottom only if user is not scrolling manually
+    onValue(recentMessagesQuery, (snapshot) => {
+      if (!isUserScrolling) {
+        scrollToBottom();
       }
     });
 
-    onValue(chatRef, (snapshot) => {
-      chatBox.innerHTML = "";
-      snapshot.forEach(child => {
-        const msg = child.val();
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>${msg.user}:</strong> ${msg.text} <small style="color:gray;">[${msg.time}]</small>`;
-        chatBox.appendChild(div);
-      });
-    });
+    // Initialize send button state
+    toggleSendButton();
   </script>
 </body>
 </html>
