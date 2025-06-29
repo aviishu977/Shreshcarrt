@@ -1,57 +1,64 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-  <meta charset="UTF-8" />
-  <title>შეკვეთის დამატება</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 400px; margin: auto; padding: 20px; }
-    input, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 1rem; }
-  </style>
+  <meta charset="UTF-8">
+  <title>გლობალური ჩატი</title>
 </head>
 <body>
-  <h2>შეკვეთის დამატება</h2>
-  <input type="text" id="name" placeholder="სახელი" required />
-  <input type="tel" id="phone" placeholder="ტელეფონი" required />
-  <button onclick="placeOrder()">დამატება</button>
+  <h1>ჩატი</h1>
 
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js"></script>
-  <script>
+  <input type="text" id="username" placeholder="შეიყვანე შენი სახელი" />
+  <input type="text" id="messageInput" placeholder="შეტყობინება..." />
+  <button id="sendBtn">გაგზავნა</button>
+
+  <div id="chatBox" style="margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
     const firebaseConfig = {
-      apiKey: "AIzaSyDIXs2pxX8x8QjhtjnD6T1xVJ5RDKSOKVg",
-      authDomain: "zippy-cart.firebaseapp.com",
-      databaseURL: "https://zippy-cart-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "zippy-cart",
-      storageBucket: "zippy-cart.appspot.com",
-      messagingSenderId: "940094965410",
-      appId: "1:940094965410:web:2e8a39eceff8a70a25f9fb"
+      apiKey: "AIzaSyChpCuDHZVEbWQ4Uw_NoVr5xyUvXtUtGZA",
+      authDomain: "test-a79ec.firebaseapp.com",
+      databaseURL: "https://test-a79ec-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "test-a79ec",
+      storageBucket: "test-a79ec.firebasestorage.app",
+      messagingSenderId: "966991665801",
+      appId: "1:966991665801:web:5d6f25671bca9022b0c458"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const chatRef = ref(db, "messages/");
 
-    function placeOrder() {
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
+    const sendBtn = document.getElementById("sendBtn");
+    const messageInput = document.getElementById("messageInput");
+    const usernameInput = document.getElementById("username");
+    const chatBox = document.getElementById("chatBox");
 
-      if (!name || !phone) {
-        alert('გთხოვთ, შეავსეთ ორივე ველი');
-        return;
+    sendBtn.addEventListener("click", () => {
+      const message = messageInput.value.trim();
+      const username = usernameInput.value.trim() || "უცნობი";
+
+      if (message) {
+        push(chatRef, {
+          user: username,
+          text: message,
+          time: new Date().toLocaleTimeString()
+        });
+        messageInput.value = "";
       }
+    });
 
-      db.ref('orders').push({
-        name,
-        phone,
-        status: 'pending',
-        courier: ''
-      }).then(() => {
-        alert('შეკვეთა წარმატებით დაემატა!');
-        document.getElementById('name').value = '';
-        document.getElementById('phone').value = '';
-      }).catch(error => {
-        alert('შეცდომა შეკვეთის დამატებისას: ' + error.message);
+    onValue(chatRef, (snapshot) => {
+      chatBox.innerHTML = "";
+      snapshot.forEach(child => {
+        const msg = child.val();
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${msg.user}:</strong> ${msg.text} <small style="color:gray;">[${msg.time}]</small>`;
+        chatBox.appendChild(div);
       });
-    }
+    });
   </script>
 </body>
 </html>
