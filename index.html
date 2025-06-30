@@ -3,431 +3,488 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VEO CHAT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet" />
-
+  <title>საჯარო პოსტები</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    :root {
+      --color-primary: #2563eb;
+      --color-primary-dark: #1e40af;
+      --color-background: #f5f7fa;
+      --color-card-bg: #ffffff;
+      --color-text-primary: #111827;
+      --color-text-secondary: #6b7280;
+      --color-border: #e5e7eb;
+      --color-shadow-light: rgba(0, 0, 0, 0.05);
+      --color-shadow-dark: rgba(0, 0, 0, 0.1);
+      --radius-base: 18px;
+      --spacing-base: 16px;
+      --font-family: 'Inter', sans-serif;
+    }
+    @font-face {
+  font-family: 'myffont';
+  src: url('alk-sanet.ttf');
+}
     * {
       box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'myffont';
     }
+
     body {
-      margin: 0; padding: 0;
-        font-family: 'Lexend', 
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #333;
+      font-family: var(--font-family);
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: column;
       min-height: 100vh;
-      padding: 20px;
     }
-    .container {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-      width: 100%;
-      max-width: 420px;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-    h1 {
-      margin: 0 0 12px;
-      text-align: center;
-      color: #5a2a83;
-      font-weight: 700;
-      font-size: 1.8rem;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    label {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #5a2a83;
-    }
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="number"] {
-      padding: 12px 14px;
-      font-size: 1rem;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      transition: border-color 0.3s ease;
-    }
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus,
-    input[type="number"]:focus {
-      border-color: #764ba2;
-      outline: none;
-    }
-    button {
-      background: #764ba2;
+
+    header {
+      background-color: var(--color-primary);
       color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      padding: var(--spacing-base);
+      text-align: center;
+      box-shadow: 0 4px 12px var(--color-shadow-dark);
+    }
+
+    main {
+      flex: 1;
+      max-width: 480px;
+      margin: var(--spacing-base) auto 2rem;
+      width: 95%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      padding: 0 var(--spacing-base);
+    }
+
+    form {
+      background: var(--color-card-bg);
+      border-radius: var(--radius-base);
+      padding: 1.75rem 1.5rem;
+      box-shadow: 0 8px 16px var(--color-shadow-light), inset 0 0 0 1px var(--color-border);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      border: 1.5px solid var(--color-border);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      font-size: 1.125rem;
+      background: var(--color-background);
+    }
+
+    textarea::placeholder {
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+    }
+
+    .camera-button {
+      display: inline-block;
+      text-align: center;
+      background-color: var(--color-primary);
+      color: white;
+      padding: 0.9rem 1rem;
       font-weight: 700;
       font-size: 1.1rem;
+      border-radius: 14px;
       cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+      user-select: none;
+    }
+
+    .camera-button:hover {
+      background-color: var(--color-primary-dark);
+      transform: translateY(-2px);
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    button {
+      background-color: var(--color-primary);
+      border: none;
+      border-radius: 14px;
+      padding: 1rem 0;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+      cursor: pointer;
+      
       transition: background-color 0.3s ease;
     }
-    button:hover {
-      background: #5a2a83;
+
+    button:disabled {
+      background-color: #93c5fd;
+      box-shadow: none;
+      cursor: not-allowed;
     }
-    .divider {
-      height: 1px;
-      background: #eee;
-      margin: 20px 0;
-    }
-    #userInfo {
-      text-align: center;
-      font-weight: 600;
-      color: #764ba2;
-    }
-    #logoutBtn {
-      background: #e04e4e;
-      margin-top: 8px;
-    }
-    #logoutBtn:hover {
-      background: #b03a3a;
-    }
-    .chat-section {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .chat-messages {
-      height: 280px;
-      overflow-y: auto;
-      border: 2px solid #ddd;
-      border-radius: 12px;
-      padding: 12px;
-      background: #fafafa;
-      font-size: 0.95rem;
-      color: #222;
+
+    #posts {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 1.5rem;
     }
-    .message {
-      padding: 8px 12px;
-      border-radius: 12px;
-      max-width: 80%;
-      word-wrap: break-word;
-      display: inline-block;
+
+    .post-card {
+      background: var(--color-card-bg);
+      border-radius: var(--radius-base);
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 12px 24px var(--color-shadow-light);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
     }
-    .message.self {
-      background: #764ba2;
-      color: white;
+
+    .post-card:hover {
+      box-shadow: 0 18px 36px rgba(0,0,0,0.12);
+    }
+
+    .post-text {
+      font-size: 1.125rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      font-weight: 500;
+      user-select: text;
+    }
+
+    .post-image {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      border:2px solid dimgray;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none; /* მოდალის გახსნისთვის მხოლოდ პოსტზე კლიკი და არა ფოტოზე */
+    }
+
+    .timestamp {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
       align-self: flex-end;
+      font-weight: 600;
+      user-select: none;
     }
-    .message.other {
-      background: #ddd;
-      color: #333;
-      align-self: flex-start;
+
+    /* Preview image and status */
+    #previewImage {
+      max-width: 100%;
+      border-radius: 14px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      object-fit: cover;
+      max-height: 280px;
+      aspect-ratio: 16 / 9;
+      display: none;
+      margin-top: -0.5rem;
     }
-    .message .sender {
-      font-weight: 700;
-      font-size: 0.85rem;
-      margin-bottom: 4px;
-      display: block;
-      color: #5a2a83;
+
+    #imageStatus {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      font-weight: 600;
+      margin-top: -0.5rem;
+      margin-bottom: 0.5rem;
+      min-height: 1.2rem;
+      user-select: none;
     }
-    .chat-header {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #5a2a83;
+
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 1rem;
+    }
+
+    .modal[aria-hidden="false"] {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      background: white;
+      border-radius: 20px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1rem 1.5rem 2rem 1.5rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .modal img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+
+    .modal p {
+      font-size: 1.2rem;
+      color: #111827;
+      font-weight: 600;
+      white-space: pre-wrap;
       text-align: center;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 2.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #FF0000;
+      font-weight: 700;
+      user-select: none;
+      line-height: 1;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>VEO CHATS</h1>
 
-    <div id="authSection">
-      <form id="registerForm">
-        <label>სახელი</label>
-        <input type="text" name="name" required placeholder="შეიყვანეთ სახელი" />
-        <label>იმეილი</label>
-        <input type="email" name="email" required placeholder="შეიყვანეთ იმეილი" />
-        <label>პაროლი</label>
-        <input type="password" name="password" required placeholder="შეიყვანეთ პაროლი" />
-        <button type="submit">რეგისტრაცია</button>
-      </form>
+<header>ჩასელფე</header>
 
-      <div class="divider"></div>
+<main>
+  <form id="postForm" autocomplete="off" novalidate>
+    <label for="imageInput" class="camera-button">ფოტოს გადაღება</label>
+    <textarea id="contentText" placeholder="დაწერე ტექსტი..." required></textarea>
+    <input type="file" id="imageInput" accept="image/*" capture="environment" />
 
-      <form id="loginForm">
-        <label>იმეილი</label>
-        <input type="email" name="email" required placeholder="შეიყვანეთ იმეილი" />
-        <label>პაროლი</label>
-        <input type="password" name="password" required placeholder="შეიყვანეთ პაროლი" />
-        <button type="submit">შესვლა</button>
-      </form>
-    </div>
+    <img id="previewImage" alt="ფოტოს პრევიუ" />
+    <p id="imageStatus"></p>
 
-    <div id="userInfo" style="display:none;"></div>
-    <button id="logoutBtn" style="display:none;">გასვლა</button>
+    <button type="submit" disabled>პოსტის გამოქვეყნება</button>
+  </form>
 
-    <div id="chatControls" style="display:none;">
-      <form id="createChatForm">
-        <label>ჩატის სახელი</label>
-        <input type="text" name="chatName" required placeholder="მაგ: მეგობრები" />
-        <label>4 ციფრიანი კოდი</label>
-        <input type="number" name="chatCode" required placeholder="მაგ: 1234" min="1000" max="9999" />
-        <button type="submit">ჩატის შექმნა</button>
-      </form>
+  <section id="posts"></section>
+</main>
 
-      <form id="joinChatForm" style="margin-top: 16px;">
-        <label>ჩატის სახელი შესასვლელად</label>
-        <input type="text" name="chatName" required placeholder="ჩატის სახელი" />
-        <label>4 ციფრიანი კოდი</label>
-        <input type="number" name="chatCode" required placeholder="კოდი" min="1000" max="9999" />
-        <button type="submit">ჩატში შესვლა</button>
-      </form>
-    </div>
-
-    <div id="chatSection" class="chat-section">
-      <div class="chat-header" id="chatTitle"></div>
-      <div class="chat-messages" id="chatMessages"></div>
-      <form id="messageForm">
-        <input type="text" name="message" placeholder="შეიყვანეთ მესიჯი..." required autocomplete="off" />
-        <button type="submit">გაგზავნა</button>
-      </form>
-    </div>
+<!-- მოდალური ფანჯარა -->
+<div id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalText">
+  <div class="modal-content">
+    <button id="modalClose" class="modal-close" aria-label="დახურვა">&times;</button>
+    <img id="modalImage" alt="პოსტის ფოტო" />
+    <p id="modalText"></p>
   </div>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
-    import {
-      getDatabase,
-      ref,
-      set,
-      get,
-      push,
-      onChildAdded
-    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getDatabase, ref, push, query, orderByChild, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBGmwPbXIKLaaeFBFUf9fGbdTykvI4b4rs",
-      authDomain: "veoo-46056.firebaseapp.com",
-      databaseURL: "https://veoo-46056-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "veoo-46056",
-      storageBucket: "veoo-46056.firebasestorage.app",
-      messagingSenderId: "149451051323",
-      appId: "1:149451051323:web:5f9ae2286384e1bcf4a71e"
+  const firebaseConfig = {
+    apiKey: "AIzaSyBO1nTM6QGumu25F7lnkCHuRjP1o7WF74s",
+    authDomain: "tete-bb546.firebaseapp.com",
+    databaseURL: "https://tete-bb546-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "tete-bb546",
+    storageBucket: "tete-bb546.appspot.com",
+    messagingSenderId: "985504524225",
+    appId: "1:985504524225:web:a0a170ffa30b1e6f66f140"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const postsRef = ref(db, 'posts');
+
+  const form = document.getElementById('postForm');
+  const contentText = document.getElementById('contentText');
+  const imageInput = document.getElementById('imageInput');
+  const submitBtn = form.querySelector('button');
+  const postsContainer = document.getElementById('posts');
+
+  const previewImage = document.getElementById('previewImage');
+  const imageStatus = document.getElementById('imageStatus');
+
+  const modal = document.getElementById('modal');
+  const modalImage = document.getElementById('modalImage');
+  const modalText = document.getElementById('modalText');
+  const modalClose = document.getElementById('modalClose');
+
+  contentText.addEventListener('input', () => {
+    submitBtn.disabled = !contentText.value.trim();
+  });
+
+  imageInput.addEventListener('change', () => {
+    const file = imageInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        previewImage.src = reader.result;
+        previewImage.style.display = 'block';
+        imageStatus.textContent = '✅ ფოტო გამზადებულია პოსტისთვის';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      previewImage.src = '';
+      previewImage.style.display = 'none';
+      imageStatus.textContent = '';
+    }
+  });
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) return resolve(null);
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error('ფაილის წაკითხვა ვერ მოხერხდა'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function formatTimestamp(ts) {
+    const d = new Date(ts);
+    return d.toLocaleString('ka-GE', { dateStyle: 'medium', timeStyle: 'short' });
+  }
+
+  function renderPost(post) {
+    const card = document.createElement('article');
+    card.className = 'post-card';
+
+    const textEl = document.createElement('p');
+    textEl.className = 'post-text';
+    textEl.textContent = post.contentText;
+
+    card.appendChild(textEl);
+
+    if (post.imageBase64) {
+      const img = document.createElement('img');
+      img.className = 'post-image';
+      img.src = post.imageBase64;
+      img.alt = 'დაპოსტილი სურათი';
+      card.appendChild(img);
+    }
+
+    const timeEl = document.createElement('time');
+    timeEl.className = 'timestamp';
+    timeEl.dateTime = new Date(post.timestamp).toISOString();
+    timeEl.textContent = formatTimestamp(post.timestamp);
+    card.appendChild(timeEl);
+
+    // მოდალის გახსნა პოსტზე დაკლიკებით
+    card.addEventListener('click', () => {
+      openModal(post);
+    });
+
+    return card;
+  }
+
+  const postsQuery = query(postsRef, orderByChild('timestamp'));
+  onValue(postsQuery, (snapshot) => {
+    const posts = [];
+    snapshot.forEach(child => {
+      const data = child.val();
+      if (data && typeof data.timestamp === "number") {
+        posts.push(data);
+      }
+    });
+
+    posts.sort((a, b) => b.timestamp - a.timestamp); // ახალი ზემოთ
+    postsContainer.innerHTML = '';
+    posts.forEach(post => {
+      postsContainer.appendChild(renderPost(post));
+    });
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+
+    const text = contentText.value.trim();
+    if (!text) {
+      submitBtn.disabled = false;
+      return;
+    }
+
+    let imageBase64 = null;
+    if (imageInput.files.length > 0) {
+      try {
+        imageBase64 = await fileToBase64(imageInput.files[0]);
+      } catch {
+        alert('სურათის წაკითხვა ვერ მოხერხდა.');
+        submitBtn.disabled = false;
+        return;
+      }
+    }
+
+    const newPost = {
+      contentText: text,
+      imageBase64,
+      timestamp: Date.now()
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // ელემენტები
-    const registerForm = document.getElementById('registerForm');
-    const loginForm = document.getElementById('loginForm');
-    const userInfo = document.getElementById('userInfo');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const authSection = document.getElementById('authSection');
-    const chatControls = document.getElementById('chatControls');
-    const createChatForm = document.getElementById('createChatForm');
-    const joinChatForm = document.getElementById('joinChatForm');
-    const chatSection = document.getElementById('chatSection');
-    const chatTitle = document.getElementById('chatTitle');
-    const chatMessages = document.getElementById('chatMessages');
-    const messageForm = document.getElementById('messageForm');
-
-    let currentUser = null;
-    let currentUserName = null;
-    let currentChat = null;
-
-    // მომხმარებლის სახელის ჩატვირთვა DB-დან
-    async function loadCurrentUserName() {
-      if (!currentUser) return null;
-      try {
-        const userRef = ref(db, 'users/' + currentUser.uid + '/name');
-        const snapshot = await get(userRef);
-        if (snapshot.exists()) {
-          return snapshot.val();
-        }
-      } catch (error) {
-        console.error('სახელის ჩატვირთვის შეცდომა:', error);
-      }
-      return null;
+    try {
+      await push(postsRef, newPost);
+      form.reset();
+      contentText.dispatchEvent(new Event('input')); // კვლავ გააქტიუროს ღილაკი
+      previewImage.src = '';
+      previewImage.style.display = 'none';
+      imageStatus.textContent = '';
+    } catch (err) {
+      alert('შეცდომა: ' + err.message);
+      submitBtn.disabled = false;
     }
+  });
 
-    // რეგისტრაცია
-    registerForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const name = registerForm.name.value.trim();
-      const email = registerForm.email.value.trim();
-      const password = registerForm.password.value.trim();
-      if (!name) {
-        alert('გთხოვთ, შეიყვანეთ სახელი');
-        return;
-      }
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        currentUser = userCredential.user;
-        await set(ref(db, 'users/' + currentUser.uid), { name, email });
-        alert('რეგისტრაცია წარმატებით დასრულდა');
-        registerForm.reset();
-      } catch (error) {
-        alert('რეგისტრაციის შეცდომა: ' + error.message);
-      }
-    });
+  function openModal(post) {
+    modalImage.src = post.imageBase64 || '';
+    modalText.textContent = post.contentText;
+    modal.setAttribute('aria-hidden', 'false');
+    modal.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
 
-    // ავტორიზაცია
-    loginForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = loginForm.email.value.trim();
-      const password = loginForm.password.value.trim();
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        currentUser = userCredential.user;
-        alert('ავტორიზაცია წარმატებით დასრულდა');
-        loginForm.reset();
-      } catch (error) {
-        alert('ავტორიზაციის შეცდომა: ' + error.message);
-      }
-    });
+  function closeModal() {
+    modal.setAttribute('aria-hidden', 'true');
+    modalImage.src = '';
+    modalText.textContent = '';
+    document.body.style.overflow = '';
+  }
 
-    // ავტორიზაციის სტატუსის მონიტორინგი
-    onAuthStateChanged(auth, async user => {
-      currentUser = user;
-      if (user) {
-        currentUserName = await loadCurrentUserName();
-        authSection.style.display = 'none';
-        userInfo.style.display = 'block';
-        userInfo.textContent = `გამარჯობა, ${currentUserName || user.email}`;
-        logoutBtn.style.display = 'block';
-        chatControls.style.display = 'block';
-      } else {
-        currentUserName = null;
-        authSection.style.display = 'block';
-        userInfo.style.display = 'none';
-        logoutBtn.style.display = 'none';
-        chatControls.style.display = 'none';
-        chatSection.style.display = 'none';
-        currentChat = null;
-        chatMessages.innerHTML = '';
-      }
-    });
+  modalClose.addEventListener('click', closeModal);
 
-    logoutBtn.addEventListener('click', async () => {
-      await signOut(auth);
-      alert('გამოსვლა შესრულდა');
-    });
-
-    // ჩატის შექმნა
-    createChatForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const chatName = createChatForm.chatName.value.trim();
-      const chatCode = createChatForm.chatCode.value.trim();
-      if (!/^\d{4}$/.test(chatCode)) {
-        alert('კოდი უნდა იყოს 4 ციფრი');
-        return;
-      }
-      if (!chatName) {
-        alert('ჩატის სახელი აუცილებელია');
-        return;
-      }
-      try {
-        const chatRef = ref(db, 'chats/' + chatName);
-        const snapshot = await get(chatRef);
-        if (snapshot.exists()) {
-          alert('ჩატი უკვე არსებობს');
-          return;
-        }
-        await set(chatRef, { code: chatCode, messages: {} });
-        alert('ჩატი წარმატებით შეიქმნა');
-        createChatForm.reset();
-      } catch (error) {
-        alert('ჩატის შექმნის შეცდომა: ' + error.message);
-      }
-    });
-
-    // ჩატში შესვლა
-    joinChatForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const chatName = joinChatForm.chatName.value.trim();
-      const chatCode = joinChatForm.chatCode.value.trim();
-      if (!chatName || !/^\d{4}$/.test(chatCode)) {
-        alert('გთხოვთ, შეიყვანეთ სწორი ჩატის სახელი და 4 ციფრიანი კოდი');
-        return;
-      }
-      try {
-        const chatRef = ref(db, 'chats/' + chatName);
-        const snapshot = await get(chatRef);
-        if (!snapshot.exists()) {
-          alert('ჩატი არ არსებობს');
-          return;
-        }
-        const chatData = snapshot.val();
-        if (chatData.code !== chatCode) {
-          alert('არასწორი კოდი');
-          return;
-        }
-        currentChat = chatName;
-        chatTitle.textContent = `ჩატი: ${chatName}`;
-        chatSection.style.display = 'flex';
-        chatMessages.innerHTML = '';
-        loadMessages();
-      } catch (error) {
-        alert('ჩატში შესვლის შეცდომა: ' + error.message);
-      }
-    });
-
-    // მესიჯების დატვირთვა და რეალურ დროში განახლება
-    function loadMessages() {
-      const messagesRef = ref(db, `chats/${currentChat}/messages`);
-      onChildAdded(messagesRef, snapshot => {
-        const msg = snapshot.val();
-        const div = document.createElement('div');
-        div.classList.add('message');
-        div.innerHTML = `<span class="sender">${msg.senderName || 'უცნობი'}</span>: ${msg.text}`;
-        if (msg.senderId === currentUser.uid) {
-          div.classList.add('self');
-        } else {
-          div.classList.add('other');
-        }
-        chatMessages.appendChild(div);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      });
+  modal.addEventListener('click', e => {
+    if (e.target === modal) {
+      closeModal();
     }
+  });
 
-    // მესიჯის გაგზავნა
-    messageForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      if (!currentChat) {
-        alert('გთხოვთ, ჯერ ჩატში შედით');
-        return;
-      }
-      const text = messageForm.message.value.trim();
-      if (!text) return;
-      const messagesRef = ref(db, `chats/${currentChat}/messages`);
-      await push(messagesRef, {
-        senderId: currentUser.uid,
-        senderName: currentUserName || 'უცნობი',
-        text,
-        timestamp: Date.now()
-      });
-      messageForm.reset();
-    });
-  </script>
+  document.addEventListener('keydown', e => {
+    if (e.key === "Escape" && modal.getAttribute('aria-hidden') === 'false') {
+      closeModal();
+    }
+  });
+</script>
+
 </body>
 </html>
