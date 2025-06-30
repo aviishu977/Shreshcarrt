@@ -273,7 +273,10 @@
 </head>
 <body>
 
-<header>ჩასელფე</header>
+<header>
+  ჩასელფე
+  <div id="activeUsers" style="font-size: 0.9rem; margin-top: 10px;">0</div>
+</header>
 
 <main>
   <form id="postForm" autocomplete="off" novalidate>
@@ -301,7 +304,17 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-  import { getDatabase, ref, push, query, orderByChild, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+  import {
+    getDatabase,
+    ref,
+    push,
+    query,
+    orderByChild,
+    onValue,
+    set,
+    onDisconnect,
+    remove
+  } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBO1nTM6QGumu25F7lnkCHuRjP1o7WF74s",
@@ -322,15 +335,28 @@
   const imageInput = document.getElementById('imageInput');
   const submitBtn = form.querySelector('button');
   const postsContainer = document.getElementById('posts');
-
   const previewImage = document.getElementById('previewImage');
   const imageStatus = document.getElementById('imageStatus');
-
   const modal = document.getElementById('modal');
   const modalImage = document.getElementById('modalImage');
   const modalText = document.getElementById('modalText');
   const modalClose = document.getElementById('modalClose');
+  const activeUsersEl = document.getElementById('activeUsers');
 
+  // ✅ ონლაინ მომხმარებლების აღრიცხვა
+  const uid = 'user_' + Math.random().toString(36).slice(2);
+  const userRef = ref(db, `presence/${uid}`);
+  set(userRef, { online: true }).then(() => {
+    onDisconnect(userRef).remove();
+  });
+
+  const presenceRef = ref(db, 'presence');
+  onValue(presenceRef, snapshot => {
+    const activeCount = snapshot.exists() ? snapshot.size : 0;
+    activeUsersEl.textContent = `⬤ ონლაინ: ${activeCount}`;
+  });
+
+  // ღილაკის აქტიურობა ტექსტზე
   contentText.addEventListener('input', () => {
     submitBtn.disabled = !contentText.value.trim();
   });
@@ -374,7 +400,6 @@
     const textEl = document.createElement('p');
     textEl.className = 'post-text';
     textEl.textContent = post.contentText;
-
     card.appendChild(textEl);
 
     if (post.imageBase64) {
@@ -391,7 +416,6 @@
     timeEl.textContent = formatTimestamp(post.timestamp);
     card.appendChild(timeEl);
 
-    // მოდალის გახსნა პოსტზე დაკლიკებით
     card.addEventListener('click', () => {
       openModal(post);
     });
@@ -409,7 +433,7 @@
       }
     });
 
-    posts.sort((a, b) => b.timestamp - a.timestamp); // ახალი ზემოთ
+    posts.sort((a, b) => b.timestamp - a.timestamp);
     postsContainer.innerHTML = '';
     posts.forEach(post => {
       postsContainer.appendChild(renderPost(post));
@@ -446,7 +470,7 @@
     try {
       await push(postsRef, newPost);
       form.reset();
-      contentText.dispatchEvent(new Event('input')); // კვლავ გააქტიუროს ღილაკი
+      contentText.dispatchEvent(new Event('input'));
       previewImage.src = '';
       previewImage.style.display = 'none';
       imageStatus.textContent = '';
@@ -472,19 +496,14 @@
   }
 
   modalClose.addEventListener('click', closeModal);
-
   modal.addEventListener('click', e => {
-    if (e.target === modal) {
-      closeModal();
-    }
+    if (e.target === modal) closeModal();
   });
-
   document.addEventListener('keydown', e => {
     if (e.key === "Escape" && modal.getAttribute('aria-hidden') === 'false') {
       closeModal();
     }
   });
 </script>
-
 </body>
 </html>
