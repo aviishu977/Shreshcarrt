@@ -1,712 +1,897 @@
 <!DOCTYPE html>
-<html lang="ka">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CONNECT GEORGIA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Social Platform 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-  :root {
-    --color-primary: #2563eb;
-    --color-primary-dark: #1e40af;
-    --color-background: #f5f7fa;
-    --color-card-bg: #ffffff;
-    --color-text-primary: #111827;
-    --color-text-secondary: #6b7280;
-    --color-border: #e5e7eb;
-    --color-shadow-light: rgba(0, 0, 0, 0.05);
-    --color-shadow-dark: rgba(0, 0, 0, 0.1);
-    --radius-base: 18px;
-    --spacing-base: 16px;
-    --font-family: 'Inter', sans-serif;
-  }
-  * {
-    box-sizing: border-box;
-    margin: 0; padding: 0;
-  }
-  body {
-    font-family: var(--font-family);
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  header {
-    background-color: var(--color-primary);
-    color: white;
-    font-weight: 700;
-    font-size: 1.5rem;
-    padding: var(--spacing-base);
-    text-align: center;
-    box-shadow: 0 4px 12px var(--color-shadow-dark);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  main {
-    flex: 1;
-    max-width: 480px;
-    margin: var(--spacing-base) auto 2rem;
-    width: 95%;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 0 var(--spacing-base);
-  }
-  form#postForm {
-    background: var(--color-card-bg);
-    border-radius: var(--radius-base);
-    padding: 1.75rem 1.5rem;
-    box-shadow: 0 8px 16px var(--color-shadow-light), inset 0 0 0 1px var(--color-border);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  textarea#contentText {
-    resize: vertical;
-    min-height: 110px;
-    border: 1.5px solid var(--color-border);
-    border-radius: 14px;
-    padding: 1rem 1.25rem;
-    font-size: 1.125rem;
-    background: var(--color-background);
-  }
-  label.camera-button {
-    display: inline-block;
-    background-color: var(--color-primary);
-    color: white;
-    padding: 0.9rem 1rem;
-    font-weight: 700;
-    font-size: 1.1rem;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
-    user-select: none;
-    text-align: center;
-    width: fit-content;
-  }
-  input#imageInput {
-    display: none;
-  }
-  button {
-    background-color: var(--color-primary);
-    border: none;
-    border-radius: 14px;
-    padding: 0.5rem 0.5rem;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  button:disabled {
-    background-color: #93c5fd;
-    cursor: not-allowed;
-  }
-  img#previewImage {
-    max-width: 100%;
-    border-radius: 14px;
-    object-fit: cover;
-    max-height: 280px;
-    aspect-ratio: 16 / 9;
-    display: none;
-  }
-  p#imageStatus, p#errorMessage {
-    font-size: 0.9rem;
-    font-weight: 600;
-    min-height: 1.2rem;
-  }
-  p#imageStatus {
-    color: var(--color-text-secondary);
-  }
-  p#errorMessage {
-    color: red;
-    display: none;
-  }
-  section#posts {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  article.post-card {
-    background: var(--color-card-bg);
-    border-radius: var(--radius-base);
-    padding: 1.5rem 1.75rem;
-    box-shadow: 0 12px 24px var(--color-shadow-light);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  img.post-image {
-    width: 100%;
-    height: auto;
-    border-radius: 14px;
-    object-fit: contain;
-  }
-  p.post-text {
-    font-size: 1.125rem;
-    white-space: pre-wrap;
-    font-weight: 500;
-  }
-  time.timestamp {
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-    align-self: flex-end;
-  }
-  button.comments-toggle {
-    background-color: var(--color-primary-dark);
-    font-size: 1rem;
-    padding: 0.4rem 1rem;
-    border-radius: 12px;
-    width: fit-content;
-    margin-top: 0.25rem;
-    align-self: flex-start;
-    cursor: pointer;
-  }
-  div.comments-container {
-    margin-top: 1rem;
-    background-color: #f0f4ff;
-    border-radius: 14px;
-    padding: 1rem;
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  div.comment-text {
-    background: white;
-    padding: 0.6rem 1rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    box-shadow: 0 2px 5px var(--color-shadow-light);
-  }
-  form.comment-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-  }
-  form.comment-form textarea {
-    resize: vertical;
-    min-height: 70px;
-    border: 1.5px solid var(--color-border);
-    border-radius: 14px;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-  }
-  form.comment-form button {
-    background-color: var(--color-primary);
-    font-weight: 700;
-    border-radius: 14px;
-    padding: 0.5rem 0;
-    font-size: 1.1rem;
-    color: white;
-    cursor: pointer;
-  }
-  /* Inbox modal styles */
-  #inboxModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-  }
-  #inboxModal.active {
-    display: flex;
-  }
-  #inboxContent {
-    background: white;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 480px;
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    position: relative;
-  }
-  #inboxContent h2 {
-    text-align: center;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: 1rem;
-  }
-  #inboxCloseBtn {
-    position: absolute;
-    top: 12px;
-    right: 16px;
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: var(--color-primary-dark);
-    background: none;
-    border: none;
-    cursor: pointer;
-    user-select: none;
-  }
-  div.inbox-comment {
-    background: #f0f4ff;
-    padding: 0.6rem 1rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    box-shadow: 0 2px 5px var(--color-shadow-light);
-  }
-  /* Loading spinner */
-  #loadingSpinner {
-    display: none;
-    margin: 2rem auto;
-    border: 5px solid #e5e7eb;
-    border-top: 5px solid var(--color-primary);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    animation: spin1s linear infinite;
-  }
-  #loadingSpinner.active {
-    display: block;
-  }
-  @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#loadingSpinner {
-  display: none;
-  margin: 2rem auto;
-  border: 5px solid #e5e7eb;
-  border-top: 5px solid var(--color-primary);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  animation: spin 1s linear infinite;
-}
-#loadingSpinner.active {
-  display: block;
-}
-  .inbox-comment {
-    background-color: #ffffff;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    border-radius: 14px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-    font-size: 1rem;
-    line-height: 1.4;
-    color: #111827;
-    border: 1px solid #e5e7eb;
-  }
+  /* Base styles omitted for brevity — use the styles from previous full example */
+  /* Include clean, responsive, minimalist styles with Inter font */
+  /* ... */
+      *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #111827;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; }
+
+    /* Container */
+    #app {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 1rem;
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      width:100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    header h1 {
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: #2563eb;
+    }
+    #userDisplayName {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #374151;
+      margin-right: 1rem;
+    }
+    #logoutBtn {
+      background: #ef4444;
+      border: none;
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    #logoutBtn:hover { background: #dc2626; }
+
+    /* Nav Tabs */
+    nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    nav button {
+      background: none;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      color: #6b7280;
+      border-bottom: 3px solid transparent;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    nav button.active {
+      color: #2563eb;
+      border-color: #2563eb;
+    }
+    nav button:hover:not(.active) { color: #374151; }
+
+    /* Forms */
+    form {
+      margin-top: 1rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
+    }
+    form > * + * { margin-top: 0.75rem; }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgb(37 99 235 / 0.3);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button[type="submit"] {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    button[type="submit"]:hover:not(:disabled) { background: #1d4ed8; }
+    button[type="submit"]:disabled {
+      background: #93c5fd;
+      cursor: not-allowed;
+    }
+
+    /* Posts Feed */
+    #postsFeed {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .post-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+    .post-card h3 {
+      margin: 0 0 0.25rem 0;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+    .post-card .author {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.75rem;
+    }
+    .post-card p {
+      margin: 0 0 0.75rem 0;
+      white-space: pre-wrap;
+    }
+    .post-card button {
+      align-self: flex-start;
+      background: #e0e7ff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      color: #4338ca;
+      transition: background 0.3s ease;
+    }
+    .post-card button:hover { background: #c7d2fe; }
+
+    /* Comments Section */
+    .comments-section {
+      margin-top: 0.75rem;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 0.75rem;
+    }
+    .comment {
+      background: #f3f4f6;
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .comment p:first-child {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #374151;
+      margin-bottom: 0.25rem;
+    }
+    .comment p:last-child {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    .comments-section input[type="text"] {
+      margin-top: 0.5rem;
+    }
+    .comments-section button {
+      margin-top: 0.5rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .comments-section button:hover:not(:disabled) { background: #1d4ed8; }
+    .comments-section button:disabled {
+      background: #93c5fd;
+      cursor: not-allowed;
+    }
+
+    /* Inbox */
+    #inbox {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-height: 100px;
+    }
+    .inbox-item {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
+    }
+    .inbox-item p:first-child {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+      color: #2563eb;
+    }
+    .inbox-item p:nth-child(2) {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+    .inbox-item p:last-child {
+      white-space: pre-wrap;
+      margin: 0;
+    }
+
+    /* Loading & Error */
+    .loading,
+    .error {
+      text-align: center;
+      color: #6b7280;
+      font-style: italic;
+      margin-top: 1rem;
+    }
+    .error { color: #ef4444; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      #app { padding: 0.75rem; }
+      header h1 { font-size: 1.25rem; }
+      nav button { padding: 0.5rem 0.6rem; font-size: 0.9rem; }
+    }
+
+    /* Badge for inbox */
+    #inboxBadge {
+      background: #ef4444;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0 6px;
+      border-radius: 9999px;
+      position: relative;
+      top: -8px;
+      left: -6px;
+      display: none;
+    }
 </style>
 </head>
 <body>
-<header>
-  CONNECT GEORGIA
-  <button id="openInboxBtn" title="ინბოქსი" style="border: 2px solid white;position: fixed;top: 60px;right: 0px;" >✉️</button>
-</header>
-<main>
-  <form id="postForm" autocomplete="off" novalidate>
-    <label for="imageInput" class="camera-button">ფოტოს გადაღება</label>
-    <input type="file" id="imageInput" accept="image/*" capture="environment" />
-    <img id="previewImage" alt="ფოტოს პრევიუ" />
-    <p id="imageStatus"></p>
-    <p id="errorMessage">ფოტოს დამატება სავალდებულოა!</p>
-    <textarea id="contentText" placeholder="დაწერე ტექსტი..." required></textarea>
-    <button type="submit" disabled>პოსტის გამოქვეყნება</button>
-  </form>
-  <div id="loadingSpinner"></div>
-  <section id="posts"></section>
-</main>
+<div id="app">
+  <header>
+    <h1 style="margin-right:35px;" >Geo Net</h1>
+    <div style="display:flex; align-items:center;">
+      <div id="userDisplayName" aria-live="polite"></div>
+      <button id="logoutBtn" title="Logout" aria-label="Logout">Logout</button>
+    </div>
+  </header>
 
-<!-- Inbox modal -->
-<div id="inboxModal" role="dialog" aria-modal="true" aria-labelledby="inboxTitle">
-  <div id="inboxContent">
-    <button id="inboxCloseBtn" aria-label="დახურვა">&times;</button>
-    <h2 id="inboxTitle">ინბოქსი</h2>
-    <div id="inboxCommentsContainer">დაილოდეთ...</div>
-  </div>
+  <nav aria-label="Main navigation">
+    <button id="tabFeed" class="active" aria-selected="true" role="tab" tabindex="0">Feed</button>
+    <button id="tabInbox" aria-selected="false" role="tab" tabindex="-1">
+      Inbox <span id="inboxBadge" aria-label="New notifications"></span>
+    </button>
+  </nav>
+
+  <section id="authSection" aria-live="polite" style="margin-top:1rem;">
+    <div id="registerFormContainer" style="max-width:400px; margin:auto;">
+      <h2>Register</h2>
+      <form id="registerForm" novalidate>
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" autocomplete="given-name" required />
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" autocomplete="family-name" required />
+        <label for="registerEmail">Email</label>
+        <input type="email" id="registerEmail" name="registerEmail" autocomplete="email" required />
+        <label for="registerPassword">Password</label>
+        <input type="password" id="registerPassword" name="registerPassword" autocomplete="new-password" minlength="6" required />
+        <button type="submit">Register</button>
+      </form>
+      <p style="margin-top:0.5rem; font-size:0.9rem;">Already have an account? <a href="#" id="showLoginLink">Login here</a>.</p>
+      <p id="registerError" class="error" role="alert" aria-live="assertive"></p>
+    </div>
+
+    <div id="loginFormContainer" style="max-width:400px; margin:auto; display:none;">
+      <h2>Login</h2>
+      <form id="loginForm" novalidate>
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" name="loginEmail" autocomplete="email" required />
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" required />
+        <button type="submit">Login</button>
+      </form>
+      <p style="margin-top:0.5rem; font-size:0.9rem;">Don't have an account? <a href="#" id="showRegisterLink">Register here</a>.</p>
+      <p id="loginError" class="error" role="alert" aria-live="assertive"></p>
+    </div>
+  </section>
+
+  <main id="mainApp" style="display:none; margin-top:1rem; flex:1 0 auto; width: 100%;" aria-live="polite">
+    <section id="createPostSection" aria-label="Create a new post">
+      <form id="createPostForm" novalidate>
+        <h2>Create a Post</h2>
+        <label for="postTitle">Title</label>
+        <input type="text" id="postTitle" name="postTitle" maxlength="100" required />
+        <label for="postContent">Content</label>
+        <textarea id="postContent" name="postContent" maxlength="1000" required></textarea>
+        <button type="submit">Post</button>
+        <p id="postError" class="error" role="alert" aria-live="assertive"></p>
+      </form>
+    </section>
+
+    <section id="feedSection" aria-label="Posts feed" style="margin-top: 1rem;">
+      <div id="postsFeed" role="list" aria-live="polite"></div>
+      <p id="feedLoading" class="loading" style="display:none;">Loading posts...</p>
+      <p id="feedEmpty" style="display:none; font-style: italic; color: #6b7280;">No posts yet.</p>
+    </section>
+
+    <section id="inboxSection" aria-label="Inbox notifications" style="margin-top: 1rem; display:none;">
+      <div id="inbox" role="list" aria-live="polite"></div>
+      <p id="inboxLoading" class="loading" style="display:none;">Loading inbox...</p>
+      <p id="inboxEmpty" style="display:none; font-style: italic; color: #6b7280;">No notifications.</p>
+    </section>
+  </main>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
 import {
   getAuth,
-  signInAnonymously,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import {
   getDatabase,
   ref,
+  set,
   push,
+  onValue,
   query,
   orderByChild,
-  onValue,
-  get
-} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+  equalTo,
+  off,
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
-// Firebase კონფიგურაცია
 const firebaseConfig = {
   apiKey: "AIzaSyBO1nTM6QGumu25F7lnkCHuRjP1o7WF74s",
   authDomain: "tete-bb546.firebaseapp.com",
   databaseURL: "https://tete-bb546-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "tete-bb546",
-  storageBucket: "tete-bb546.appspot.com",
+  storageBucket: "tete-bb546.firebasestorage.app",
   messagingSenderId: "985504524225",
-  appId: "1:985504524225:web:a0a170ffa30b1e6f66f140"
+  appId: "1:985504524225:web:089ea12d15b9030866f140",
+  measurementId: "G-490P2KJ1WC",
 };
 
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-let currentUid = null;
-
 // ელემენტები
-const form = document.getElementById("postForm");
-const contentText = document.getElementById("contentText");
-const imageInput = document.getElementById("imageInput");
-const previewImage = document.getElementById("previewImage");
-const imageStatus = document.getElementById("imageStatus");
-const errorMessage = document.getElementById("errorMessage");
-const postsContainer = document.getElementById("posts");
-const loadingSpinner = document.getElementById("loadingSpinner");
+const authSection = document.getElementById("authSection");
+const registerFormContainer = document.getElementById("registerFormContainer");
+const loginFormContainer = document.getElementById("loginFormContainer");
+const registerForm = document.getElementById("registerForm");
+const loginForm = document.getElementById("loginForm");
+const registerError = document.getElementById("registerError");
+const loginError = document.getElementById("loginError");
+const userDisplayName = document.getElementById("userDisplayName");
+const logoutBtn = document.getElementById("logoutBtn");
+const mainApp = document.getElementById("mainApp");
+const createPostForm = document.getElementById("createPostForm");
+const postError = document.getElementById("postError");
+const postsFeed = document.getElementById("postsFeed");
+const feedLoading = document.getElementById("feedLoading");
+const feedEmpty = document.getElementById("feedEmpty");
+const inboxSection = document.getElementById("inboxSection");
+const inbox = document.getElementById("inbox");
+const inboxLoading = document.getElementById("inboxLoading");
+const inboxEmpty = document.getElementById("inboxEmpty");
+const inboxBadge = document.getElementById("inboxBadge");
 
-const inboxModal = document.getElementById("inboxModal");
-const inboxCloseBtn = document.getElementById("inboxCloseBtn");
-const inboxCommentsContainer = document.getElementById("inboxCommentsContainer");
-const openInboxBtn = document.getElementById("openInboxBtn");
+const tabFeed = document.getElementById("tabFeed");
+const tabInbox = document.getElementById("tabInbox");
 
-// ფოტოს დამუშავება და ღილაკის კონტროლი
-imageInput.addEventListener("change", () => {
-  const file = imageInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      previewImage.src = reader.result;
-      previewImage.style.display = "block";
-      imageStatus.textContent = "✅ ფოტო გამზადებულია პოსტისთვის";
-      errorMessage.style.display = "none";
-      form.querySelector("button[type=submit]").disabled = !contentText.value.trim();
-    };
-    reader.readAsDataURL(file);
-  } else {
-    previewImage.style.display = "none";
-    imageStatus.textContent = "";
-    form.querySelector("button[type=submit]").disabled = true;
+let currentUser = null;
+let commentsListeners = {};
+let inboxListener = null;
+let unreadCount = 0;
+
+// ფორმების გადართვა რეგისტრაციასა და ლოგინს შორის
+document.getElementById("showLoginLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  registerFormContainer.style.display = "none";
+  loginFormContainer.style.display = "block";
+  registerError.textContent = "";
+  loginError.textContent = "";
+});
+document.getElementById("showRegisterLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  loginFormContainer.style.display = "none";
+  registerFormContainer.style.display = "block";
+  registerError.textContent = "";
+  loginError.textContent = "";
+});
+
+// რეგისტრაცია
+registerForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  registerError.textContent = "";
+  const firstName = registerForm.firstName.value.trim();
+  const lastName = registerForm.lastName.value.trim();
+  const email = registerForm.registerEmail.value.trim();
+  const password = registerForm.registerPassword.value;
+
+  if (!firstName || !lastName || !email || !password) {
+    registerError.textContent = "გთხოვთ შეავსოთ ყველა ველი.";
+    return;
   }
-});
-
-// ტექსტის კონტროლი პოსტზე
-contentText.addEventListener("input", () => {
-  form.querySelector("button[type=submit]").disabled =
-    !contentText.value.trim() || !imageInput.files.length;
-});
-
-// Base64-ში გადაყვანის ფუნქცია
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) return resolve(null);
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error("ფაილის წაკითხვა ვერ მოხერხდა"));
-    reader.readAsDataURL(file);
-  });
-}
-
-// ანონიმური ავტორიზაცია
-signInAnonymously(auth).catch((e) => alert("ავტორიზაციის შეცდომა: " + e.message));
-
-// ავტორიზაციის ცვლილების მოსმენა
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUid = user.uid;
-    loadPosts();
-    loadInboxComments();
-  }
-});
-
-// პოსტების ჩატვირთვა ლოდინგით
-function loadPosts() {
-  loadingSpinner.classList.add("active");
-  const postsRef = ref(db, "posts");
-  const postsQuery = query(postsRef, orderByChild("timestamp"));
-  onValue(
-    postsQuery,
-    (snapshot) => {
-      loadingSpinner.classList.remove("active");
-      const posts = [];
-      snapshot.forEach((child) => {
-        const data = child.val();
-        if (data && typeof data.timestamp === "number") {
-          posts.push({ id: child.key, ...data });
-        }
-      });
-      posts.sort((a, b) => b.timestamp - a.timestamp);
-      renderPosts(posts);
-    },
-    { onlyOnce: true }
-  );
-}
-
-// პოსტების ჩვენება
-function renderPosts(posts) {
-  postsContainer.innerHTML = "";
-  if (posts.length === 0) {
-    postsContainer.textContent = "პოსტები არ არის.";
+  if (password.length < 6) {
+    registerError.textContent = "პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო.";
     return;
   }
 
-  posts.forEach((post) => {
-    const card = document.createElement("article");
-    card.className = "post-card";
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await set(ref(db, "users/" + user.uid), { firstName, lastName, email });
+    registerForm.reset();
+  } catch (error) {
+    registerError.textContent = error.message;
+  }
+});
 
-    // ტექსტი
-    const textEl = document.createElement("p");
-    textEl.className = "post-text";
-    textEl.textContent = post.contentText;
-    card.appendChild(textEl);
+// ლოგინი
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  loginError.textContent = "";
+  const email = loginForm.loginEmail.value.trim();
+  const password = loginForm.loginPassword.value;
 
-    // ფოტო
-    if (post.imageBase64) {
-      const img = document.createElement("img");
-      img.className = "post-image";
-      img.src = post.imageBase64;
-      card.appendChild(img);
+  if (!email || !password) {
+    loginError.textContent = "გთხოვთ შეავსოთ ყველა ველი.";
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    loginForm.reset();
+  } catch (error) {
+    loginError.textContent = error.message;
+  }
+});
+
+// ლოგაუთი
+logoutBtn.addEventListener("click", () => {
+  signOut(auth);
+});
+
+// ავტორიზაციის სტატუსის ცვლილება
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  if (user) {
+    authSection.style.display = "none";
+    mainApp.style.display = "block";
+    logoutBtn.style.display = "inline-block";
+
+    const userRef = ref(db, "users/" + user.uid);
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      userDisplayName.textContent = data ? `${data.firstName} ${data.lastName}` : "User";
+    }, { onlyOnce: true });
+
+    activateTab("feed");
+    loadPosts();
+    loadInbox();
+  } else {
+    authSection.style.display = "block";
+    mainApp.style.display = "none";
+    logoutBtn.style.display = "none";
+    userDisplayName.textContent = "";
+    clearCommentsListeners();
+    clearInboxListener();
+    clearFeed();
+    clearInbox();
+    inboxBadge.style.display = "none";
+    unreadCount = 0;
+    tabFeed.classList.add("active");
+    tabFeed.setAttribute("aria-selected", "true");
+    tabInbox.classList.remove("active");
+    tabInbox.setAttribute("aria-selected", "false");
+    registerFormContainer.style.display = "block";
+    loginFormContainer.style.display = "none";
+  }
+});
+
+// პოსტის შექმნა
+createPostForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  postError.textContent = "";
+  if (!currentUser) return;
+
+  const title = createPostForm.postTitle.value.trim();
+  const content = createPostForm.postContent.value.trim();
+
+  if (!title || !content) {
+    postError.textContent = "სათაური და ტექსტი აუცილებელია.";
+    return;
+  }
+  if (title.length > 100) {
+    postError.textContent = "სათაურის მაქსიმალური სიგრძე 100 სიმბოლოა.";
+    return;
+  }
+  if (content.length > 1000) {
+    postError.textContent = "ტექსტის მაქსიმალური სიგრძე 1000 სიმბოლოა.";
+    return;
+  }
+
+  try {
+    const userRef = ref(db, "users/" + currentUser.uid);
+    const userSnap = await new Promise((resolve) => onValue(userRef, resolve, { onlyOnce: true }));
+    const userData = userSnap.val();
+
+    const postRef = push(ref(db, "posts"));
+    await set(postRef, {
+      authorId: currentUser.uid,
+      authorName: `${userData.firstName} ${userData.lastName}`,
+      title,
+      content,
+      timestamp: Date.now(),
+    });
+    createPostForm.reset();
+  } catch (error) {
+    postError.textContent = error.message;
+  }
+});
+
+// პოსტების ჩატვირთვა და ჩვენება
+function loadPosts() {
+  feedLoading.style.display = "block";
+  feedEmpty.style.display = "none";
+  postsFeed.innerHTML = "";
+
+  const postsQuery = query(ref(db, "posts"), orderByChild("timestamp"));
+  onValue(postsQuery, (snapshot) => {
+    feedLoading.style.display = "none";
+    postsFeed.innerHTML = "";
+
+    const posts = [];
+    snapshot.forEach((childSnap) => {
+      posts.push({ id: childSnap.key, ...childSnap.val() });
+    });
+    posts.sort((a, b) => b.timestamp - a.timestamp);
+
+    if (posts.length === 0) {
+      feedEmpty.style.display = "block";
+      return;
+    } else {
+      feedEmpty.style.display = "none";
     }
 
-    // დრო
-    const timeEl = document.createElement("time");
-    timeEl.className = "timestamp";
-    timeEl.textContent = new Date(post.timestamp).toLocaleString("ka-GE", {
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    });
-    card.appendChild(timeEl);
-
-    // კომენტარების ღილაკი
-    const commentsToggleBtn = document.createElement("button");
-    commentsToggleBtn.className = "comments-toggle";
-    commentsToggleBtn.textContent = "კომენტარები";
-    card.appendChild(commentsToggleBtn);
-
-    // კომენტარების კონტეინერი
-    const commentsContainer = document.createElement("div");
-    commentsContainer.className = "comments-container";
-    card.appendChild(commentsContainer);
-
-    // კომენტარების ჩვენება/მალვა
-    commentsToggleBtn.addEventListener("click", () => {
-      if (commentsContainer.style.display === "flex") {
-        commentsContainer.style.display = "none";
-        commentsToggleBtn.textContent = "კომენტარები";
-      } else {
-        commentsContainer.style.display = "flex";
-        commentsToggleBtn.textContent = "კომენტარები დახურვა";
-        loadComments(post.id, commentsContainer);
-      }
-    });
-
-    postsContainer.appendChild(card);
-  });
-}
-
-// კომენტარების ჩატვირთვა
-function loadComments(postId, container) {
-  container.innerHTML = "დაელოდეთ...";
-
-  const commentsRef = ref(db, `comments/${postId}`);
-  onValue(
-    commentsRef,
-    (snapshot) => {
-      container.innerHTML = "";
-      if (!snapshot.exists()) {
-        container.textContent = "კომენტარები არ არის.";
-        return;
-      }
-      snapshot.forEach((child) => {
-        const comment = child.val();
-        const commentDiv = document.createElement("div");
-        commentDiv.className = "comment-text";
-        commentDiv.textContent = comment.text;
-        container.appendChild(commentDiv);
-      });
-
-      // კომენტარის დამატების ფორმა
-      const commentForm = document.createElement("form");
-      commentForm.className = "comment-form";
-      commentForm.innerHTML = `
-        <textarea placeholder="დაწერე კომენტარი..." required></textarea>
-        <button type="submit">გაგზავნა</button>
+    posts.forEach((post) => {
+      const postCard = document.createElement("article");
+      postCard.className = "post-card";
+      postCard.setAttribute("role", "listitem");
+      postCard.innerHTML = `
+        <h3>${escapeHtml(post.title)}</h3>
+        <p class="author">${escapeHtml(post.authorName)} - ${formatTimestamp(post.timestamp)}</p>
+        <p>${escapeHtml(post.content)}</p>
+        <button aria-expanded="false" aria-controls="comments-${post.id}" aria-label="კომენტარების გადართვა პოსტზე: ${escapeHtml(post.title)}" data-postid="${post.id}">კომენტარები</button>
+        <section id="comments-${post.id}" class="comments-section" hidden aria-live="polite"></section>
       `;
-      container.appendChild(commentForm);
+      postsFeed.appendChild(postCard);
 
-      commentForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const textarea = commentForm.querySelector("textarea");
-        const text = textarea.value.trim();
-        if (!text) return;
-        try {
-          await push(ref(db, `comments/${postId}`), {
-            text,
-            timestamp: Date.now(),
-            uid: currentUid
-          });
-          textarea.value = "";
-          loadInboxComments(); // ინბოქსისთვის განახლება
-          loadComments(postId, container); // რეფრეში კომენტარები
-        } catch (error) {
-          alert("შეცდომა კომენტარის დამატებისას: " + error.message);
-        }
+      const commentsBtn = postCard.querySelector("button");
+      commentsBtn.addEventListener("click", () => {
+        toggleComments(post.id, commentsBtn);
       });
-    },
-    { onlyOnce: true }
-  );
-}
-
-// ინბოქსის გახსნა და დახურვა
-openInboxBtn.addEventListener("click", () => {
-  inboxModal.classList.add("active");
-  loadInboxComments();
-});
-inboxCloseBtn.addEventListener("click", () => {
-  inboxModal.classList.remove("active");
-});
-
-// ინბოქსში შენს პოსტებზე კომენტარების ჩატვირთვა
-function loadInboxComments() {
-  if (!currentUid) return;
-  inboxCommentsContainer.innerHTML = "დაელოდეთ...";
-
-  const postsRef = ref(db, "posts");
-  onValue(
-    postsRef,
-    (snapshot) => {
-      const userPostIds = [];
-      snapshot.forEach((child) => {
-        const post = child.val();
-        if (post && post.uid === currentUid) {
-          userPostIds.push(child.key);
-        }
-      });
-
-      if (userPostIds.length === 0) {
-        inboxCommentsContainer.textContent = "ინბოქსი ცარიელია.";
-        return;
-      }
-
-      let allComments = [];
-      let loadedCount = 0;
-
-      userPostIds.forEach((postId) => {
-        const commentsRef = ref(db, `comments/${postId}`);
-        onValue(
-          commentsRef,
-          (snap) => {
-            loadedCount++;
-            if (snap.exists()) {
-              snap.forEach((child) => {
-                const comment = child.val();
-                allComments.push({
-                  postId,
-                  ...comment,
-                });
-              });
-            }
-            if (loadedCount === userPostIds.length) {
-              displayInboxComments(allComments);
-            }
-          },
-          { onlyOnce: true }
-        );
-      });
-    },
-    { onlyOnce: true }
-  );
-}
-
-function displayInboxComments(comments) {
-  inboxCommentsContainer.innerHTML = "";
-  if (comments.length === 0) {
-    inboxCommentsContainer.textContent = "ინბოქსი ცარიელია.";
-    return;
-  }
-  // ახალი ვერსია: აჩვენებს კომენტარს + პოსტის ტექსტს (საჭიროა დათვალიერება)
-  // ამიტომ ჯერ უნდა წამოვიღოთ პოსტის ტექსტები, რომ გამოაჩინოთ სწორად
-
-  // აქ შეგვიძლია დავაწყვილოთ კომენტარები მათი პოსტის ტექსტთან
-  const postsRef = ref(db, "posts");
-  get(postsRef).then((postsSnap) => {
-    const postsMap = {};
-    postsSnap.forEach((postSnap) => {
-      postsMap[postSnap.key] = postSnap.val();
-    });
-
-    // დავალაგოთ და გავაჩინოთ კომენტარები
-    comments.sort((a, b) => b.timestamp - a.timestamp);
-    comments.forEach((comment) => {
-      const postText = postsMap[comment.postId]?.contentText || "[პოსტი წაშლილია]";
-      const div = document.createElement("div");
-      div.className = "inbox-comment";
-      div.innerHTML = `<strong>პოსტის ტექსტი:</strong> <em>${escapeHtml(postText)}</em><br><strong>კომენტარი:</strong> ${escapeHtml(comment.text)}`;
-      inboxCommentsContainer.appendChild(div);
     });
   });
 }
 
-// უსაფრთხო HTML-ით გამოტანა XSS-ისგან დასაცავად
+// HTML ინექციისგან დაცვა
 function escapeHtml(text) {
   if (!text) return "";
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return text.replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
 }
 
-// პოსტის გამოქვეყნება
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const text = contentText.value.trim();
-  const file = imageInput.files[0];
+// თარიღის ფორმატირება
+function formatTimestamp(ms) {
+  if (!ms) return "";
+  const date = new Date(ms);
+  return date.toLocaleString("ka-GE", { dateStyle: "long", timeStyle: "short" });
+}
 
-  if (!file) {
-    errorMessage.style.display = "block";
-    return;
+// კომენტარების გადართვა
+function toggleComments(postId, button) {
+  const commentsSection = document.getElementById(`comments-${postId}`);
+  if (!commentsSection) return;
+
+  const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+  if (isExpanded) {
+    commentsSection.hidden = true;
+    button.setAttribute("aria-expanded", "false");
+    clearCommentsListener(postId);
+  } else {
+    commentsSection.hidden = false;
+    button.setAttribute("aria-expanded", "true");
+    loadComments(postId);
   }
-  errorMessage.style.display = "none";
+}
 
-  if (!text) return;
+// კომენტარების ჩატვირთვა პოსტზე
+function loadComments(postId) {
+  const commentsRef = ref(db, `posts/${postId}/comments`);
+  const commentsSection = document.getElementById(`comments-${postId}`);
+  commentsSection.innerHTML = '<p class="loading">კომენტარების ჩატვირთვა...</p>';
 
-  let imageBase64;
-  try {
-    imageBase64 = await fileToBase64(file);
-  } catch {
-    alert("სურათის წაკითხვა ვერ მოხერხდა.");
-    return;
+  // თუ უკვე არის მოსმენა, გავაუქმოთ
+  if (commentsListeners[postId]) {
+    off(ref(db, `posts/${postId}/comments`), "value", commentsListeners[postId]);
   }
 
-  const newPost = {
-    uid: currentUid,
-    contentText: text,
-    imageBase64,
+  commentsListeners[postId] = onValue(commentsRef, (snapshot) => {
+    commentsSection.innerHTML = "";
+    const comments = [];
+    snapshot.forEach((childSnap) => {
+      comments.push(childSnap.val());
+    });
+    comments.sort((a, b) => a.timestamp - b.timestamp);
+
+    if (comments.length === 0) {
+      commentsSection.innerHTML = "<p>კომენტარები არ არის.</p>";
+    } else {
+      comments.forEach((comment) => {
+        const commentDiv = document.createElement("article");
+        commentDiv.className = "comment";
+        commentDiv.innerHTML = `
+          <p><strong>${escapeHtml(comment.authorName)}</strong> - ${formatTimestamp(comment.timestamp)}</p>
+          <p>${escapeHtml(comment.text)}</p>
+        `;
+        commentsSection.appendChild(commentDiv);
+      });
+    }
+
+    // კომენტარის დამატების ფორმა
+    const inputForm = document.createElement("form");
+    inputForm.setAttribute("aria-label", "კომენტარის დამატება");
+    inputForm.innerHTML = `
+      <input type="text" id="commentInput-${postId}" name="commentInput" placeholder="დაწერეთ კომენტარი..." required aria-required="true" aria-describedby="commentError-${postId}" />
+      <button type="submit" aria-label="კომენტარის გაგზავნა">გაგზავნა</button>
+      <p id="commentError-${postId}" class="error" role="alert" aria-live="assertive"></p>
+    `;
+
+    inputForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const input = inputForm.querySelector("input");
+      const errorP = inputForm.querySelector("p.error");
+      errorP.textContent = "";
+      const text = input.value.trim();
+      if (!text) {
+        errorP.textContent = "კომენტარი არ შეიძლება იყოს ცარიელი.";
+        return;
+      }
+      try {
+        await submitComment(postId, text);
+        input.value = "";
+      } catch (err) {
+        errorP.textContent = err.message;
+      }
+    });
+
+    commentsSection.appendChild(inputForm);
+  });
+}
+
+// კომენტარის გაგზავნა Firebase-ში
+async function submitComment(postId, text) {
+  if (!currentUser) throw new Error("კომენტარის დასამატებლად საჭიროა ავტორიზაცია.");
+
+  const userRef = ref(db, "users/" + currentUser.uid);
+  const userSnap = await new Promise((resolve) => onValue(userRef, resolve, { onlyOnce: true }));
+  const userData = userSnap.val();
+
+  if (!userData) throw new Error("მომხმარებლის მონაცემები ვერ მოიძებნა.");
+
+  const commentRef = push(ref(db, `posts/${postId}/comments`));
+  await set(commentRef, {
+    authorId: currentUser.uid,
+    authorName: `${userData.firstName} ${userData.lastName}`,
+    text,
     timestamp: Date.now(),
-  };
+  });
+}
 
-  try {
-    await push(ref(db, "posts"), newPost);
-    form.reset();
-    previewImage.style.display = "none";
-    imageStatus.textContent = "";
-    form.querySelector("button[type=submit]").disabled = true;
-    loadPosts(); // ახალი პოსტის დამატების შემდეგ ჩატვირთე პოსტები
-  } catch (err) {
-    alert("შეცდომა პოსტის დამატებისას: " + err.message);
+// მოსმენების გაწმენდა კომენტარებზე
+function clearCommentsListener(postId) {
+  if (commentsListeners[postId]) {
+    off(ref(db, `posts/${postId}/comments`), "value", commentsListeners[postId]);
+    delete commentsListeners[postId];
   }
-});
-      
+}
+
+// ყველა კომენტარის მოსმენების გაწმენდა
+function clearCommentsListeners() {
+  Object.keys(commentsListeners).forEach((postId) => {
+    clearCommentsListener(postId);
+  });
+}
+
+// ფიდის გასუფთავება
+function clearFeed() {
+  postsFeed.innerHTML = "";
+  feedEmpty.style.display = "none";
+  feedLoading.style.display = "none";
+}
+
+// ტაბების მართვა
+tabInbox.addEventListener("click", () => activateTab("inbox"));
+tabFeed.addEventListener("click", () => activateTab("feed"));
+
+function activateTab(tab) {
+  if (tab === "feed") {
+    tabFeed.classList.add("active");
+    tabFeed.setAttribute("aria-selected", "true");
+    tabFeed.setAttribute("tabindex", "0");
+    tabInbox.classList.remove("active");
+    tabInbox.setAttribute("aria-selected", "false");
+    tabInbox.setAttribute("tabindex", "-1");
+    inboxSection.style.display = "none";
+    document.getElementById("createPostSection").style.display = "block";
+    document.getElementById("feedSection").style.display = "block";
+  } else if (tab === "inbox") {
+    tabInbox.classList.add("active");
+    tabInbox.setAttribute("aria-selected", "true");
+    tabInbox.setAttribute("tabindex", "0");
+    tabFeed.classList.remove("active");
+    tabFeed.setAttribute("aria-selected", "false");
+    tabFeed.setAttribute("tabindex", "-1");
+    inboxSection.style.display = "block";
+    document.getElementById("createPostSection").style.display = "none";
+    document.getElementById("feedSection").style.display = "none";
+    unreadCount = 0;
+    updateInboxBadge();
+  }
+}
+
+// ინბოქსის ჩატვირთვა და მოსმენა
+function loadInbox() {
+  if (!currentUser) return;
+
+  inboxLoading.style.display = "block";
+  inboxEmpty.style.display = "none";
+  inbox.innerHTML = "";
+
+  clearInboxListener();
+
+  // ვიღებთ პოსტებს, რომლებიც currentUser-ისაა
+  const userPostsQuery = query(ref(db, "posts"), orderByChild("authorId"), equalTo(currentUser.uid));
+
+  inboxListener = onValue(userPostsQuery, (postsSnap) => {
+    inboxLoading.style.display = "none";
+    inbox.innerHTML = "";
+    const inboxItems = [];
+
+    if (!postsSnap.exists()) {
+      inboxEmpty.style.display = "block";
+      inboxBadge.style.display = "none";
+      return;
+    }
+
+    // თითოეულ პოსტზე ვუსმენთ კომენტარებს
+    postsSnap.forEach((postSnap) => {
+      const post = postSnap.val();
+      const postId = postSnap.key;
+      const commentsRef = ref(db, `posts/${postId}/comments`);
+
+      onValue(commentsRef, (commentsSnap) => {
+        inboxItems.length = 0;
+
+        postsSnap.forEach((pSnap) => {
+          const p = pSnap.val();
+          const pId = pSnap.key;
+          const cRef = ref(db, `posts/${pId}/comments`);
+          onValue(cRef, (cSnap) => {
+            cSnap.forEach((commentSnap) => {
+              const comment = commentSnap.val();
+              inboxItems.push({
+                postTitle: p.title,
+                commenterName: comment.authorName,
+                time: comment.timestamp,
+                message: comment.text,
+              });
+            });
+
+            inboxItems.sort((a, b) => b.time - a.time);
+
+            inbox.innerHTML = "";
+            if (inboxItems.length === 0) {
+              inboxEmpty.style.display = "block";
+              inboxBadge.style.display = "none";
+              return;
+            } else {
+              inboxEmpty.style.display = "none";
+            }
+
+            inboxItems.forEach((item) => {
+              const itemDiv = document.createElement("article");
+              itemDiv.className = "inbox-item";
+              itemDiv.innerHTML = `
+                <p>${escapeHtml(item.postTitle)}</p>
+                <p>${escapeHtml(item.commenterName)} - ${formatTimestamp(item.time)}</p>
+                <p>${escapeHtml(item.message)}</p>
+              `;
+              inbox.appendChild(itemDiv);
+            });
+
+            unreadCount = inboxItems.length;
+            updateInboxBadge();
+          }, { onlyOnce: false });
+        });
+      }, { onlyOnce: false });
+    });
+  });
+}
+
+// ინბოქსის მოსმენის გაწმენდა
+function clearInboxListener() {
+  if (inboxListener) {
+    off(ref(db, "posts"), "value", inboxListener);
+    inboxListener = null;
+  }
+}
+
+// ინბოქსის გასუფთავება
+function clearInbox() {
+  inbox.innerHTML = "";
+  inboxEmpty.style.display = "none";
+  inboxLoading.style.display = "none";
+}
+
+// ინბოქსის ბეჯის განახლება
+function updateInboxBadge() {
+  if (unreadCount > 0) {
+    inboxBadge.style.display = "inline-block";
+    inboxBadge.textContent = unreadCount > 99 ? "99+" : unreadCount;
+  } else {
+    inboxBadge.style.display = "none";
+  }
+}
+
 </script>
 </body>
-
 </html>
