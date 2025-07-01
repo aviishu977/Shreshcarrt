@@ -288,45 +288,45 @@
     <h1 style="margin-right:35px;" >Geo Net</h1>
     <div style="display:flex; align-items:center;">
       <div id="userDisplayName" aria-live="polite"></div>
-      <button id="logoutBtn" title="Logout" aria-label="Logout">Logout</button>
+      <button id="logoutBtn" title="Logout" aria-label="Logout">გასვლა</button>
     </div>
   </header>
 
   <nav aria-label="Main navigation">
-    <button id="tabFeed" class="active" aria-selected="true" role="tab" tabindex="0">Feed</button>
+    <button id="tabFeed" class="active" aria-selected="true" role="tab" tabindex="0">მთავარი</button>
     <button id="tabInbox" aria-selected="false" role="tab" tabindex="-1">
-      Inbox <span id="inboxBadge" aria-label="New notifications"></span>
+      ინბოქსი <span id="inboxBadge" aria-label="New notifications"></span>
     </button>
   </nav>
 
   <section id="authSection" aria-live="polite" style="margin-top:1rem;">
     <div id="registerFormContainer" style="max-width:400px; margin:auto;">
-      <h2>Register</h2>
+      <h2>რეგისტრაცია</h2>
       <form id="registerForm" novalidate>
-        <label for="firstName">First Name</label>
+        <label for="firstName"> სახელი</label>
         <input type="text" id="firstName" name="firstName" autocomplete="given-name" required />
-        <label for="lastName">Last Name</label>
+        <label for="lastName">გვარი</label>
         <input type="text" id="lastName" name="lastName" autocomplete="family-name" required />
-        <label for="registerEmail">Email</label>
+        <label for="registerEmail">ემაილი</label>
         <input type="email" id="registerEmail" name="registerEmail" autocomplete="email" required />
-        <label for="registerPassword">Password</label>
+        <label for="registerPassword">პაროლი</label>
         <input type="password" id="registerPassword" name="registerPassword" autocomplete="new-password" minlength="6" required />
-        <button type="submit">Register</button>
+        <button type="submit">რეგისტრაცია</button>
       </form>
-      <p style="margin-top:0.5rem; font-size:0.9rem;">Already have an account? <a href="#" id="showLoginLink">Login here</a>.</p>
+      <p style="margin-top:0.5rem; font-size:0.9rem;">გაქვს უკვე ექაუნთი? <a href="#" id="showLoginLink">შედი აქ</a>.</p>
       <p id="registerError" class="error" role="alert" aria-live="assertive"></p>
     </div>
 
     <div id="loginFormContainer" style="max-width:400px; margin:auto; display:none;">
-      <h2>Login</h2>
+      <h2>შესვლა</h2>
       <form id="loginForm" novalidate>
-        <label for="loginEmail">Email</label>
+        <label for="loginEmail">ემაილი</label>
         <input type="email" id="loginEmail" name="loginEmail" autocomplete="email" required />
-        <label for="loginPassword">Password</label>
+        <label for="loginPassword">პაროლი</label>
         <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" required />
-        <button type="submit">Login</button>
+        <button type="submit">შესვლა</button>
       </form>
-      <p style="margin-top:0.5rem; font-size:0.9rem;">Don't have an account? <a href="#" id="showRegisterLink">Register here</a>.</p>
+      <p style="margin-top:0.5rem; font-size:0.9rem;">არ გაქვს ექაუნთი? <a href="#" id="showRegisterLink">დარეგისტრილდი აქ</a>.</p>
       <p id="loginError" class="error" role="alert" aria-live="assertive"></p>
     </div>
   </section>
@@ -334,26 +334,26 @@
   <main id="mainApp" style="display:none; margin-top:1rem; flex:1 0 auto; width: 100%;" aria-live="polite">
     <section id="createPostSection" aria-label="Create a new post">
       <form id="createPostForm" novalidate>
-        <h2>Create a Post</h2>
-        <label for="postTitle">Title</label>
+        <h2>შექმენი პოსტი</h2>
+        <label for="postTitle">სათაური</label>
         <input type="text" id="postTitle" name="postTitle" maxlength="100" required />
-        <label for="postContent">Content</label>
+        <label for="postContent">კონტენტი</label>
         <textarea id="postContent" name="postContent" maxlength="1000" required></textarea>
-        <button type="submit">Post</button>
+        <button type="submit">დაპოსტვა</button>
         <p id="postError" class="error" role="alert" aria-live="assertive"></p>
       </form>
     </section>
 
     <section id="feedSection" aria-label="Posts feed" style="margin-top: 1rem;">
       <div id="postsFeed" role="list" aria-live="polite"></div>
-      <p id="feedLoading" class="loading" style="display:none;">Loading posts...</p>
-      <p id="feedEmpty" style="display:none; font-style: italic; color: #6b7280;">No posts yet.</p>
+      <p id="feedLoading" class="loading" style="display:none;">პოსტების ჩატვირთვა...</p>
+      <p id="feedEmpty" style="display:none; font-style: italic; color: #6b7280;">არ არის პოსტები.</p>
     </section>
 
     <section id="inboxSection" aria-label="Inbox notifications" style="margin-top: 1rem; display:none;">
       <div id="inbox" role="list" aria-live="polite"></div>
-      <p id="inboxLoading" class="loading" style="display:none;">Loading inbox...</p>
-      <p id="inboxEmpty" style="display:none; font-style: italic; color: #6b7280;">No notifications.</p>
+      <p id="inboxLoading" class="loading" style="display:none;">ინბოქსის ჩატვირთვა...</p>
+      <p id="inboxEmpty" style="display:none; font-style: italic; color: #6b7280;">არ არის ნოთიფიკაციები.</p>
     </section>
   </main>
 </div>
