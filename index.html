@@ -11,34 +11,32 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
-    :root {
-  /* 🎨 ფერები */
-  --color-bg: #f8fafc; /* ძალიან ღია ცისფერი-მონაცრისფრო ფონები */
-  --color-surface: #ffffff;
-  --color-text: #1e293b; /* slate-900 */
-  --color-heading: #0f172a; /* slate-950 */
-  
-  --color-primary: #6366f1; /* indigo-500 – მძლავრი, მეწამული ელფერით */
-  --color-primary-hover: #4f46e5; /* indigo-600 */
-  --color-primary-dark: #4338ca; /* indigo-700 */
-  
-  --color-success: #10b981; /* emerald-500 */
-  --color-danger: #f43f5e; /* rose-500 */
-  --color-danger-dark: #be123c; /* rose-700 */
+:root {
+  --color-bg: #fff !important;
+  --color-surface: #fff !important;
+  --color-text: #000 !important;
+  --color-heading: #000 !important;
 
-  --color-muted: #94a3b8; /* slate-400 */
-  --color-border: #e2e8f0; /* slate-200 */
-  --color-border-light: #f1f5f9; /* slate-100 */
+  --color-primary: #000 !important;
+  --color-primary-hover: #222 !important;
+  --color-primary-dark: #111 !important;
 
-  /* 🟢 ელემენტების ზომები და ჩრდილები */
+  --color-success: #444 !important;
+  --color-danger: #000 !important;
+  --color-danger-dark: #111 !important;
+
+  --color-muted: #666 !important;
+  --color-border: #000 !important;
+  --color-border-light: #ccc !important;
+
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
 
-  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 8px 24px rgba(99, 102, 241, 0.3); /* primary ჩრდილი */
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 @font-face {
   font-family: 'myffont';
@@ -53,7 +51,6 @@
   margin: 0;
   padding: 0;
 }
-/* Reset and Typography */
 
 body {
   background-color: var(--color-bg);
@@ -66,9 +63,8 @@ body {
 
 /* Header */
 header {
-  background-color: var(--color-primary);
-  color: #fff;
-  padding: 18px 20px;
+  background-color: white;
+  color: white;
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
@@ -76,7 +72,30 @@ header {
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(92, 106, 196, 0.4);
+  box-shadow: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 10px;
+  height: 80px;
+  
+}
+header div {
+  width: 95%;
+  height: 100%;
+  background: black;
+  padding: 20px;
+  border-radius: 10px;
+  background-image: url('https://i.postimg.cc/0NyKt1rS/Picsart-25-07-24-00-35-36-421.png');
+  background-size: cover;        /* სურათი სრულად დაფაროს დივი */
+  background-position: center;   /* ცენტრში გაასწოროს */
+  background-repeat: no-repeat;  /* არ გაიმეოროს სურათი */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 0px 0px 7px white;
+  box-shadow: 0px 5px 15px #000000D4;
 }
 
 /* Pages */
@@ -86,6 +105,10 @@ header {
   max-width: 480px;
   margin: 0 auto;
   animation: fadeIn 0.3s ease forwards;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .page.active {
@@ -107,11 +130,12 @@ header {
 .task-card {
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   padding: 18px 22px;
   margin-bottom: 18px;
   transition: box-shadow 0.25s ease;
   cursor: default;
+  color: var(--color-text);
 }
 
 .task-card:hover {
@@ -130,31 +154,32 @@ header {
   margin-bottom: 6px;
   line-height: 1.35;
   word-break: break-word;
+  color: var(--color-text);
 }
 
 .task-card .pay {
-  color: var(  --color-success);
+  color: var(--color-primary);
   font-weight: 700;
   margin-top: 8px;
   font-size: 16px;
 }
 
 .task-card .delete-btn {
-  background-color: var(--color-danger);
-  color: #fff;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
   border: none;
   border-radius: var(--radius-md);
   padding: 8px 14px;
   font-size: 0.9rem;
   margin-top: 12px;
-  box-shadow: 0 3px 8px rgba(239, 68, 68, 0.45);
+  box-shadow: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .task-card .delete-btn:hover {
-  background-color: var(--color-danger-dark);
-  box-shadow: 0 5px 15px rgba(185, 28, 28, 0.6);
+  background-color: var(--color-primary-hover);
+  box-shadow: none;
 }
 
 /* Form Elements */
@@ -173,7 +198,7 @@ textarea {
   border-radius: var(--radius-md);
   border: 1.8px solid var(--color-border);
   background-color: var(--color-surface);
-  color: var(--color-heading);
+  color: var(--color-text);
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 22px;
@@ -189,7 +214,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(92, 106, 196, 0.45);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
   outline: none;
 }
 
@@ -201,22 +226,22 @@ textarea {
 /* Buttons */
 button.primary {
   background-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-surface);
   border: none;
   border-radius: var(--radius-lg);
   padding: 16px;
   width: 100%;
   font-weight: 700;
   font-size: 1.15rem;
-  box-shadow: 0 6px 16px rgba(92, 106, 196, 0.55);
+  box-shadow: none;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 button.primary:hover {
   background-color: var(--color-primary-hover);
-  box-shadow: 0 10px 26px rgba(71, 85, 178, 0.7);
+  box-shadow: none;
 }
 
 button.primary:active {
@@ -236,7 +261,7 @@ button.primary:active {
   justify-content: space-around;
   align-items: center;
   z-index: 9999;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 
 .bottom-nav button {
@@ -291,14 +316,14 @@ button.primary:active {
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
-  color: var(--color-heading);
+  color: var(--color-text);
   font-weight: 500;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 #searchInput:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(92, 106, 196, 0.45);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
   outline: none;
 }
 
@@ -314,7 +339,7 @@ button.primary:active {
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
-  color: var(--color-heading);
+  color: var(--color-text);
   font-weight: 600;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   appearance: none;
@@ -323,7 +348,7 @@ button.primary:active {
 
 .category-wrapper select:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(92, 106, 196, 0.45);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
   outline: none;
 }
 
@@ -345,6 +370,7 @@ button.primary:active {
   padding: 32px 28px;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
+  color: var(--color-text);
 }
 
 #loginPage h2 {
@@ -359,13 +385,16 @@ button.primary:active {
 #loginPage input {
   margin-bottom: 24px;
   font-weight: 600;
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
 #loginPage button {
   margin-top: 12px;
-  box-shadow: 0 6px 15px rgba(92, 106, 196, 0.55);
+  box-shadow: none;
 }
 
+/* Error Text */
 #loginError {
   color: var(--color-danger);
   text-align: center;
@@ -381,30 +410,38 @@ button.primary:active {
   font-style: italic;
   user-select: none;
 }
+
+/* Loading Overlay */
 #loadingOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(255, 255, 255, 1);
+  background: var(--color-surface);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 99999;
   user-select: none;
 }
+
 .loader {
   width: 50px;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 8px solid;
-  border-color: #000 transparent;
+  border-color: var(--color-text) transparent;
   animation: l1 1s linear infinite;
 }
+
 @keyframes l1 {
   to {
     transform: rotate(180deg);
   }
 }
-
+#loginBtn{
+  background: white;
+  border: 2px solid black;
+  color: black;
+}
   </style>
 </head>
 <body>
@@ -414,16 +451,18 @@ button.primary:active {
 
 
 
-  <header>Geotasks</header>
-
+  <header> <div>
+    geotask
+  </div></header>
+<br><br>
   <!-- LOGIN PAGE -->
   <section id="loginPage" class="page active" aria-label="შესვლის და რეგისტრაციის გვერდი">
     <h2>რეგისტრაცია</h2>
     <div id="loginError" role="alert" aria-live="polite"></div>
     <input type="email" id="emailInput" placeholder="ელ.ფოსტა" autocomplete="username" aria-required="true" />
     <input type="password" id="passwordInput" placeholder="პაროლი" autocomplete="current-password" aria-required="true" />
-    <button id="loginBtn" class="primary" aria-label="შესვლის ღილაკი">შესვლა</button>
-    <button id="registerBtn" class="primary" style="background:#22c55e; margin-top:12px;" aria-label="რეგისტრაციის ღილაკი">რეგისტრაცია</button>
+    <button id="registerBtn" class="primary" style="background:black; margin-top:12px;" aria-label="რეგისტრაციის ღილაკი">რეგისტრაცია</button>
+        <button id="loginBtn" class="primary" aria-label="შესვლის ღილაკი">შესვლა</button>
   </section>
 
   <!-- TASKS PAGE -->
@@ -522,7 +561,7 @@ button.primary:active {
       <textarea id="taskDescription" rows="4" required aria-required="true" placeholder="დაიწერე დავალების დეტალური აღწერა"></textarea>
       
       <label for="taskContact">კონტაქტი (ტელეფონი/სოციალური)</label>
-      <input type="text" id="taskContact" required aria-required="true" placeholder="მაგ: 599123456 ან Telegram @username" />
+      <input type="text" id="taskContact" required aria-required="true" placeholder="ტელ / სოციალური ქსელის @username" />
       
       <label for="taskPayment">ანაზღაურება (₾)</label>
       <input type="number" id="taskPayment" min="0" required aria-required="true" placeholder="ანაზღაურების რაოდენობა" />
