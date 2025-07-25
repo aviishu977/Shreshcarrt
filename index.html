@@ -4,443 +4,563 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GeoTask</title>
-
   <!-- Google Fonts and Material Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-
   <style>
-:root {
+  :root {
   --color-bg: #fff !important;
   --color-surface: #fff !important;
   --color-text: #000 !important;
-  --color-heading: #000 !important;
+  --color-heading: #000 !important; --color-primary: #000 !important;
+--color-primary-hover: #222 !important;
+--color-primary-dark: #111 !important;
 
-  --color-primary: #000 !important;
-  --color-primary-hover: #222 !important;
-  --color-primary-dark: #111 !important;
+--color-success: #444 !important;
+--color-danger: #000 !important;
+--color-danger-dark: #111 !important;
 
-  --color-success: #444 !important;
-  --color-danger: #000 !important;
-  --color-danger-dark: #111 !important;
+--color-muted: #666 !important;
+--color-border: #000 !important;
+--color-border-light: #ccc !important;
 
-  --color-muted: #666 !important;
-  --color-border: #000 !important;
-  --color-border-light: #ccc !important;
+--radius-sm: 8px;
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-xl: 24px;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-
-  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+--shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.1);
+--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+--shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 @font-face {
-  font-family: 'myffont';
-  src: url('alk-sanet.ttf');
+font-family: 'myffont';
+src: url('alk-sanet.ttf');
 }
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  font-family: 'myffont';
-  line-height: 1;
-  margin: 0;
-  padding: 0;
+box-sizing: border-box;
+font-family: 'myffont';
+line-height: 1;
+margin: 0;
+padding: 0;
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  padding-bottom: 72px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  user-select: none;
+background-color: var(--color-bg);
+color: var(--color-text);
+padding-bottom: 72px;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+user-select: none;
 }
 
 /* Header */
 header {
-  background-color: white;
-  color: white;
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  letter-spacing: 0.06em;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: none;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 10px;
-  height: 80px;
-  
+background-color: white;
+color: white;
+font-size: 2rem;
+font-weight: 700;
+text-align: center;
+letter-spacing: 0.06em;
+position: sticky;
+top: 0;
+z-index: 10;
+box-shadow: none;
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+top: 10px;
+height: 80px;
+
 }
 header div {
-  width: 95%;
-  height: 100%;
-  background: black;
-  padding: 20px;
-  border-radius: 10px;
-  background-image: url('https://i.postimg.cc/0NyKt1rS/Picsart-25-07-24-00-35-36-421.png');
-  background-size: cover;        /* სურათი სრულად დაფაროს დივი */
-  background-position: center;   /* ცენტრში გაასწოროს */
-  background-repeat: no-repeat;  /* არ გაიმეოროს სურათი */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-shadow: 0px 0px 7px white;
-  box-shadow: 0px 5px 15px #000000D4;
+width: 95%;
+height: 100%;
+background: black;
+padding: 20px;
+border-radius: 10px;
+background-image: url('https://i.postimg.cc/0NyKt1rS/Picsart-25-07-24-00-35-36-421.png');
+background-size: cover;        /* სურათი სრულად დაფაროს დივი /
+background-position: center;   / ცენტრში გაასწოროს /
+background-repeat: no-repeat;  / არ გაიმეოროს სურათი */
+display: flex;
+justify-content: center;
+align-items: center;
+text-shadow: 0px 0px 7px white;
+box-shadow: 0px 5px 15px #000000D4;
 }
 
 /* Pages */
 .page {
-  display: none;
-  padding: 24px 20px;
-  max-width: 480px;
-  margin: 0 auto;
-  animation: fadeIn 0.3s ease forwards;
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+display: none;
+padding: 24px 20px;
+max-width: 600px;
+margin: 0 auto;
+animation: fadeIn 0.3s ease forwards;
+background-color: var(--color-surface);
+color: var(--color-text);
+border-radius: var(--radius-lg);
+box-shadow: var(--shadow-md);
 }
 
 .page.active {
-  display: block;
+display: block;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+from {
+opacity: 0;
+transform: translateY(8px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
 }
 
 /* Task Cards */
 .task-card {
-  background-color: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: 18px 22px;
-  margin-bottom: 18px;
-  transition: box-shadow 0.25s ease;
-  cursor: default;
-  color: var(--color-text);
+background-color: var(--color-surface);
+border-radius: var(--radius-lg);
+box-shadow: var(--shadow-sm);
+padding: 18px 22px;
+margin-bottom: 18px;
+transition: box-shadow 0.25s ease;
+cursor: default;
+color: var(--color-text);
 }
 
 .task-card:hover {
-  box-shadow: var(--shadow-lg);
+box-shadow: var(--shadow-lg);
 }
 
 .task-card h3 {
-  font-size: 1.15rem;
-  margin-bottom: 8px;
-  color: var(--color-primary);
+font-size: 1.15rem;
+margin-bottom: 8px;
+color: var(--color-primary);
 }
 
 .task-card p {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  line-height: 1.35;
-  word-break: break-word;
-  color: var(--color-text);
+font-size: 0.95rem;
+font-weight: 600;
+margin-bottom: 6px;
+line-height: 1.35;
+word-break: break-word;
+color: var(--color-text);
 }
 
 .task-card .pay {
-  color: var(--color-primary);
-  font-weight: 700;
-  margin-top: 8px;
-  font-size: 16px;
+color: var(--color-primary);
+font-weight: 700;
+margin-top: 8px;
+font-size: 16px;
 }
 
 .task-card .delete-btn {
-  background-color: var(--color-primary);
-  color: var(--color-surface);
-  border: none;
-  border-radius: var(--radius-md);
-  padding: 8px 14px;
-  font-size: 0.9rem;
-  margin-top: 12px;
-  box-shadow: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+background-color: var(--color-primary);
+color: var(--color-surface);
+border: none;
+border-radius: var(--radius-md);
+padding: 8px 14px;
+font-size: 1rem;
+margin-top: 12px;
+box-shadow: none;
+cursor: pointer;
+transition: background-color 0.3s ease;
 }
 
 .task-card .delete-btn:hover {
-  background-color: var(--color-primary-hover);
-  box-shadow: none;
+background-color: var(--color-primary-hover);
+box-shadow: none;
 }
 
 /* Form Elements */
 label {
-  font-weight: 600;
-  display: block;
-  margin-bottom: 8px;
-  color: var(--color-heading);
+font-weight: 600;
+display: block;
+margin-bottom: 8px;
+color: var(--color-heading);
 }
 
 input,
 select,
 textarea {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: var(--radius-md);
-  border: 1.8px solid var(--color-border);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 22px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+width: 100%;
+padding: 14px 16px;
+border-radius: var(--radius-md);
+border: 1.8px solid var(--color-border);
+background-color: var(--color-surface);
+color: var(--color-text);
+font-size: 1rem;
+font-weight: 500;
+margin-bottom: 22px;
+transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--color-muted);
+color: var(--color-muted);
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-  outline: none;
+border-color: var(--color-primary);
+box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+outline: none;
 }
 
 textarea {
-  resize: vertical;
-  min-height: 100px;
+resize: vertical;
+min-height: 100px;
 }
 
 /* Buttons */
 button.primary {
-  background-color: var(--color-primary);
-  color: var(--color-surface);
-  border: none;
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  width: 100%;
-  font-weight: 700;
-  font-size: 1.15rem;
-  box-shadow: none;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+background-color: var(--color-primary);
+color: var(--color-surface);
+border: none;
+border-radius: var(--radius-lg);
+padding: 16px;
+width: 100%;
+font-weight: 700;
+font-size: 1.15rem;
+box-shadow: none;
+cursor: pointer;
+user-select: none;
+transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 button.primary:hover {
-  background-color: var(--color-primary-hover);
-  box-shadow: none;
+background-color: var(--color-primary-hover);
+box-shadow: none;
 }
 
 button.primary:active {
-  transform: scale(0.98);
+transform: scale(0.98);
 }
 
 /* Bottom Navigation */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background-color: var(--color-surface);
-  border-top: 1.5px solid var(--color-border-light);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 9999;
-  box-shadow: none;
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+height: 64px;
+background-color: var(--color-surface);
+border-top: 1.5px solid var(--color-border-light);
+display: flex;
+justify-content: space-around;
+align-items: center;
+z-index: 9999;
+box-shadow: none;
 }
 
 .bottom-nav button {
-  background: none;
-  border: none;
-  color: var(--color-muted);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 2px 6px;
-  position: relative;
-  transition: color 0.3s ease;
+background: none;
+border: none;
+color: var(--color-muted);
+display: flex;
+flex-direction: column;
+align-items: center;
+font-size: 12px;
+cursor: pointer;
+padding: 2px 6px;
+position: relative;
+transition: color 0.3s ease;
 }
 
 .bottom-nav button.active,
 .bottom-nav button:hover {
-  color: var(--color-primary);
+color: var(--color-primary);
 }
 
 .bottom-nav button:active::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 30%;
-  width: 40%;
-  height: 3px;
-  background-color: var(--color-primary);
-  border-radius: 12px;
+content: '';
+position: absolute;
+bottom: -6px;
+left: 30%;
+width: 40%;
+height: 3px;
+background-color: var(--color-primary);
+border-radius: 12px;
 }
 
 .material-icons-outlined {
-  font-size: 28px;
-  margin-bottom: 4px;
+font-size: 28px;
+margin-bottom: 4px;
 }
 
 /* Filters */
 .filter-group {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-  max-width: 100%;
-  align-items: stretch;
-  justify-content: center;
+display: flex;
+gap: 10px;
+margin-bottom: 24px;
+max-width: 100%;
+align-items: stretch;
+justify-content: center;
 }
 
 #searchInput {
-  flex-grow: 9;
-  padding: 14px 18px;
-  font-size: 1rem;
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  font-weight: 500;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+flex-grow: 9;
+padding: 14px 18px;
+font-size: 1rem;
+border: 1.5px solid var(--color-border);
+border-radius: var(--radius-md);
+background-color: var(--color-surface);
+color: var(--color-text);
+font-weight: 500;
+transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 #searchInput:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-  outline: none;
+border-color: var(--color-primary);
+box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+outline: none;
 }
 
 .category-wrapper {
-  position: relative;
-  flex-grow: 1;
-  max-width: 100px;
+position: relative;
+flex-grow: 1;
+max-width: 100px;
 }
 
 .category-wrapper select {
-  width: 40px;
-  font-size: 1rem;
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  font-weight: 600;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  appearance: none;
-  padding-left: 40px;
+width: 40px;
+font-size: 1rem;
+border: 1.5px solid var(--color-border);
+border-radius: var(--radius-md);
+background-color: var(--color-surface);
+color: var(--color-text);
+font-weight: 600;
+transition: border-color 0.3s ease, box-shadow 0.3s ease;
+appearance: none;
+padding-left: 40px;
 }
 
 .category-wrapper select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-  outline: none;
+border-color: var(--color-primary);
+box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+outline: none;
 }
 
 .filter-icon {
-  position: absolute;
-  left: 32%;
-  top: 37%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: var(--color-muted);
-  pointer-events: none;
+position: absolute;
+left: 32%;
+top: 37%;
+transform: translateY(-50%);
+font-size: 20px;
+color: var(--color-muted);
+pointer-events: none;
 }
 
 /* Login Page */
 #loginPage {
-  max-width: 400px;
-  margin: 48px auto 72px auto;
-  background-color: var(--color-surface);
-  padding: 32px 28px;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
-  color: var(--color-text);
+max-width: 400px;
+margin: 48px auto 72px auto;
+background-color: var(--color-surface);
+padding: 32px 28px;
+border-radius: var(--radius-xl);
+box-shadow: var(--shadow-md);
+color: var(--color-text);
 }
 
 #loginPage h2 {
-  margin-bottom: 24px;
-  text-align: center;
-  color: var(--color-primary);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  font-size: 1.8rem;
+margin-bottom: 24px;
+text-align: center;
+color: var(--color-primary);
+font-weight: 800;
+letter-spacing: 0.06em;
+font-size: 1.8rem;
 }
 
 #loginPage input {
-  margin-bottom: 24px;
-  font-weight: 600;
-  background-color: var(--color-surface);
-  color: var(--color-text);
+margin-bottom: 24px;
+font-weight: 600;
+background-color: var(--color-surface);
+color: var(--color-text);
 }
 
 #loginPage button {
-  margin-top: 12px;
-  box-shadow: none;
+margin-top: 12px;
+box-shadow: none;
 }
 
 /* Error Text */
 #loginError {
-  color: var(--color-danger);
-  text-align: center;
-  margin-bottom: 16px;
-  font-weight: 600;
+color: var(--color-danger);
+text-align: center;
+margin-bottom: 16px;
+font-weight: 600;
 }
 
 /* No Tasks Message */
 #noTasksMsg {
-  color: var(--color-muted);
-  text-align: center;
-  margin-top: 36px;
-  font-style: italic;
-  user-select: none;
+color: var(--color-muted);
+text-align: center;
+margin-top: 36px;
+font-style: italic;
+user-select: none;
+}
+#noFavoritesMsg {
+color: var(--color-muted);
+text-align: center;
+margin-top: 36px;
+font-style: italic;
+user-select: none;
 }
 
 /* Loading Overlay */
 #loadingOverlay {
-  position: fixed;
-  inset: 0;
-  background: var(--color-surface);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-  user-select: none;
+position: fixed;
+inset: 0;
+background: var(--color-surface);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 99999;
+user-select: none;
 }
 
 .loader {
-  width: 50px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 8px solid;
-  border-color: var(--color-text) transparent;
-  animation: l1 1s linear infinite;
+width: 50px;
+aspect-ratio: 1;
+border-radius: 50%;
+border: 8px solid;
+border-color: var(--color-text) transparent;
+animation: l1 1s linear infinite;
 }
 
 @keyframes l1 {
-  to {
-    transform: rotate(180deg);
-  }
+to {
+transform: rotate(180deg);
+}
 }
 #loginBtn{
-  background: white;
-  border: 2px solid black;
-  color: black;
+background: white;
+border: 2px solid black;
+color: black;
+}
+/* სტილები იგივე, როგორც პირადული კოდის მიხედვით... /
+/ --- სრულად ჩასვით ზემოთ მოცემული CSS --- /
+/ აქ არ გადმოიწერდება ადგილი ეკონომიის მიზნით, მაგრამ შეგიძლიათ გამოიყენოთ ის რაც გქონდათ. /
+/ დამატებითი დეტალები მოდალისთვის: */
+#taskModal {
+width: 100%;
+height: 100vh;
+display:none;
+position:fixed;
+z-index: 1000;
+left:0;top:0;right:0;bottom:0;
+background:rgba(0,0,0,0.25);
+justify-content:center;
+align-items: center;
+
+}
+#taskModal .modal-content {
+  background:white;
+  padding:32px 24px;
+  border-radius:16px;
+  width: 95%;
+  margin:64px auto 0 auto;
+  box-shadow:0 16px 48px #0003;
+  position:relative;
+  font-size:1rem;
+  border:2px solid black;
+  height: auto;
+  margin-bottom: 150px ;
+}
+#taskModal .modal-content button {
+  margin-top:24px;
+  width:100%;
+}
+#taskModal .modal-content h3 {
+  margin-bottom:18px;
+}
+#taskModal .modal-content p {
+  margin-bottom:7px;
+  font-size:1rem;
+}
+.closetask , .delete-btn{
+  height: 50px;
+  border-radius: 10px;
+  border: none;
+  background: black;
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* Profile page specific styles for buttons */
+#profilePage .tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+#profilePage .tab-buttons button {
+    background-color: var(--color-border-light);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#profilePage .tab-buttons button.active {
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+}
+
+#profilePage .tab-buttons button:hover:not(.active) {
+    background-color: var(--color-border);
+    color: var(--color-surface);
+}
+
+/* Favorite button on task cards */
+.task-card .favorite-btn {
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto; /* Push to the right */
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.task-card .favorite-btn .material-icons {
+    font-size: 24px;
+}
+
+.task-card .favorite-btn.active .material-icons {
+    color: var(--color-danger); /* Or any color for active favorite */
+}
+
+/* To align favorite button nicely */
+.task-card {
+    display: flex;
+    flex-direction: column;
+    position: relative; /* For absolute positioning of favorite button if needed */
+}
+
+.task-card .favorite-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: gray; /* Default color */
+}
+
+.task-card .favorite-btn.is-favorite {
+    color: black; /* Color when it's a favorite */
 }
   </style>
 </head>
@@ -448,167 +568,127 @@ button.primary:active {
 <div id="loadingOverlay" role="alert" aria-live="polite" aria-label="იტვირთება">
   <div class="loader"></div>
 </div>
-
-
-
-  <header> <div>
-    geotask
-  </div></header>
+<header><div>geotask</div></header>
 <br><br>
-  <!-- LOGIN PAGE -->
-  <section id="loginPage" class="page active" aria-label="შესვლის და რეგისტრაციის გვერდი">
-    <h2>რეგისტრაცია</h2>
-    <div id="loginError" role="alert" aria-live="polite"></div>
-    <input type="email" id="emailInput" placeholder="ელ.ფოსტა" autocomplete="username" aria-required="true" />
-    <input type="password" id="passwordInput" placeholder="პაროლი" autocomplete="current-password" aria-required="true" />
-    <button id="registerBtn" class="primary" style="background:black; margin-top:12px;" aria-label="რეგისტრაციის ღილაკი">რეგისტრაცია</button>
-        <button id="loginBtn" class="primary" aria-label="შესვლის ღილაკი">შესვლა</button>
-  </section>
-
-  <!-- TASKS PAGE -->
-  <section id="tasksPage" class="page" aria-label="ყველა დავალების გვერდი">
-    <div class="filter-group">
-      <input
-        type="search"
-        id="searchInput"
-        placeholder="ძიება..."
-        aria-label="ძიება დავალებებში"
-      />
-      <div class="category-wrapper">
-        <span class="material-icons filter-icon" aria-hidden="true">filter_list</span>
-<select id="categoryFilter" aria-label="დავალებების ფილტრი კატეგორიის მიხედვით">
-  <option value="">ყველა კატეგორია</option>
-
-  <!-- ✏️ ტექსტი -->
-  <option value="ტექსტის დაწერა">ტექსტის დაწერა</option>
-  <option value="თარგმნა">თარგმნა</option>
-  <option value="კონტენტის შექმნა">კონტენტის შექმნა</option>
-  <option value="კორექტურა">კორექტურა</option>
-
-  <!-- 🎨 დიზაინი -->
-  <option value="ლოგოს დიზაინი">ლოგოს დიზაინი</option>
-  <option value="გრაფიკული დიზაინი">გრაფიკული დიზაინი</option>
-  <option value="სოციალური პოსტების დიზაინი">სოციალური პოსტების დიზაინი</option>
-  <option value="ფოტო მონტაჟი">ფოტო მონტაჟი</option>
-  <option value="ვიდეო მონტაჟი">ვიდეო მონტაჟი</option>
-
-  <!-- 💻 პროგრამირება -->
-  <option value="ფრონტ ენდი">ფრონტ ენდი</option>
-  <option value="ბექ ენდი">ბექ ენდი</option>
-  <option value="მობაილ დეველოპმენტი">მობაილ დეველოპმენტი</option>
-  <option value="ბაგების გამართვა">ბაგების გამართვა</option>
-  <option value="ტესტირება">ტესტირება</option>
-
-  <!-- 📣 მარკეტინგი -->
-  <option value="სოციალური მედია მენეჯმენტი">სოციალური მედია მენეჯმენტი</option>
-  <option value="მარკეტინგი">მარკეტინგი</option>
-  <option value="რეკლამის მართვა">რეკლამის მართვა</option>
-  <option value="SEO ოპტიმიზაცია">SEO ოპტიმიზაცია</option>
-
-  <!-- 🧾 მარტივი დავალებები -->
-  <option value="ონლაინ შოპინგის დახმარება">ონლაინ შოპინგის დახმარება</option>
-  <option value="ფორმების შევსება">ფორმების შევსება</option>
-  <option value="მცირე კვლევა">მცირე კვლევა</option>
-  <option value="მონაცემების აკრეფა">მონაცემების აკრეფა</option>
-</select>
-      </div>
+<!-- LOGIN PAGE -->
+<section id="loginPage" class="page active" aria-label="შესვლის და რეგისტრაციის გვერდი">
+  <h2>რეგისტრაცია</h2>
+  <div id="loginError" role="alert" aria-live="polite"></div>
+  <input type="email" id="emailInput" placeholder="ელ.ფოსტა" autocomplete="username" aria-required="true" />
+  <input type="password" id="passwordInput" placeholder="პაროლი" autocomplete="current-password" aria-required="true" />
+  <button id="registerBtn" class="primary" style="background:black; margin-top:12px;" aria-label="რეგისტრაციის ღილაკი">რეგისტრაცია</button>
+  <button id="loginBtn" class="primary" aria-label="შესვლის ღილაკი">შესვლა</button>
+</section>
+<!-- TASKS PAGE -->
+<section id="tasksPage" class="page" aria-label="ყველა დავალების გვერდი">
+  <div class="filter-group">
+    <input type="search" id="searchInput" placeholder="ძიება..." aria-label="ძიება დავალებებში" />
+    <div class="category-wrapper">
+      <span class="material-icons filter-icon" aria-hidden="true">filter_list</span>
+      <select id="categoryFilter" aria-label="დავალებების ფილტრი კატეგორიის მიხედვით">
+        <option value="">ყველა კატეგორია</option>
+        <!-- დანარჩენი კატეგორიები აქ ჩავამატეთ -->
+        <option value="ტექსტის დაწერა">ტექსტის დაწერა</option>
+        <option value="თარგმნა">თარგმნა</option>
+        <option value="კონტენტის შექმნა">კონტენტის შექმნა</option>
+        <option value="კორექტურა">კორექტურა</option>
+        <option value="ლოგოს დიზაინი">ლოგოს დიზაინი</option>
+        <option value="გრაფიკული დიზაინი">გრაფიკული დიზაინი</option>
+        <option value="სოციალური პოსტების დიზაინი">სოციალური პოსტების დიზაინი</option>
+        <option value="ფოტო მონტაჟი">ფოტო მონტაჟი</option>
+        <option value="ვიდეო მონტაჟი">ვიდეო მონტაჟი</option>
+        <option value="ფრონტ ენდი">ფრონტ ენდი</option>
+        <option value="ბექ ენდი">ბექ ენდი</option>
+        <option value="მობაილ დეველოპმენტი">მობაილ დეველოპმენტი</option>
+        <option value="ბაგების გამართვა">ბაგების გამართვა</option>
+        <option value="ტესტირება">ტესტირება</option>
+        <option value="სოციალური მედია მენეჯმენტი">სოციალური მედია მენეჯმენტი</option>
+        <option value="მარკეტინგი">მარკეტინგი</option>
+        <option value="რეკლამის მართვა">რეკლამის მართვა</option>
+        <option value="SEO ოპტიმიზაცია">SEO ოპტიმიზაცია</option>
+        <option value="ონლაინ შოპინგის დახმარება">ონლაინ შოპინგის დახმარება</option>
+        <option value="ფორმების შევსება">ფორმების შევსება</option>
+        <option value="მცირე კვლევა">მცირე კვლევა</option>
+        <option value="მონაცემების აკრეფა">მონაცემების აკრეფა</option>
+      </select>
     </div>
-    <div id="tasksList" aria-live="polite"></div>
-  </section>
-
-  <!-- POST PAGE -->
-  <section id="postPage" class="page" aria-label="ახალი დავალების დამატების გვერდი">
-    <h2>დავალების დამატება</h2><br>
-    <form id="postTaskForm" novalidate>
-      <label for="taskCategory">კატეგორია</label>
-<select id="taskCategory" required aria-required="true" aria-describedby="categoryHelp">
-  <option value="" disabled selected>აირჩიეთ კატეგორია</option>
-
-  <!-- ✏️ ტექსტი -->
-  <option value="ტექსტის დაწერა">ტექსტის დაწერა</option>
-  <option value="თარგმნა">თარგმნა</option>
-  <option value="კონტენტის შექმნა">კონტენტის შექმნა</option>
-  <option value="კორექტურა">კორექტურა</option>
-
-  <!-- 🎨 დიზაინი -->
-  <option value="ლოგოს დიზაინი">ლოგოს დიზაინი</option>
-  <option value="გრაფიკული დიზაინი">გრაფიკული დიზაინი</option>
-  <option value="სოციალური პოსტების დიზაინი">სოციალური პოსტების დიზაინი</option>
-  <option value="ფოტო მონტაჟი">ფოტო მონტაჟი</option>
-  <option value="ვიდეო მონტაჟი">ვიდეო მონტაჟი</option>
-
-  <!-- 💻 პროგრამირება -->
-  <option value="ფრონტ ენდი">ფრონტ ენდი</option>
-  <option value="ბექ ენდი">ბექ ენდი</option>
-  <option value="მობაილ დეველოპმენტი">მობაილ დეველოპმენტი</option>
-  <option value="ბაგების გამართვა">ბაგების გამართვა</option>
-  <option value="ტესტირება">ტესტირება</option>
-
-  <!-- 📣 მარკეტინგი -->
-  <option value="სოციალური მედია მენეჯმენტი">სოციალური მედია მენეჯმენტი</option>
-  <option value="მარკეტინგი">მარკეტინგი</option>
-  <option value="რეკლამის მართვა">რეკლამის მართვა</option>
-  <option value="SEO ოპტიმიზაცია">SEO ოპტიმიზაცია</option>
-
-  <!-- 🧾 მარტივი დავალებები -->
-  <option value="ონლაინ შოპინგის დახმარება">ონლაინ შოპინგის დახმარება</option>
-  <option value="ფორმების შევსება">ფორმების შევსება</option>
-  <option value="მცირე კვლევა">მცირე კვლევა</option>
-  <option value="მონაცემების აკრეფა">მონაცემების აკრეფა</option>
-</select>
-      
-      <label for="taskDescription">აღწერა</label>
-      <textarea id="taskDescription" rows="4" required aria-required="true" placeholder="დაიწერე დავალების დეტალური აღწერა"></textarea>
-      
-      <label for="taskContact">კონტაქტი (ტელეფონი/სოციალური)</label>
-      <input type="text" id="taskContact" required aria-required="true" placeholder="ტელ / სოციალური ქსელის @username" />
-      
-      <label for="taskPayment">ანაზღაურება (₾)</label>
-      <input type="number" id="taskPayment" min="0" required aria-required="true" placeholder="ანაზღაურების რაოდენობა" />
-      
-      <button id="postTaskBtn" class="primary" type="submit" aria-label="დავალების გამოქვეყნების ღილაკი">დავალების გამოქვეყნება</button>
-    </form>
-  </section>
-
-  <!-- PROFILE PAGE -->
-  <section id="profilePage" class="page" aria-label="მომხმარებლის პროფილი - დაპოსტილი დავალებები">
-    <h2>ჩემი დავალებები</h2> <br>
-    <div id="userTasksList" aria-live="polite"></div>
-    <p id="noTasksMsg" style="display:none;">თქვენ ჯერ არ გაქვთ დაპოსტილი დავალებები.</p>
-  </section>
-
-  <!-- Bottom Navigation -->
-  <nav id="navnav" class="bottom-nav" role="navigation" aria-label="ქვედა ნავიგაცია">
-    <button id="navTasks" class="active" aria-label="დავალებების ნახვა" type="button">
-      <span class="material-icons-outlined" aria-hidden="true">list_alt</span> დავალებები
-    </button>
-    <button id="navPost" aria-label="ახალი დავალების პოსტვა" type="button">
-      <span class="material-icons-outlined" aria-hidden="true">add_circle</span> დაპოსტე
-    </button>
-    <button id="navProfile" aria-label="ჩემი დავალებების ნახვა" type="button">
-      <span class="material-icons-outlined" aria-hidden="true">person</span> პროფილი
-    </button>
-    <button id="navLogout" aria-label="გამოსვლა" type="button">
-      <span class="material-icons-outlined" aria-hidden="true">logout</span> გამოსვლა
-    </button>
-  </nav>
-
-  <script type="module">
-    // app.js
+  </div>
+  <div id="tasksList" aria-live="polite"></div>
+</section>
+<!-- დეტალების მოდალი -->
+<div id="taskModal"></div>
+<!-- POST PAGE -->
+<section id="postPage" class="page" aria-label="ახალი დავალების დამატების გვერდი">
+  <h2>დავალების დამატება</h2><br>
+  <form id="postTaskForm" novalidate>
+    <label for="taskCategory">კატეგორია</label>
+    <select id="taskCategory" required aria-required="true">
+      <option value="" disabled selected>აირჩიეთ კატეგორია</option>
+      <!-- იგივე კატეგორიები როგორიც სიაში -->
+      <option value="ტექსტის დაწერა">ტექსტის დაწერა</option>
+      <option value="თარგმნა">თარგმნა</option>
+      <option value="კონტენტის შექმნა">კონტენტის შექმნა</option>
+      <option value="კორექტურა">კორექტურა</option>
+      <option value="ლოგოს დიზაინი">ლოგოს დიზაინი</option>
+      <option value="გრაფიკული დიზაინი">გრაფიკული დიზაინი</option>
+      <option value="სოციალური პოსტების დიზაინი">სოციალური პოსტების დიზაინი</option>
+      <option value="ფოტო მონტაჟი">ფოტო მონტაჟი</option>
+      <option value="ვიდეო მონტაჟი">ვიდეო მონტაჟი</option>
+      <option value="ფრონტ ენდი">ფრონტ ენდი</option>
+      <option value="ბექ ენდი">ბექ ენდი</option>
+      <option value="მობაილ დეველოპმენტი">მობაილ დეველოპმენტი</option>
+      <option value="ბაგების გამართვა">ბაგების გამართვა</option>
+      <option value="ტესტირება">ტესტირება</option>
+      <option value="სოციალური მედია მენეჯმენტი">სოციალური მედია მენეჯმენტი</option>
+      <option value="მარკეტინგი">მარკეტინგი</option>
+      <option value="რეკლამის მართვა">რეკლამის მართვა</option>
+      <option value="SEO ოპტიმიზაცია">SEO ოპტიმიზაცია</option>
+      <option value="ონლაინ შოპინგის დახმარება">ონლაინ შოპინგის დახმარება</option>
+      <option value="ფორმების შევსება">ფორმების შევსება</option>
+      <option value="მცირე კვლევა">მცირე კვლევა</option>
+      <option value="მონაცემების აკრეფა">მონაცემების აკრეფა</option>
+    </select>
+    <label for="taskDescription">აღწერა</label>
+    <textarea id="taskDescription" rows="4" required aria-required="true" placeholder="დაიწერე დავალების დეტალური აღწერა"></textarea>
+    <label for="taskContact">კონტაქტი (ტელეფონი/სოციალური)</label>
+    <input type="text" id="taskContact" required aria-required="true" placeholder="ტელ / სოციალური ქსელის @username" />
+    <label for="taskPayment">ანაზღაურება (₾)</label>
+    <input type="number" id="taskPayment" min="0" required aria-required="true" placeholder="ანაზღაურების რაოდენობა" />
+    <button id="postTaskBtn" class="primary" type="submit" aria-label="დავალების გამოქვეყნების ღილაკი">დავალების გამოქვეყნება</button>
+  </form>
+</section>
+<!-- PROFILE PAGE -->
+<section id="profilePage" class="page" aria-label="მომხმარებლის პროფილი - დაპოსტილი დავალებები და ფავორიტები">
+  <h2>პროფილი</h2><br>
+  <div class="tab-buttons">
+    <button id="btnUserTasks" class="active" aria-label="ჩემი პოსტები">ჩემი პოსტები</button>
+    <button id="btnFavorites" aria-label="ფავორიტები">ფავორიტები</button>
+  </div>
+  <div id="userTasksList" aria-live="polite"></div>
+  <div id="favoritesList" aria-live="polite" style="display:none;"></div>
+  <p id="noTasksMsg" style="display:none;">თქვენ ჯერ არ გაქვთ დაპოსტილი დავალებები.</p>
+  <p id="noFavoritesMsg" style="display:none;">ფავორიტებზე არაფერია დამატებული.</p>
+</section>
+<!-- Bottom Navigation -->  <nav id="navnav" class="bottom-nav" role="navigation" aria-label="ქვედა ნავიგაცია">
+  <button id="navTasks" class="active" aria-label="დავალებების ნახვა" type="button">
+    <span class="material-icons-outlined" aria-hidden="true">list_alt</span> დავალებები
+  </button>
+  <button id="navPost" aria-label="ახალი დავალების პოსტვა" type="button">
+    <span class="material-icons-outlined" aria-hidden="true">add_circle</span> დაპოსტე
+  </button>
+  <button id="navProfile" aria-label="ჩემი დავალებების ნახვა" type="button">
+    <span class="material-icons-outlined" aria-hidden="true">person</span> პროფილი
+  </button>
+  <button id="navLogout" aria-label="გამოსვლა" type="button">
+    <span class="material-icons-outlined" aria-hidden="true">logout</span> გამოსვლა
+  </button>
+</nav>  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import {
-  getDatabase,
-  ref,
-  push,
-  onValue,
-  remove
+  getDatabase, ref, push, onValue, remove, set
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -626,7 +706,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// DOM elements references
+// DOM ელემენტების ცვლადები
 const loginPage = document.getElementById("loginPage");
 const tasksPage = document.getElementById("tasksPage");
 const postPage = document.getElementById("postPage");
@@ -655,8 +735,17 @@ const postTaskForm = document.getElementById("postTaskForm");
 
 const userTasksList = document.getElementById("userTasksList");
 const noTasksMsg = document.getElementById("noTasksMsg");
+const taskModal = document.getElementById("taskModal");
 
-// Page display management
+// New elements for favorites
+const btnUserTasks = document.getElementById("btnUserTasks");
+const btnFavorites = document.getElementById("btnFavorites");
+const favoritesList = document.getElementById("favoritesList");
+const noFavoritesMsg = document.getElementById("noFavoritesMsg");
+
+let userFavorites = {}; // To store the current user's favorite task IDs
+
+// გვერდების გადართვა
 function showPage(page) {
   [loginPage, tasksPage, postPage, profilePage].forEach(p => p.classList.remove("active"));
   page.classList.add("active");
@@ -666,54 +755,63 @@ function showPage(page) {
   else if (page === profilePage) navProfile.classList.add("active");
 }
 
-// Authentication state listener
+// ავტორიზაციის სტატუსი
 onAuthStateChanged(auth, user => {
   if (user) {
     loginError.textContent = "";
     showPage(tasksPage);
+    loadFavoritesStatus(user.uid); // Load favorite status on auth state change
     loadTasks();
     loadUserTasks(user.uid);
+    bottomNav.style.display = 'flex';
   } else {
     showPage(loginPage);
+    bottomNav.style.display = 'none';
   }
 });
 
-// Registration handler
+// რეგისტრაცია
 registerBtn.onclick = () => {
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
-
   if (!email || !password) {
     loginError.textContent = "ელ.ფოსტა და პაროლი აუცილებელია";
     return;
   }
-
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => { loginError.textContent = ""; })
     .catch(error => { loginError.textContent = error.message; });
 };
 
-// Login handler
+// შესვლა
 loginBtn.onclick = () => {
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
-
   if (!email || !password) {
     loginError.textContent = "ელ.ფოსტა და პაროლი აუცილებელია";
     return;
   }
-
   signInWithEmailAndPassword(auth, email, password)
     .then(() => { loginError.textContent = ""; })
     .catch(error => { loginError.textContent = error.message; });
 };
 
-// Logout handler
-navLogout.onclick = () => {
-  signOut(auth);
-};
+// გამოსვლა
+navLogout.onclick = () => { signOut(auth); };
 
-// Load all tasks from Firebase
+// Load favorite status for the current user
+function loadFavoritesStatus(uid) {
+  onValue(ref(db, `userFavorites/${uid}`), snapshot => {
+    userFavorites = snapshot.val() || {};
+    // After loading favorites, reload tasks to update favorite icons
+    loadTasks();
+    if (profilePage.classList.contains('active') && btnFavorites.classList.contains('active')) {
+      loadUserFavorites(); // Reload favorites list if on favorites tab
+    }
+  });
+}
+
+// დავალებების ჩამოტვირთვა (მისაწოდეთ მხოლოდ კატეგორია, დრო და ანაზღაურება)
 function loadTasks() {
   onValue(ref(db, 'tasks'), snapshot => {
     const data = snapshot.val();
@@ -722,39 +820,76 @@ function loadTasks() {
       tasksList.innerHTML = "<p>ვერც ერთი დავალება ვერ მოიძებნა.</p>";
       return;
     }
-
     const filterCat = categoryFilter.value;
     const searchTerm = searchInput.value.toLowerCase();
 
-    Object.entries(data).forEach(([id, task]) => {
+    const tasksArray = Object.entries(data).reverse(); // Display newest first
+
+    tasksArray.forEach(([id, task]) => {
       if ((filterCat === "" || task.category === filterCat)) {
         const searchableText = (task.description + " " + task.contact + " " + task.category).toLowerCase();
         if (!searchableText.includes(searchTerm)) return;
 
+        const posted = new Date(task.timestamp).toLocaleString('ka-GE');
+        const isFavorite = userFavorites[id] ? true : false;
+        const favIcon = isFavorite ? "favorite" : "favorite_border";
+
         const taskHTML = `
-          <div class="task-card">
-            <h3>${task.category}</h3>
-            <p><strong>აღწერა:</strong> ${task.description}</p>
-            <p><strong>კონტაქტი:</strong> ${task.contact}</p>
+          <div class="task-card" data-id="${id}" style="cursor:pointer;">
+            <h3>კატეგორია: ${task.category}</h3>
+            <p><strong>დადების დრო:</strong> ${posted}</p>
             <p class="pay"><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
+            <button class="favorite-btn ${isFavorite ? 'is-favorite' : ''}" aria-label="ფავორიტის დამატება/წაშლა" onclick="event.stopPropagation(); toggleFavorite('${id}')">
+              <span class="material-icons">${favIcon}</span>
+            </button>
           </div>
         `;
-        tasksList.insertAdjacentHTML('afterbegin', taskHTML);
+        tasksList.insertAdjacentHTML('beforeend', taskHTML); // Use 'beforeend' to keep newest at top after reverse
       }
+    });
+
+    // დააყენეთ click listener-ები მოდალისთვის
+    tasksList.querySelectorAll(".task-card").forEach(card => {
+      card.onclick = (event) => {
+        // Prevent modal from opening if favorite button was clicked
+        if (event.target.closest('.favorite-btn')) {
+            return;
+        }
+        const id = card.getAttribute("data-id");
+        const task = data[id];
+        showTaskModal(task);
+      };
     });
   });
 }
 
-// Handle new task posting
+// დეტალების მოდალის ფუნქცია
+function showTaskModal(task) {
+  const posted = new Date(task.timestamp).toLocaleString('ka-GE');
+  taskModal.innerHTML = `
+    <div class="modal-content">
+      <h3>კატეგორია: ${task.category}</h3>
+      <p><strong>დადების დრო:</strong> ${posted}</p>
+      <p><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
+      <p><strong>აღწერა:</strong> ${task.description}</p>
+      <p><strong>კონტაქტი:</strong> ${task.contact}</p>
+      <button class="closetask" onclick="closeTaskModal()">დახურვა</button>
+    </div>
+  `;
+  taskModal.style.display = 'flex';
+}
+window.closeTaskModal = function() {
+  taskModal.style.display = 'none';
+}
+
+// ახალი პოსტის დადება
 postTaskForm.onsubmit = e => {
   e.preventDefault();
-
   const category = taskCategory.value;
   const description = taskDescription.value.trim();
   const contact = taskContact.value.trim();
   const paymentNum = Number(taskPayment.value.trim());
   const user = auth.currentUser;
-
   if (!category || !description || !contact || !taskPayment.value.trim()) {
     alert("გთხოვთ შეავსოთ ყველა ველი!");
     return;
@@ -767,7 +902,6 @@ postTaskForm.onsubmit = e => {
     alert("გთხოვთ გაიაროთ ავტორიზაცია");
     return;
   }
-
   const taskData = {
     category,
     description,
@@ -776,18 +910,17 @@ postTaskForm.onsubmit = e => {
     userId: user.uid,
     timestamp: Date.now()
   };
-
   push(ref(db, 'tasks'), taskData)
     .then(() => {
       alert("დავალება წარმატებით დაემატა!");
       postTaskForm.reset();
       showPage(tasksPage);
-      loadTasks();
+      loadTasks(); // Reload tasks to show the new one
     })
     .catch(e => alert("დაფიქსირდა შეცდომა: " + e.message));
 };
 
-// Load tasks posted by current user
+// პროფილის გვერდი - ჩემი დავალებები
 function loadUserTasks(uid) {
   onValue(ref(db, 'tasks'), snapshot => {
     const data = snapshot.val();
@@ -796,7 +929,6 @@ function loadUserTasks(uid) {
       noTasksMsg.style.display = "block";
       return;
     }
-
     let hasTasks = false;
     Object.entries(data).forEach(([id, task]) => {
       if (task.userId === uid) {
@@ -807,17 +939,14 @@ function loadUserTasks(uid) {
             <p><strong>აღწერა:</strong> ${task.description}</p>
             <p><strong>კონტაქტი:</strong> ${task.contact}</p>
             <p class="pay"><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
-            <button class="delete-btn" aria-label="დავალების წაშლა" onclick="deleteTask('${id}')">წაშლა</button>
+            <button class="delete-btn" aria-label="დავალების წაშლა" onclick="deleteTask('${id}')">პოსტის წაშლა</button>
           </div>
         `);
       }
     });
-
     noTasksMsg.style.display = hasTasks ? "none" : "block";
   });
 }
-
-// Delete task function accessible globally for inline onclick
 window.deleteTask = function(id) {
   if (confirm("ნამდვილად გსურთ ამ დავალების წაშლა?")) {
     remove(ref(db, 'tasks/' + id))
@@ -825,10 +954,132 @@ window.deleteTask = function(id) {
   }
 };
 
-// Event bindings for filters and navigation
+// Favorites functionality
+// Load user favorites from Firebase
+function loadUserFavorites() {
+  const user = auth.currentUser;
+  if (!user) {
+    favoritesList.innerHTML = "";
+    noFavoritesMsg.style.display = "block";
+    return;
+  }
+
+  onValue(ref(db, `userFavorites/${user.uid}`), favoriteSnapshot => {
+    userFavorites = favoriteSnapshot.val() || {}; // Update global userFavorites
+    favoritesList.innerHTML = "";
+
+    if (Object.keys(userFavorites).length === 0) {
+      noFavoritesMsg.style.display = "block";
+      favoritesList.innerHTML = "";
+      return;
+    }
+    noFavoritesMsg.style.display = "none";
+
+    // Now fetch the actual task details for favorited tasks
+    onValue(ref(db, 'tasks'), tasksSnapshot => {
+      const allTasks = tasksSnapshot.val() || {};
+      favoritesList.innerHTML = "";
+      let foundFavorites = false;
+      Object.keys(userFavorites).forEach(taskId => {
+        const task = allTasks[taskId];
+        if (task) {
+          foundFavorites = true;
+          const posted = new Date(task.timestamp).toLocaleString('ka-GE');
+          favoritesList.insertAdjacentHTML('beforeend', `
+            <div class="task-card" data-id="${taskId}">
+              <h3>კატეგორია: ${task.category}</h3>
+              <p><strong>დადების დრო:</strong> ${posted}</p>
+              <p><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
+              <p><strong>აღწერა:</strong> ${task.description}</p>
+              <p><strong>კონტაქტი:</strong> ${task.contact}</p>
+              <button class="delete-btn" aria-label="ფავორიტიდან წაშლა" onclick="toggleFavorite('${taskId}')">
+ წაშლა ფავორიტებიდან
+              </button>
+            </div>
+          `);
+        }
+      });
+      if (!foundFavorites) {
+          noFavoritesMsg.style.display = "block";
+          favoritesList.innerHTML = "";
+      }
+    }, {
+      onlyOnce: true // Fetch tasks only once for favorites list
+    });
+  });
+}
+
+// Function to add/remove a task from favorites
+window.toggleFavorite = function(taskId) {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("გთხოვთ გაიაროთ ავტორიზაცია");
+    return;
+  }
+
+  const favPath = `userFavorites/${user.uid}/${taskId}`;
+  if (userFavorites[taskId]) {
+    // Remove from favorites
+    remove(ref(db, favPath))
+      .then(() => {
+        delete userFavorites[taskId]; // Update local cache
+        // Update the icon on the currently displayed task if it's visible
+        const taskCard = document.querySelector(`.task-card[data-id="${taskId}"]`);
+        if (taskCard) {
+            taskCard.querySelector('.favorite-btn .material-icons').textContent = 'favorite_border';
+            taskCard.querySelector('.favorite-btn').classList.remove('is-favorite');
+        }
+        if (profilePage.classList.contains('active') && btnFavorites.classList.contains('active')) {
+          loadUserFavorites(); // Reload favorites list if on favorites tab
+        } else {
+          loadTasks(); // Reload all tasks to update favorite status
+        }
+      })
+      .catch(e => alert("ფავორიტიდან წაშლის დროს პრობლემა: " + e.message));
+  } else {
+    // Add to favorites
+    set(ref(db, favPath), true) // Store taskId: true
+      .then(() => {
+        userFavorites[taskId] = true; // Update local cache
+        // Update the icon on the currently displayed task if it's visible
+        const taskCard = document.querySelector(`.task-card[data-id="${taskId}"]`);
+        if (taskCard) {
+            taskCard.querySelector('.favorite-btn .material-icons').textContent = 'favorite';
+            taskCard.querySelector('.favorite-btn').classList.add('is-favorite');
+        }
+        if (profilePage.classList.contains('active') && btnFavorites.classList.contains('active')) {
+          loadUserFavorites(); // Reload favorites list if on favorites tab
+        } else {
+          loadTasks(); // Reload all tasks to update favorite status
+        }
+      })
+      .catch(e => alert("ფავორიტებში დამატების დროს პრობლემა: " + e.message));
+  }
+};
+
+// Toggle between user tasks and favorites lists on profile page
+btnUserTasks.onclick = () => {
+  btnUserTasks.classList.add("active");
+  btnFavorites.classList.remove("active");
+  userTasksList.style.display = "block";
+  favoritesList.style.display = "none";
+  noFavoritesMsg.style.display = "none";
+  noTasksMsg.style.display = userTasksList.innerHTML.trim() === "" ? "block" : "none";
+};
+
+btnFavorites.onclick = () => {
+  btnUserTasks.classList.remove("active");
+  btnFavorites.classList.add("active");
+  userTasksList.style.display = "none";
+  noTasksMsg.style.display = "none";
+  favoritesList.style.display = "block";
+  loadUserFavorites();
+};
+
+
+// ფილტრები და სანავიგაციო ღილაკების კონტროლი
 categoryFilter.onchange = loadTasks;
 searchInput.oninput = loadTasks;
-
 navTasks.onclick = () => showPage(tasksPage);
 navPost.onclick = () => showPage(postPage);
 navProfile.onclick = () => {
@@ -836,6 +1087,11 @@ navProfile.onclick = () => {
   if (user) {
     loadUserTasks(user.uid);
     showPage(profilePage);
+    // Ensure "My Posts" tab is active by default when entering profile page
+    btnUserTasks.classList.add("active");
+    btnFavorites.classList.remove("active");
+    userTasksList.style.display = "block";
+    favoritesList.style.display = "none";
   } else {
     alert("გთხოვთ გაიაროთ ავტორიზაცია");
     showPage(loginPage);
@@ -843,18 +1099,7 @@ navProfile.onclick = () => {
 };
 const bottomNav = document.querySelector('.bottom-nav');
 
-onAuthStateChanged(auth, user => {
-  if (user) {
-    loginError.textContent = "";
-    showPage(tasksPage);
-    loadTasks();
-    loadUserTasks(user.uid);
-    bottomNav.style.display = 'flex';  // ნავიგაცია გამოჩნდება
-  } else {
-    showPage(loginPage);
-    bottomNav.style.display = 'none';  // ნავიგაცია დაიმალება
-  }
-});
+// Loading overlay იმუშავე
 window.addEventListener('load', () => {
   const loadingOverlay = document.getElementById('loadingOverlay');
   if (loadingOverlay) {
@@ -866,7 +1111,5 @@ window.addEventListener('load', () => {
     }, 300);
   }
 });
-
-  </script>
-</body>
+</script></body>
 </html>
