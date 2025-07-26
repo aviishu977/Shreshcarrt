@@ -1,1115 +1,880 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GeoTask</title>
-  <!-- Google Fonts and Material Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <style>
-  :root {
-  --color-bg: #fff !important;
-  --color-surface: #fff !important;
-  --color-text: #000 !important;
-  --color-heading: #000 !important; --color-primary: #000 !important;
---color-primary-hover: #222 !important;
---color-primary-dark: #111 !important;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBusiness - შექმენი შენი ვებსაიტი</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
---color-success: #444 !important;
---color-danger: #000 !important;
---color-danger-dark: #111 !important;
+    <style>
+        /* Custom Tailwind Configuration (replicated inline) */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --bg-light: #f9fafb;
+            --bg-dark: #e5e7eb;
+            --text: #111827;
+            --text-light: #6b7280;
+            --border: #d1d5db;
+            --radius: 12px;
+        }
 
---color-muted: #666 !important;
---color-border: #000 !important;
---color-border-light: #ccc !important;
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-light);
+            color: var(--text);
+        }
 
---radius-sm: 8px;
---radius-md: 12px;
---radius-lg: 16px;
---radius-xl: 24px;
+        /* Base styles for buttons, inputs, etc. */
+        input[type="text"], textarea, input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.5rem; /* Equivalent to rounded-lg */
+            border: 1px solid var(--border);
+            background-color: white;
+            transition: all 0.3s ease-in-out;
+        }
+        input[type="text"]:focus, textarea:focus, input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Equivalent to ring-2 ring-primary */
+        }
 
---shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.1);
---shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
---shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-@font-face {
-font-family: 'myffont';
-src: url('alk-sanet.ttf');
-}
-*,
-*::before,
-*::after {
-box-sizing: border-box;
-font-family: 'myffont';
-line-height: 1;
-margin: 0;
-padding: 0;
-}
+        /* Specific button styles */
+        .btn-add-service {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1rem;
+            background-color: #dbeafe; /* bg-blue-100 */
+            border: none;
+            color: var(--primary-dark);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+        }
+        .btn-add-service:hover {
+            background-color: var(--primary);
+            color: white;
+        }
 
-body {
-background-color: var(--color-bg);
-color: var(--color-text);
-padding-bottom: 72px;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-user-select: none;
-}
+        .publish-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            background-color: var(--primary);
+            border: none;
+            color: white;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: bold;
+            padding: 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            transition: all 0.3s ease-in-out;
+        }
+        .publish-btn:disabled {
+            background-color: var(--bg-dark);
+            cursor: default;
+            box-shadow: none;
+            color: var(--text-light);
+        }
+        .publish-btn:not(:disabled):hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-xl */
+        }
 
-/* Header */
-header {
-background-color: white;
-color: white;
-font-size: 2rem;
-font-weight: 700;
-text-align: center;
-letter-spacing: 0.06em;
-position: sticky;
-top: 0;
-z-index: 10;
-box-shadow: none;
-width: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
-top: 10px;
-height: 80px;
+        .error-message {
+            color: #ef4444; /* text-red-600 */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.25rem;
+            display: none; /* Controlled by JS */
+        }
+        .error-message.show {
+            display: block;
+        }
 
-}
-header div {
-width: 95%;
-height: 100%;
-background: black;
-padding: 20px;
-border-radius: 10px;
-background-image: url('https://i.postimg.cc/0NyKt1rS/Picsart-25-07-24-00-35-36-421.png');
-background-size: cover;        /* სურათი სრულად დაფაროს დივი /
-background-position: center;   / ცენტრში გაასწოროს /
-background-repeat: no-repeat;  / არ გაიმეოროს სურათი */
-display: flex;
-justify-content: center;
-align-items: center;
-text-shadow: 0px 0px 7px white;
-box-shadow: 0px 5px 15px #000000D4;
-}
+        /* Generated Site specific styles */
+        .hero-section h1 {
+            font-size: 3rem; /* text-5xl */
+            font-weight: 800; /* font-extrabold */
+            margin-bottom: 1rem;
+            line-height: 1.25;
+            letter-spacing: -0.025em; /* tracking-wide */
+        }
+        .hero-section p {
+            font-size: 1.25rem; /* text-xl */
+            max-width: 48rem; /* max-w-3xl */
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+            font-weight: 500; /* font-medium */
+        }
+        .hero-section a.btn-primary {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            font-weight: bold;
+            border-radius: 9999px; /* rounded-full */
+            text-transform: uppercase;
+            background-color: white;
+            color: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            transition: all 0.3s;
+        }
+        .hero-section a.btn-primary:hover {
+            background-color: var(--primary-dark);
+            color: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-xl */
+        }
 
-/* Pages */
-.page {
-display: none;
-padding: 24px 20px;
-max-width: 600px;
-margin: 0 auto;
-animation: fadeIn 0.3s ease forwards;
-background-color: var(--color-surface);
-color: var(--color-text);
-border-radius: var(--radius-lg);
-box-shadow: var(--shadow-md);
-}
-
-.page.active {
-display: block;
-}
-
-@keyframes fadeIn {
-from {
-opacity: 0;
-transform: translateY(8px);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
-}
-
-/* Task Cards */
-.task-card {
-background-color: var(--color-surface);
-border-radius: var(--radius-lg);
-box-shadow: var(--shadow-sm);
-padding: 18px 22px;
-margin-bottom: 18px;
-transition: box-shadow 0.25s ease;
-cursor: default;
-color: var(--color-text);
-}
-
-.task-card:hover {
-box-shadow: var(--shadow-lg);
-}
-
-.task-card h3 {
-font-size: 1.15rem;
-margin-bottom: 8px;
-color: var(--color-primary);
-}
-
-.task-card p {
-font-size: 0.95rem;
-font-weight: 600;
-margin-bottom: 6px;
-line-height: 1.35;
-word-break: break-word;
-color: var(--color-text);
-}
-
-.task-card .pay {
-color: var(--color-primary);
-font-weight: 700;
-margin-top: 8px;
-font-size: 16px;
-}
-
-.task-card .delete-btn {
-background-color: var(--color-primary);
-color: var(--color-surface);
-border: none;
-border-radius: var(--radius-md);
-padding: 8px 14px;
-font-size: 1rem;
-margin-top: 12px;
-box-shadow: none;
-cursor: pointer;
-transition: background-color 0.3s ease;
-}
-
-.task-card .delete-btn:hover {
-background-color: var(--color-primary-hover);
-box-shadow: none;
-}
-
-/* Form Elements */
-label {
-font-weight: 600;
-display: block;
-margin-bottom: 8px;
-color: var(--color-heading);
-}
-
-input,
-select,
-textarea {
-width: 100%;
-padding: 14px 16px;
-border-radius: var(--radius-md);
-border: 1.8px solid var(--color-border);
-background-color: var(--color-surface);
-color: var(--color-text);
-font-size: 1rem;
-font-weight: 500;
-margin-bottom: 22px;
-transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input::placeholder,
-textarea::placeholder {
-color: var(--color-muted);
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-border-color: var(--color-primary);
-box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-outline: none;
-}
-
-textarea {
-resize: vertical;
-min-height: 100px;
-}
-
-/* Buttons */
-button.primary {
-background-color: var(--color-primary);
-color: var(--color-surface);
-border: none;
-border-radius: var(--radius-lg);
-padding: 16px;
-width: 100%;
-font-weight: 700;
-font-size: 1.15rem;
-box-shadow: none;
-cursor: pointer;
-user-select: none;
-transition: background-color 0.3s ease, transform 0.1s ease;
-}
-
-button.primary:hover {
-background-color: var(--color-primary-hover);
-box-shadow: none;
-}
-
-button.primary:active {
-transform: scale(0.98);
-}
-
-/* Bottom Navigation */
-.bottom-nav {
-position: fixed;
-bottom: 0;
-left: 0;
-right: 0;
-height: 64px;
-background-color: var(--color-surface);
-border-top: 1.5px solid var(--color-border-light);
-display: flex;
-justify-content: space-around;
-align-items: center;
-z-index: 9999;
-box-shadow: none;
-}
-
-.bottom-nav button {
-background: none;
-border: none;
-color: var(--color-muted);
-display: flex;
-flex-direction: column;
-align-items: center;
-font-size: 12px;
-cursor: pointer;
-padding: 2px 6px;
-position: relative;
-transition: color 0.3s ease;
-}
-
-.bottom-nav button.active,
-.bottom-nav button:hover {
-color: var(--color-primary);
-}
-
-.bottom-nav button:active::after {
-content: '';
-position: absolute;
-bottom: -6px;
-left: 30%;
-width: 40%;
-height: 3px;
-background-color: var(--color-primary);
-border-radius: 12px;
-}
-
-.material-icons-outlined {
-font-size: 28px;
-margin-bottom: 4px;
-}
-
-/* Filters */
-.filter-group {
-display: flex;
-gap: 10px;
-margin-bottom: 24px;
-max-width: 100%;
-align-items: stretch;
-justify-content: center;
-}
-
-#searchInput {
-flex-grow: 9;
-padding: 14px 18px;
-font-size: 1rem;
-border: 1.5px solid var(--color-border);
-border-radius: var(--radius-md);
-background-color: var(--color-surface);
-color: var(--color-text);
-font-weight: 500;
-transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#searchInput:focus {
-border-color: var(--color-primary);
-box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-outline: none;
-}
-
-.category-wrapper {
-position: relative;
-flex-grow: 1;
-max-width: 100px;
-}
-
-.category-wrapper select {
-width: 40px;
-font-size: 1rem;
-border: 1.5px solid var(--color-border);
-border-radius: var(--radius-md);
-background-color: var(--color-surface);
-color: var(--color-text);
-font-weight: 600;
-transition: border-color 0.3s ease, box-shadow 0.3s ease;
-appearance: none;
-padding-left: 40px;
-}
-
-.category-wrapper select:focus {
-border-color: var(--color-primary);
-box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-outline: none;
-}
-
-.filter-icon {
-position: absolute;
-left: 32%;
-top: 37%;
-transform: translateY(-50%);
-font-size: 20px;
-color: var(--color-muted);
-pointer-events: none;
-}
-
-/* Login Page */
-#loginPage {
-max-width: 400px;
-margin: 48px auto 72px auto;
-background-color: var(--color-surface);
-padding: 32px 28px;
-border-radius: var(--radius-xl);
-box-shadow: var(--shadow-md);
-color: var(--color-text);
-}
-
-#loginPage h2 {
-margin-bottom: 24px;
-text-align: center;
-color: var(--color-primary);
-font-weight: 800;
-letter-spacing: 0.06em;
-font-size: 1.8rem;
-}
-
-#loginPage input {
-margin-bottom: 24px;
-font-weight: 600;
-background-color: var(--color-surface);
-color: var(--color-text);
-}
-
-#loginPage button {
-margin-top: 12px;
-box-shadow: none;
-}
-
-/* Error Text */
-#loginError {
-color: var(--color-danger);
-text-align: center;
-margin-bottom: 16px;
-font-weight: 600;
-}
-
-/* No Tasks Message */
-#noTasksMsg {
-color: var(--color-muted);
-text-align: center;
-margin-top: 36px;
-font-style: italic;
-user-select: none;
-}
-#noFavoritesMsg {
-color: var(--color-muted);
-text-align: center;
-margin-top: 36px;
-font-style: italic;
-user-select: none;
-}
-
-/* Loading Overlay */
-#loadingOverlay {
-position: fixed;
-inset: 0;
-background: var(--color-surface);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 99999;
-user-select: none;
-}
-
-.loader {
-width: 50px;
-aspect-ratio: 1;
-border-radius: 50%;
-border: 8px solid;
-border-color: var(--color-text) transparent;
-animation: l1 1s linear infinite;
-}
-
-@keyframes l1 {
-to {
-transform: rotate(180deg);
-}
-}
-#loginBtn{
-background: white;
-border: 2px solid black;
-color: black;
-}
-/* სტილები იგივე, როგორც პირადული კოდის მიხედვით... /
-/ --- სრულად ჩასვით ზემოთ მოცემული CSS --- /
-/ აქ არ გადმოიწერდება ადგილი ეკონომიის მიზნით, მაგრამ შეგიძლიათ გამოიყენოთ ის რაც გქონდათ. /
-/ დამატებითი დეტალები მოდალისთვის: */
-#taskModal {
-width: 100%;
-height: 100vh;
-display:none;
-position:fixed;
-z-index: 1000;
-left:0;top:0;right:0;bottom:0;
-background:rgba(0,0,0,0.25);
-justify-content:center;
-align-items: center;
-
-}
-#taskModal .modal-content {
-  background:white;
-  padding:32px 24px;
-  border-radius:16px;
-  width: 95%;
-  margin:64px auto 0 auto;
-  box-shadow:0 16px 48px #0003;
-  position:relative;
-  font-size:1rem;
-  border:2px solid black;
-  height: auto;
-  margin-bottom: 150px ;
-}
-#taskModal .modal-content button {
-  margin-top:24px;
-  width:100%;
-}
-#taskModal .modal-content h3 {
-  margin-bottom:18px;
-}
-#taskModal .modal-content p {
-  margin-bottom:7px;
-  font-size:1rem;
-}
-.closetask , .delete-btn{
-  height: 50px;
-  border-radius: 10px;
-  border: none;
-  background: black;
-  color: white;
-  font-size: 1.5rem;
-}
-
-/* Profile page specific styles for buttons */
-#profilePage .tab-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-}
-
-#profilePage .tab-buttons button {
-    background-color: var(--color-border-light);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: 10px 15px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-#profilePage .tab-buttons button.active {
-    background-color: var(--color-primary);
-    color: var(--color-surface);
-}
-
-#profilePage .tab-buttons button:hover:not(.active) {
-    background-color: var(--color-border);
-    color: var(--color-surface);
-}
-
-/* Favorite button on task cards */
-.task-card .favorite-btn {
-    background: none;
-    border: none;
-    color: var(--color-muted);
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
-    margin-left: auto; /* Push to the right */
-    display: flex;
-    align-items: center;
-    transition: color 0.3s ease;
-}
-
-.task-card .favorite-btn .material-icons {
-    font-size: 24px;
-}
-
-.task-card .favorite-btn.active .material-icons {
-    color: var(--color-danger); /* Or any color for active favorite */
-}
-
-/* To align favorite button nicely */
-.task-card {
-    display: flex;
-    flex-direction: column;
-    position: relative; /* For absolute positioning of favorite button if needed */
-}
-
-.task-card .favorite-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: gray; /* Default color */
-}
-
-.task-card .favorite-btn.is-favorite {
-    color: black; /* Color when it's a favorite */
-}
-  </style>
+        /* Mobile menu specific styles */
+        #nav-menu.mobile-menu-open {
+            transform: translateX(0);
+        }
+        #nav-menu.mobile-menu-closed {
+            transform: translateX(100%);
+        }
+        @media (min-width: 768px) { /* Equivalent to md breakpoint */
+            #nav-menu.mobile-menu-closed, #nav-menu.mobile-menu-open {
+                transform: translateX(0);
+            }
+            #nav-menu {
+                position: static;
+                flex-direction: row;
+                justify-content: flex-end; /* Align items to the right in desktop */
+                space-x: 2rem; /* space-x-8 */
+                space-y: 0;
+                background-color: transparent;
+            }
+            #burger {
+                display: none;
+            }
+        }
+        .burger-line-1.open { transform: rotate(45deg) translate(0, 10px); }
+        .burger-line-2.open { opacity: 0; }
+        .burger-line-3.open { transform: rotate(-45deg) translate(0, -10px); }
+    </style>
 </head>
 <body>
-<div id="loadingOverlay" role="alert" aria-live="polite" aria-label="იტვირთება">
-  <div class="loader"></div>
-</div>
-<header><div>geotask</div></header>
-<br><br>
-<!-- LOGIN PAGE -->
-<section id="loginPage" class="page active" aria-label="შესვლის და რეგისტრაციის გვერდი">
-  <h2>რეგისტრაცია</h2>
-  <div id="loginError" role="alert" aria-live="polite"></div>
-  <input type="email" id="emailInput" placeholder="ელ.ფოსტა" autocomplete="username" aria-required="true" />
-  <input type="password" id="passwordInput" placeholder="პაროლი" autocomplete="current-password" aria-required="true" />
-  <button id="registerBtn" class="primary" style="background:black; margin-top:12px;" aria-label="რეგისტრაციის ღილაკი">რეგისტრაცია</button>
-  <button id="loginBtn" class="primary" aria-label="შესვლის ღილაკი">შესვლა</button>
-</section>
-<!-- TASKS PAGE -->
-<section id="tasksPage" class="page" aria-label="ყველა დავალების გვერდი">
-  <div class="filter-group">
-    <input type="search" id="searchInput" placeholder="ძიება..." aria-label="ძიება დავალებებში" />
-    <div class="category-wrapper">
-      <span class="material-icons filter-icon" aria-hidden="true">filter_list</span>
-      <select id="categoryFilter" aria-label="დავალებების ფილტრი კატეგორიის მიხედვით">
-        <option value="">ყველა კატეგორია</option>
-        <!-- დანარჩენი კატეგორიები აქ ჩავამატეთ -->
-        <option value="ტექსტის დაწერა">ტექსტის დაწერა</option>
-        <option value="თარგმნა">თარგმნა</option>
-        <option value="კონტენტის შექმნა">კონტენტის შექმნა</option>
-        <option value="კორექტურა">კორექტურა</option>
-        <option value="ლოგოს დიზაინი">ლოგოს დიზაინი</option>
-        <option value="გრაფიკული დიზაინი">გრაფიკული დიზაინი</option>
-        <option value="სოციალური პოსტების დიზაინი">სოციალური პოსტების დიზაინი</option>
-        <option value="ფოტო მონტაჟი">ფოტო მონტაჟი</option>
-        <option value="ვიდეო მონტაჟი">ვიდეო მონტაჟი</option>
-        <option value="ფრონტ ენდი">ფრონტ ენდი</option>
-        <option value="ბექ ენდი">ბექ ენდი</option>
-        <option value="მობაილ დეველოპმენტი">მობაილ დეველოპმენტი</option>
-        <option value="ბაგების გამართვა">ბაგების გამართვა</option>
-        <option value="ტესტირება">ტესტირება</option>
-        <option value="სოციალური მედია მენეჯმენტი">სოციალური მედია მენეჯმენტი</option>
-        <option value="მარკეტინგი">მარკეტინგი</option>
-        <option value="რეკლამის მართვა">რეკლამის მართვა</option>
-        <option value="SEO ოპტიმიზაცია">SEO ოპტიმიზაცია</option>
-        <option value="ონლაინ შოპინგის დახმარება">ონლაინ შოპინგის დახმარება</option>
-        <option value="ფორმების შევსება">ფორმების შევსება</option>
-        <option value="მცირე კვლევა">მცირე კვლევა</option>
-        <option value="მონაცემების აკრეფა">მონაცემების აკრეფა</option>
-      </select>
-    </div>
-  </div>
-  <div id="tasksList" aria-live="polite"></div>
-</section>
-<!-- დეტალების მოდალი -->
-<div id="taskModal"></div>
-<!-- POST PAGE -->
-<section id="postPage" class="page" aria-label="ახალი დავალების დამატების გვერდი">
-  <h2>დავალების დამატება</h2><br>
-  <form id="postTaskForm" novalidate>
-    <label for="taskCategory">კატეგორია</label>
-    <select id="taskCategory" required aria-required="true">
-      <option value="" disabled selected>აირჩიეთ კატეგორია</option>
-      <!-- იგივე კატეგორიები როგორიც სიაში -->
-      <option value="ტექსტის დაწერა">ტექსტის დაწერა</option>
-      <option value="თარგმნა">თარგმნა</option>
-      <option value="კონტენტის შექმნა">კონტენტის შექმნა</option>
-      <option value="კორექტურა">კორექტურა</option>
-      <option value="ლოგოს დიზაინი">ლოგოს დიზაინი</option>
-      <option value="გრაფიკული დიზაინი">გრაფიკული დიზაინი</option>
-      <option value="სოციალური პოსტების დიზაინი">სოციალური პოსტების დიზაინი</option>
-      <option value="ფოტო მონტაჟი">ფოტო მონტაჟი</option>
-      <option value="ვიდეო მონტაჟი">ვიდეო მონტაჟი</option>
-      <option value="ფრონტ ენდი">ფრონტ ენდი</option>
-      <option value="ბექ ენდი">ბექ ენდი</option>
-      <option value="მობაილ დეველოპმენტი">მობაილ დეველოპმენტი</option>
-      <option value="ბაგების გამართვა">ბაგების გამართვა</option>
-      <option value="ტესტირება">ტესტირება</option>
-      <option value="სოციალური მედია მენეჯმენტი">სოციალური მედია მენეჯმენტი</option>
-      <option value="მარკეტინგი">მარკეტინგი</option>
-      <option value="რეკლამის მართვა">რეკლამის მართვა</option>
-      <option value="SEO ოპტიმიზაცია">SEO ოპტიმიზაცია</option>
-      <option value="ონლაინ შოპინგის დახმარება">ონლაინ შოპინგის დახმარება</option>
-      <option value="ფორმების შევსება">ფორმების შევსება</option>
-      <option value="მცირე კვლევა">მცირე კვლევა</option>
-      <option value="მონაცემების აკრეფა">მონაცემების აკრეფა</option>
-    </select>
-    <label for="taskDescription">აღწერა</label>
-    <textarea id="taskDescription" rows="4" required aria-required="true" placeholder="დაიწერე დავალების დეტალური აღწერა"></textarea>
-    <label for="taskContact">კონტაქტი (ტელეფონი/სოციალური)</label>
-    <input type="text" id="taskContact" required aria-required="true" placeholder="ტელ / სოციალური ქსელის @username" />
-    <label for="taskPayment">ანაზღაურება (₾)</label>
-    <input type="number" id="taskPayment" min="0" required aria-required="true" placeholder="ანაზღაურების რაოდენობა" />
-    <button id="postTaskBtn" class="primary" type="submit" aria-label="დავალების გამოქვეყნების ღილაკი">დავალების გამოქვეყნება</button>
-  </form>
-</section>
-<!-- PROFILE PAGE -->
-<section id="profilePage" class="page" aria-label="მომხმარებლის პროფილი - დაპოსტილი დავალებები და ფავორიტები">
-  <h2>პროფილი</h2><br>
-  <div class="tab-buttons">
-    <button id="btnUserTasks" class="active" aria-label="ჩემი პოსტები">ჩემი პოსტები</button>
-    <button id="btnFavorites" aria-label="ფავორიტები">ფავორიტები</button>
-  </div>
-  <div id="userTasksList" aria-live="polite"></div>
-  <div id="favoritesList" aria-live="polite" style="display:none;"></div>
-  <p id="noTasksMsg" style="display:none;">თქვენ ჯერ არ გაქვთ დაპოსტილი დავალებები.</p>
-  <p id="noFavoritesMsg" style="display:none;">ფავორიტებზე არაფერია დამატებული.</p>
-</section>
-<!-- Bottom Navigation -->  <nav id="navnav" class="bottom-nav" role="navigation" aria-label="ქვედა ნავიგაცია">
-  <button id="navTasks" class="active" aria-label="დავალებების ნახვა" type="button">
-    <span class="material-icons-outlined" aria-hidden="true">list_alt</span> დავალებები
-  </button>
-  <button id="navPost" aria-label="ახალი დავალების პოსტვა" type="button">
-    <span class="material-icons-outlined" aria-hidden="true">add_circle</span> დაპოსტე
-  </button>
-  <button id="navProfile" aria-label="ჩემი დავალებების ნახვა" type="button">
-    <span class="material-icons-outlined" aria-hidden="true">person</span> პროფილი
-  </button>
-  <button id="navLogout" aria-label="გამოსვლა" type="button">
-    <span class="material-icons-outlined" aria-hidden="true">logout</span> გამოსვლა
-  </button>
-</nav>  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-import {
-  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import {
-  getDatabase, ref, push, onValue, remove, set
-} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB5se_Fmj3dGvC1YCh8fOIN5__0EZWsPTQ",
-  authDomain: "shop-156df.firebaseapp.com",
-  databaseURL: "https://shop-156df-default-rtdb.firebaseio.com",
-  projectId: "shop-156df",
-  storageBucket: "shop-156df.firebasestorage.app",
-  messagingSenderId: "472375031829",
-  appId: "1:472375031829:web:3687bb0654f47255a9361c",
-  measurementId: "G-36C3B74NL0"
-};
+    <header class="bg-white p-5 shadow-sm sticky top-0 z-50 flex justify-between items-center border-b border-border">
+        <a href="#" id="site-logo" class="text-primary text-3xl font-extrabold tracking-wide">MyBusiness</a>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-// DOM ელემენტების ცვლადები
-const loginPage = document.getElementById("loginPage");
-const tasksPage = document.getElementById("tasksPage");
-const postPage = document.getElementById("postPage");
-const profilePage = document.getElementById("profilePage");
-
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-const loginError = document.getElementById("loginError");
-
-const navTasks = document.getElementById("navTasks");
-const navPost = document.getElementById("navPost");
-const navProfile = document.getElementById("navProfile");
-const navLogout = document.getElementById("navLogout");
-
-const categoryFilter = document.getElementById("categoryFilter");
-const searchInput = document.getElementById("searchInput");
-const tasksList = document.getElementById("tasksList");
-
-const taskCategory = document.getElementById("taskCategory");
-const taskDescription = document.getElementById("taskDescription");
-const taskContact = document.getElementById("taskContact");
-const taskPayment = document.getElementById("taskPayment");
-const postTaskForm = document.getElementById("postTaskForm");
-
-const userTasksList = document.getElementById("userTasksList");
-const noTasksMsg = document.getElementById("noTasksMsg");
-const taskModal = document.getElementById("taskModal");
-
-// New elements for favorites
-const btnUserTasks = document.getElementById("btnUserTasks");
-const btnFavorites = document.getElementById("btnFavorites");
-const favoritesList = document.getElementById("favoritesList");
-const noFavoritesMsg = document.getElementById("noFavoritesMsg");
-
-let userFavorites = {}; // To store the current user's favorite task IDs
-
-// გვერდების გადართვა
-function showPage(page) {
-  [loginPage, tasksPage, postPage, profilePage].forEach(p => p.classList.remove("active"));
-  page.classList.add("active");
-  [navTasks, navPost, navProfile].forEach(btn => btn.classList.remove("active"));
-  if (page === tasksPage) navTasks.classList.add("active");
-  else if (page === postPage) navPost.classList.add("active");
-  else if (page === profilePage) navProfile.classList.add("active");
-}
-
-// ავტორიზაციის სტატუსი
-onAuthStateChanged(auth, user => {
-  if (user) {
-    loginError.textContent = "";
-    showPage(tasksPage);
-    loadFavoritesStatus(user.uid); // Load favorite status on auth state change
-    loadTasks();
-    loadUserTasks(user.uid);
-    bottomNav.style.display = 'flex';
-  } else {
-    showPage(loginPage);
-    bottomNav.style.display = 'none';
-  }
-});
-
-// რეგისტრაცია
-registerBtn.onclick = () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  if (!email || !password) {
-    loginError.textContent = "ელ.ფოსტა და პაროლი აუცილებელია";
-    return;
-  }
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => { loginError.textContent = ""; })
-    .catch(error => { loginError.textContent = error.message; });
-};
-
-// შესვლა
-loginBtn.onclick = () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  if (!email || !password) {
-    loginError.textContent = "ელ.ფოსტა და პაროლი აუცილებელია";
-    return;
-  }
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => { loginError.textContent = ""; })
-    .catch(error => { loginError.textContent = error.message; });
-};
-
-// გამოსვლა
-navLogout.onclick = () => { signOut(auth); };
-
-// Load favorite status for the current user
-function loadFavoritesStatus(uid) {
-  onValue(ref(db, `userFavorites/${uid}`), snapshot => {
-    userFavorites = snapshot.val() || {};
-    // After loading favorites, reload tasks to update favorite icons
-    loadTasks();
-    if (profilePage.classList.contains('active') && btnFavorites.classList.contains('active')) {
-      loadUserFavorites(); // Reload favorites list if on favorites tab
-    }
-  });
-}
-
-// დავალებების ჩამოტვირთვა (მისაწოდეთ მხოლოდ კატეგორია, დრო და ანაზღაურება)
-function loadTasks() {
-  onValue(ref(db, 'tasks'), snapshot => {
-    const data = snapshot.val();
-    tasksList.innerHTML = "";
-    if (!data) {
-      tasksList.innerHTML = "<p>ვერც ერთი დავალება ვერ მოიძებნა.</p>";
-      return;
-    }
-    const filterCat = categoryFilter.value;
-    const searchTerm = searchInput.value.toLowerCase();
-
-    const tasksArray = Object.entries(data).reverse(); // Display newest first
-
-    tasksArray.forEach(([id, task]) => {
-      if ((filterCat === "" || task.category === filterCat)) {
-        const searchableText = (task.description + " " + task.contact + " " + task.category).toLowerCase();
-        if (!searchableText.includes(searchTerm)) return;
-
-        const posted = new Date(task.timestamp).toLocaleString('ka-GE');
-        const isFavorite = userFavorites[id] ? true : false;
-        const favIcon = isFavorite ? "favorite" : "favorite_border";
-
-        const taskHTML = `
-          <div class="task-card" data-id="${id}" style="cursor:pointer;">
-            <h3>კატეგორია: ${task.category}</h3>
-            <p><strong>დადების დრო:</strong> ${posted}</p>
-            <p class="pay"><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
-            <button class="favorite-btn ${isFavorite ? 'is-favorite' : ''}" aria-label="ფავორიტის დამატება/წაშლა" onclick="event.stopPropagation(); toggleFavorite('${id}')">
-              <span class="material-icons">${favIcon}</span>
+        <div class="md:hidden">
+            <button
+                id="burger"
+                class="relative w-8 h-6 flex flex-col justify-between items-center bg-none border-none cursor-pointer p-0 z-50"
+                aria-label="მთავარი მენიუ"
+            >
+                <span class="block w-8 h-0.5 bg-primary rounded-sm transition-all duration-300 ease-in-out burger-line-1"></span>
+                <span class="block w-8 h-0.5 bg-primary rounded-sm transition-all duration-300 ease-in-out burger-line-2"></span>
+                <span class="block w-8 h-0.5 bg-primary rounded-sm transition-all duration-300 ease-in-out burger-line-3"></span>
             </button>
-          </div>
-        `;
-        tasksList.insertAdjacentHTML('beforeend', taskHTML); // Use 'beforeend' to keep newest at top after reverse
-      }
-    });
+        </div>
 
-    // დააყენეთ click listener-ები მოდალისთვის
-    tasksList.querySelectorAll(".task-card").forEach(card => {
-      card.onclick = (event) => {
-        // Prevent modal from opening if favorite button was clicked
-        if (event.target.closest('.favorite-btn')) {
-            return;
-        }
-        const id = card.getAttribute("data-id");
-        const task = data[id];
-        showTaskModal(task);
-      };
-    });
-  });
-}
+        <nav
+            id="nav-menu"
+            class="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center space-y-8 text-xl transition-transform duration-300 ease-in-out mobile-menu-closed md:static md:flex md:flex-row md:space-x-8 md:space-y-0 md:bg-transparent"
+            role="navigation"
+            aria-label="ძირითადი ნავიგაცია"
+        >
+            <a href="#" id="nav-dashboard" class="font-semibold text-text-light hover:text-primary transition-colors duration-300 hidden">ჩემი საიტები</a>
+            <a href="#" id="nav-create" class="font-semibold text-text-light hover:text-primary transition-colors duration-300 hidden">ახალი საიტი</a>
+            <a href="#" id="nav-login" class="font-semibold text-text-light hover:text-primary transition-colors duration-300">შესვლა</a>
+            <a href="#" id="nav-register" class="font-semibold text-white bg-primary py-2 px-4 rounded-full hover:bg-primary-dark transition-colors duration-300">რეგისტრაცია</a>
+            <button id="nav-logout" class="font-semibold text-red-500 hover:text-red-700 transition-colors duration-300 p-2 rounded hidden">გასვლა</button>
+        </nav>
+    </header>
 
-// დეტალების მოდალის ფუნქცია
-function showTaskModal(task) {
-  const posted = new Date(task.timestamp).toLocaleString('ka-GE');
-  taskModal.innerHTML = `
-    <div class="modal-content">
-      <h3>კატეგორია: ${task.category}</h3>
-      <p><strong>დადების დრო:</strong> ${posted}</p>
-      <p><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
-      <p><strong>აღწერა:</strong> ${task.description}</p>
-      <p><strong>კონტაქტი:</strong> ${task.contact}</p>
-      <button class="closetask" onclick="closeTaskModal()">დახურვა</button>
-    </div>
-  `;
-  taskModal.style.display = 'flex';
-}
-window.closeTaskModal = function() {
-  taskModal.style.display = 'none';
-}
+    <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-8">
+        <div id="login-page" class="form-container bg-white p-10 rounded-radius shadow-xl border border-border max-w-md mx-auto my-16 current-page">
+            <h1 class="text-center text-primary text-4xl font-extrabold mb-8">შესვლა</h1>
+            <form id="login-form">
+                <label for="login-email" class="block mt-4 mb-2 font-bold text-sm text-text">ელ-ფოსტა</label>
+                <input type="email" id="login-email" placeholder="your@example.com" required>
 
-// ახალი პოსტის დადება
-postTaskForm.onsubmit = e => {
-  e.preventDefault();
-  const category = taskCategory.value;
-  const description = taskDescription.value.trim();
-  const contact = taskContact.value.trim();
-  const paymentNum = Number(taskPayment.value.trim());
-  const user = auth.currentUser;
-  if (!category || !description || !contact || !taskPayment.value.trim()) {
-    alert("გთხოვთ შეავსოთ ყველა ველი!");
-    return;
-  }
-  if (isNaN(paymentNum) || paymentNum < 0) {
-    alert("შეიყვანეთ სწორი ანაზღაურების რაოდენობა (0 ან მეტი).");
-    return;
-  }
-  if (!user) {
-    alert("გთხოვთ გაიაროთ ავტორიზაცია");
-    return;
-  }
-  const taskData = {
-    category,
-    description,
-    contact,
-    payment: paymentNum,
-    userId: user.uid,
-    timestamp: Date.now()
-  };
-  push(ref(db, 'tasks'), taskData)
-    .then(() => {
-      alert("დავალება წარმატებით დაემატა!");
-      postTaskForm.reset();
-      showPage(tasksPage);
-      loadTasks(); // Reload tasks to show the new one
-    })
-    .catch(e => alert("დაფიქსირდა შეცდომა: " + e.message));
-};
+                <label for="login-password" class="block mt-4 mb-2 font-bold text-sm text-text">პაროლი</label>
+                <input type="password" id="login-password" placeholder="********" required>
 
-// პროფილის გვერდი - ჩემი დავალებები
-function loadUserTasks(uid) {
-  onValue(ref(db, 'tasks'), snapshot => {
-    const data = snapshot.val();
-    userTasksList.innerHTML = "";
-    if (!data) {
-      noTasksMsg.style.display = "block";
-      return;
-    }
-    let hasTasks = false;
-    Object.entries(data).forEach(([id, task]) => {
-      if (task.userId === uid) {
-        hasTasks = true;
-        userTasksList.insertAdjacentHTML('beforeend', `
-          <div class="task-card" data-id="${id}">
-            <h3>${task.category}</h3>
-            <p><strong>აღწერა:</strong> ${task.description}</p>
-            <p><strong>კონტაქტი:</strong> ${task.contact}</p>
-            <p class="pay"><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
-            <button class="delete-btn" aria-label="დავალების წაშლა" onclick="deleteTask('${id}')">პოსტის წაშლა</button>
-          </div>
-        `);
-      }
-    });
-    noTasksMsg.style.display = hasTasks ? "none" : "block";
-  });
-}
-window.deleteTask = function(id) {
-  if (confirm("ნამდვილად გსურთ ამ დავალების წაშლა?")) {
-    remove(ref(db, 'tasks/' + id))
-      .catch(e => alert("წაშლის დროს პრობლემა: " + e.message));
-  }
-};
+                <button type="submit" class="publish-btn mt-8" id="login-button">შესვლა</button>
+            </form>
+            <p class="text-center mt-6 text-text-light">
+                არ გაქვთ ანგარიში?
+                <a href="#" id="show-register" class="text-primary font-semibold hover:underline">რეგისტრაცია</a>
+            </p>
+        </div>
 
-// Favorites functionality
-// Load user favorites from Firebase
-function loadUserFavorites() {
-  const user = auth.currentUser;
-  if (!user) {
-    favoritesList.innerHTML = "";
-    noFavoritesMsg.style.display = "block";
-    return;
-  }
+        <div id="register-page" class="form-container bg-white p-10 rounded-radius shadow-xl border border-border max-w-md mx-auto my-16 hidden">
+            <h1 class="text-center text-primary text-4xl font-extrabold mb-8">რეგისტრაცია</h1>
+            <form id="register-form">
+                <label for="register-email" class="block mt-4 mb-2 font-bold text-sm text-text">ელ-ფოსტა</label>
+                <input type="email" id="register-email" placeholder="your@example.com" required>
 
-  onValue(ref(db, `userFavorites/${user.uid}`), favoriteSnapshot => {
-    userFavorites = favoriteSnapshot.val() || {}; // Update global userFavorites
-    favoritesList.innerHTML = "";
+                <label for="register-password" class="block mt-4 mb-2 font-bold text-sm text-text">პაროლი</label>
+                <input type="password" id="register-password" placeholder="მინიმუმ 6 სიმბოლო" required minlength="6">
 
-    if (Object.keys(userFavorites).length === 0) {
-      noFavoritesMsg.style.display = "block";
-      favoritesList.innerHTML = "";
-      return;
-    }
-    noFavoritesMsg.style.display = "none";
+                <label for="confirm-password" class="block mt-4 mb-2 font-bold text-sm text-text">პაროლის გამეორება</label>
+                <input type="password" id="confirm-password" placeholder="გაიმეორეთ პაროლი" required>
 
-    // Now fetch the actual task details for favorited tasks
-    onValue(ref(db, 'tasks'), tasksSnapshot => {
-      const allTasks = tasksSnapshot.val() || {};
-      favoritesList.innerHTML = "";
-      let foundFavorites = false;
-      Object.keys(userFavorites).forEach(taskId => {
-        const task = allTasks[taskId];
-        if (task) {
-          foundFavorites = true;
-          const posted = new Date(task.timestamp).toLocaleString('ka-GE');
-          favoritesList.insertAdjacentHTML('beforeend', `
-            <div class="task-card" data-id="${taskId}">
-              <h3>კატეგორია: ${task.category}</h3>
-              <p><strong>დადების დრო:</strong> ${posted}</p>
-              <p><strong>ანაზღაურება:</strong> ${task.payment} ₾</p>
-              <p><strong>აღწერა:</strong> ${task.description}</p>
-              <p><strong>კონტაქტი:</strong> ${task.contact}</p>
-              <button class="delete-btn" aria-label="ფავორიტიდან წაშლა" onclick="toggleFavorite('${taskId}')">
- წაშლა ფავორიტებიდან
-              </button>
+                <button type="submit" class="publish-btn mt-8" id="register-button">რეგისტრაცია</button>
+            </form>
+            <p class="text-center mt-6 text-text-light">
+                უკვე გაქვთ ანგარიში?
+                <a href="#" id="show-login" class="text-primary font-semibold hover:underline">შესვლა</a>
+            </p>
+        </div>
+
+        <div id="dashboard-page" class="dashboard-container my-8 hidden">
+            <h1 class="text-4xl font-extrabold text-text mb-6">ჩემი ვებსაიტები</h1>
+            <button id="dashboard-create-new-site" class="btn-add-service bg-primary text-white hover:bg-primary-dark w-fit px-6 py-3 rounded-full mb-8 block ml-auto">
+                + შექმენი ახალი ვებსაიტი
+            </button>
+
+            <div id="user-sites-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+            <div id="no-sites-message" class="text-center p-10 bg-white rounded-xl shadow-md border border-border hidden">
+                <p class="text-xl text-text-light mb-4">თქვენ ჯერ არ გაქვთ შექმნილი ვებსაიტები.</p>
+                <button id="no-sites-create-button" class="text-primary font-semibold hover:underline">
+                    დაიწყეთ თქვენი პირველი საიტის შექმნა!
+                </button>
             </div>
-          `);
+             <div id="dashboard-loading" class="flex justify-center items-center py-10 hidden">
+                <p class="text-lg text-text-light">საიტები იტვირთება...</p>
+            </div>
+        </div>
+
+        <div id="create-site-page" class="form-container bg-white p-10 rounded-radius shadow-xl border border-border max-w-2xl mx-auto my-8 hidden">
+            <h1 class="text-center text-primary text-4xl font-extrabold mb-8">შექმენი შენი ბიზნეს ვებსაიტი</h1>
+            <form id="create-site-form">
+                <label for="name" class="block mt-4 mb-2 font-bold text-sm text-text">ბიზნესის დასახელება *</label>
+                <input type="text" id="name" placeholder="მაგ. ჩემი კაფე, ხალიჩების წმენდა" required>
+                <div id="nameError" class="error-message"></div>
+
+                <label for="about" class="block mt-4 mb-2 font-bold text-sm text-text">მოკლე აღწერა (ჰერო სექციისთვის) *</label>
+                <textarea id="about" placeholder="მოკლედ აღწერე რას აკეთებს შენი ბიზნესი, რა არის მისი მისია..." class="min-h-[100px]" required></textarea>
+                <div id="aboutError" class="error-message"></div>
+
+                <label for="aboutDetail" class="block mt-4 mb-2 font-bold text-sm text-text">„ჩვენ შესახებ“ დეტალური ტექსტი</label>
+                <textarea id="aboutDetail" placeholder="დაწყებული ბიზნესის ისტორია, მისია და დამატებითი ინფორმაცია..." class="min-h-[120px]"></textarea>
+
+                <label class="block mt-4 mb-2 font-bold text-sm text-text">სერვისები</label>
+                <div id="services-container" class="flex flex-col gap-5 mt-3">
+                    <div class="service-pair flex flex-col sm:flex-row gap-4 items-start">
+                        <input type="text" class="service-name flex-1 w-full sm:w-auto p-3 text-sm" placeholder="მომსახურების სახელი">
+                        <textarea class="service-description flex-1 w-full sm:w-auto min-h-[70px] p-3 text-sm" placeholder="კონკრეტული მოკლე აღწერა"></textarea>
+                    </div>
+                     <div class="service-pair flex flex-col sm:flex-row gap-4 items-start">
+                        <input type="text" class="service-name flex-1 w-full sm:w-auto p-3 text-sm" placeholder="მომსახურების სახელი">
+                        <textarea class="service-description flex-1 w-full sm:w-auto min-h-[70px] p-3 text-sm" placeholder="კონკრეტული მოკლე აღწერა"></textarea>
+                    </div>
+                </div>
+                <button type="button" class="btn-add-service" id="add-service-btn">
+                    + მეტი სერვისი
+                </button>
+
+                <label for="address" class="block mt-4 mb-2 font-bold text-sm text-text">მისამართი</label>
+                <input type="text" id="address" placeholder="მაგ. ქ. თბილისი, მერაბ კოსტავას ქ. N1">
+
+                <label for="contact" class="block mt-4 mb-2 font-bold text-sm text-text">საკონტაქტო ინფორმაცია (ტელეფონი ან ელ. ფოსტა) *</label>
+                <input type="text" id="contact" placeholder="+995 555 123 456 ან info@mybusiness.ge" required>
+                <div id="contactError" class="error-message"></div>
+
+                <button type="submit" class="publish-btn" id="create-site-button">გამოქვეყნება</button>
+            </form>
+        </div>
+
+        <div id="generated-site-page" class="site-content bg-white rounded-radius shadow-2xl p-8 md:p-12 lg:p-16 max-w-5xl mx-auto my-8 md:my-12 hidden">
+            <div id="site-loading-error" class="text-center mt-20 p-8 bg-white rounded-xl shadow-md border border-border hidden">
+                <h1 class="text-4xl text-red-600 font-bold mb-4">😢 ვებსაიტი ვერ მოიძებნა.</h1>
+                <p class="text-lg text-text-light">გთხოვთ გადაამოწმოთ ბმული ან <button id="site-error-create-new" class="text-primary hover:underline font-semibold">შექმენით ახალი საიტი</button>.</p>
+            </div>
+            <section class="hero-section bg-primary text-white p-16 md:p-20 rounded-radius text-center mb-16 shadow-xl shadow-primary-dark/30" aria-labelledby="siteNameHero" role="banner">
+                <h1 id="generated-site-name"></h1>
+                <p id="generated-site-about" class="text-lg md:text-xl"></p>
+                <a href="#generated-contact-info" class="btn-primary" aria-label="დაგვიკავშირდით">დაგვიკავშირდით</a>
+            </section>
+
+            <section id="generated-about-us" class="mb-16 md:mb-24 px-4" aria-labelledby="aboutUsTitle">
+                <h2 id="aboutUsTitle" class="text-3xl md:text-4xl font-extrabold text-primary-dark mb-6 text-center">ჩვენ შესახებ</h2>
+                <p id="generated-site-about-detail" class="text-lg text-text-light max-w-3xl mx-auto leading-relaxed"></p>
+            </section>
+
+            <section id="generated-services" class="mb-16 md:mb-24 px-4" aria-labelledby="servicesTitle">
+                <h2 id="servicesTitle" class="text-3xl md:text-4xl font-extrabold text-primary-dark mb-10 text-center">ჩვენი მომსახურება</h2>
+                <div id="generated-services-list" class="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto" aria-live="polite">
+                    </div>
+            </section>
+
+            <section id="generated-contact-info" class="mt-16 md:mt-24 text-center px-4" aria-labelledby="contactInfoTitle">
+                <h2 id="contactInfoTitle" class="text-3xl md:text-4xl font-extrabold text-primary-dark mb-6">კონტაქტი</h2>
+                <p class="text-lg text-text-light mb-2">დაგვიკავშირდით ნებისმიერი კითხვისთვის:</p>
+                <p class="text-lg text-text-light mb-2">
+                    <strong class="text-text font-bold">ტელეფონი/ელ. ფოსტა:</strong> <span id="generated-site-contact-display"></span>
+                </p>
+                <p class="text-lg text-text-light">
+                    <strong class="text-text font-bold">მისამართი:</strong> <span id="generated-site-address-display"></span>
+                </p>
+            </section>
+        </div>
+
+        <div id="not-found-page" class="text-center mt-20 p-8 bg-white rounded-xl shadow-md hidden">
+            <h1 class="text-4xl text-red-600 font-bold mb-4">404 - გვერდი ვერ მოიძებნა 😢</h1>
+            <p class="text-lg text-text-light">ბმული, რომელსაც ეძებთ, არ არსებობს. <a href="#" id="go-home-404" class="text-primary hover:underline font-semibold">მთავარ გვერდზე დაბრუნება</a>.</p>
+        </div>
+    </main>
+
+    <footer class="bg-text text-white text-center p-6 text-sm user-select-none shrink-0 border-t border-border">
+        <p>&copy; 2025 <span id="footerSiteName">MyBusiness</span>. ყველა უფლება დაცულია.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Your Firebase configuration (REPLACE WITH YOURS)
+        const firebaseConfig = {
+          apiKey: "AIzaSyBNkJJKCbyiGsZtGnZW6pLEAO4hfGAhGn0",
+          authDomain: "busines-6009a.firebaseapp.com",
+          databaseURL: "https://busines-6009a-default-rtdb.europe-west1.firebasedatabase.app", // This is for Realtime DB, Firestore is used below
+          projectId: "busines-6009a",
+          storageBucket: "busines-6009a.firebasestorage.app",
+          messagingSenderId: "1060456180737",
+          appId: "1:1060456180737:web:2a16c8a0b7a19740c7a400",
+          measurementId: "G-KRLDD9XV3V"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
+
+        // --- DOM Elements ---
+        const pages = {
+            login: document.getElementById('login-page'),
+            register: document.getElementById('register-page'),
+            dashboard: document.getElementById('dashboard-page'),
+            create: document.getElementById('create-site-page'),
+            generatedSite: document.getElementById('generated-site-page'),
+            notFound: document.getElementById('not-found-page')
+        };
+
+        const navLinks = {
+            dashboard: document.getElementById('nav-dashboard'),
+            create: document.getElementById('nav-create'),
+            login: document.getElementById('nav-login'),
+            register: document.getElementById('nav-register'),
+            logout: document.getElementById('nav-logout')
+        };
+
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const createSiteForm = document.getElementById('create-site-form');
+        const userSitesList = document.getElementById('user-sites-list');
+        const noSitesMessage = document.getElementById('no-sites-message');
+        const dashboardLoading = document.getElementById('dashboard-loading');
+
+        const burgerButton = document.getElementById('burger');
+        const navMenu = document.getElementById('nav-menu');
+        const burgerLines = [
+            document.querySelector('.burger-line-1'),
+            document.querySelector('.burger-line-2'),
+            document.querySelector('.burger-line-3')
+        ];
+
+        let currentAuthUser = null; // To store the current authenticated user
+
+        // --- Utility Functions ---
+        function showPage(pageId, siteData = null) {
+            Object.values(pages).forEach(page => page.classList.add('hidden'));
+            pages[pageId].classList.remove('hidden');
+
+            if (pageId === 'generatedSite' && siteData) {
+                renderGeneratedSite(siteData);
+            } else if (pageId === 'dashboard') {
+                fetchUserSites();
+            }
+
+            closeMobileMenu(); // Close menu on navigation
         }
-      });
-      if (!foundFavorites) {
-          noFavoritesMsg.style.display = "block";
-          favoritesList.innerHTML = "";
-      }
-    }, {
-      onlyOnce: true // Fetch tasks only once for favorites list
-    });
-  });
-}
 
-// Function to add/remove a task from favorites
-window.toggleFavorite = function(taskId) {
-  const user = auth.currentUser;
-  if (!user) {
-    alert("გთხოვთ გაიაროთ ავტორიზაცია");
-    return;
-  }
-
-  const favPath = `userFavorites/${user.uid}/${taskId}`;
-  if (userFavorites[taskId]) {
-    // Remove from favorites
-    remove(ref(db, favPath))
-      .then(() => {
-        delete userFavorites[taskId]; // Update local cache
-        // Update the icon on the currently displayed task if it's visible
-        const taskCard = document.querySelector(`.task-card[data-id="${taskId}"]`);
-        if (taskCard) {
-            taskCard.querySelector('.favorite-btn .material-icons').textContent = 'favorite_border';
-            taskCard.querySelector('.favorite-btn').classList.remove('is-favorite');
+        function showToast(message, type = 'success', duration = 3000) {
+            Toastify({
+                text: message,
+                duration: duration,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: type === 'success' ? "#4CAF50" : (type === 'error' ? "#f44336" : "#2196F3"),
+                },
+                onClick: function(){} // Callback after click
+            }).showToast();
         }
-        if (profilePage.classList.contains('active') && btnFavorites.classList.contains('active')) {
-          loadUserFavorites(); // Reload favorites list if on favorites tab
-        } else {
-          loadTasks(); // Reload all tasks to update favorite status
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
-      })
-      .catch(e => alert("ფავორიტიდან წაშლის დროს პრობლემა: " + e.message));
-  } else {
-    // Add to favorites
-    set(ref(db, favPath), true) // Store taskId: true
-      .then(() => {
-        userFavorites[taskId] = true; // Update local cache
-        // Update the icon on the currently displayed task if it's visible
-        const taskCard = document.querySelector(`.task-card[data-id="${taskId}"]`);
-        if (taskCard) {
-            taskCard.querySelector('.favorite-btn .material-icons').textContent = 'favorite';
-            taskCard.querySelector('.favorite-btn').classList.add('is-favorite');
+
+        function clearForm(form) {
+            form.reset();
+            form.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            // Clear dynamic service inputs for create form
+            if (form.id === 'create-site-form') {
+                const servicesContainer = document.getElementById('services-container');
+                servicesContainer.innerHTML = `
+                    <div class="service-pair flex flex-col sm:flex-row gap-4 items-start">
+                        <input type="text" class="service-name flex-1 w-full sm:w-auto p-3 text-sm" placeholder="მომსახურების სახელი">
+                        <textarea class="service-description flex-1 w-full sm:w-auto min-h-[70px] p-3 text-sm" placeholder="კონკრეტული მოკლე აღწერა"></textarea>
+                    </div>
+                    <div class="service-pair flex flex-col sm:flex-row gap-4 items-start">
+                        <input type="text" class="service-name flex-1 w-full sm:w-auto p-3 text-sm" placeholder="მომსახურების სახელი">
+                        <textarea class="service-description flex-1 w-full sm:w-auto min-h-[70px] p-3 text-sm" placeholder="კონკრეტული მოკლე აღწერა"></textarea>
+                    </div>
+                `;
+            }
         }
-        if (profilePage.classList.contains('active') && btnFavorites.classList.contains('active')) {
-          loadUserFavorites(); // Reload favorites list if on favorites tab
-        } else {
-          loadTasks(); // Reload all tasks to update favorite status
+
+        function toggleLoading(button, isLoading, originalText) {
+            if (isLoading) {
+                button.disabled = true;
+                button.textContent = originalText + '...';
+            } else {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
         }
-      })
-      .catch(e => alert("ფავორიტებში დამატების დროს პრობლემა: " + e.message));
-  }
-};
 
-// Toggle between user tasks and favorites lists on profile page
-btnUserTasks.onclick = () => {
-  btnUserTasks.classList.add("active");
-  btnFavorites.classList.remove("active");
-  userTasksList.style.display = "block";
-  favoritesList.style.display = "none";
-  noFavoritesMsg.style.display = "none";
-  noTasksMsg.style.display = userTasksList.innerHTML.trim() === "" ? "block" : "none";
-};
+        function closeMobileMenu() {
+            navMenu.classList.remove('mobile-menu-open');
+            navMenu.classList.add('mobile-menu-closed');
+            burgerButton.setAttribute('aria-expanded', 'false');
+            burgerLines.forEach(line => line.classList.remove('open'));
+        }
 
-btnFavorites.onclick = () => {
-  btnUserTasks.classList.remove("active");
-  btnFavorites.classList.add("active");
-  userTasksList.style.display = "none";
-  noTasksMsg.style.display = "none";
-  favoritesList.style.display = "block";
-  loadUserFavorites();
-};
+        // --- Authentication State Management ---
+        auth.onAuthStateChanged(user => {
+            currentAuthUser = user;
+            updateNavVisibility();
+            if (user) {
+                showPage('dashboard');
+                document.title = "MyBusiness • ჩემი საიტები";
+            } else {
+                showPage('login');
+                document.title = "MyBusiness • შესვლა/რეგისტრაცია";
+            }
+        });
 
+        function updateNavVisibility() {
+            if (currentAuthUser) {
+                navLinks.dashboard.classList.remove('hidden');
+                navLinks.create.classList.remove('hidden');
+                navLinks.logout.classList.remove('hidden');
+                navLinks.login.classList.add('hidden');
+                navLinks.register.classList.add('hidden');
+            } else {
+                navLinks.dashboard.classList.add('hidden');
+                navLinks.create.classList.add('hidden');
+                navLinks.logout.classList.add('hidden');
+                navLinks.login.classList.remove('hidden');
+                navLinks.register.classList.remove('hidden');
+            }
+        }
 
-// ფილტრები და სანავიგაციო ღილაკების კონტროლი
-categoryFilter.onchange = loadTasks;
-searchInput.oninput = loadTasks;
-navTasks.onclick = () => showPage(tasksPage);
-navPost.onclick = () => showPage(postPage);
-navProfile.onclick = () => {
-  const user = auth.currentUser;
-  if (user) {
-    loadUserTasks(user.uid);
-    showPage(profilePage);
-    // Ensure "My Posts" tab is active by default when entering profile page
-    btnUserTasks.classList.add("active");
-    btnFavorites.classList.remove("active");
-    userTasksList.style.display = "block";
-    favoritesList.style.display = "none";
-  } else {
-    alert("გთხოვთ გაიაროთ ავტორიზაცია");
-    showPage(loginPage);
-  }
-};
-const bottomNav = document.querySelector('.bottom-nav');
+        // --- Event Listeners for Navigation ---
+        document.getElementById('site-logo').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentAuthUser) {
+                showPage('dashboard');
+            } else {
+                showPage('login');
+            }
+        });
+        navLinks.dashboard.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('dashboard');
+        });
+        navLinks.create.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('create');
+            clearForm(createSiteForm);
+        });
+        navLinks.login.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('login');
+            clearForm(loginForm);
+        });
+        navLinks.register.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('register');
+            clearForm(registerForm);
+        });
+        navLinks.logout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await auth.signOut();
+                showToast('წარმატებით გამოხვედით.');
+            } catch (error) {
+                showToast('გასვლის შეცდომა: ' + error.message, 'error');
+                console.error('Logout error:', error);
+            }
+        });
 
-// Loading overlay იმუშავე
-window.addEventListener('load', () => {
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  if (loadingOverlay) {
-    loadingOverlay.style.transition = 'opacity 0.3s ease';
-    loadingOverlay.style.opacity = '0';
-    loadingOverlay.style.pointerEvents = 'none';
-    setTimeout(() => {
-      loadingOverlay.style.display = 'none';
-    }, 300);
-  }
-});
-</script></body>
+        document.getElementById('show-register').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('register');
+            clearForm(registerForm);
+        });
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('login');
+            clearForm(loginForm);
+        });
+        document.getElementById('dashboard-create-new-site').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('create');
+            clearForm(createSiteForm);
+        });
+        document.getElementById('no-sites-create-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('create');
+            clearForm(createSiteForm);
+        });
+        document.getElementById('site-error-create-new').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('create');
+            clearForm(createSiteForm);
+        });
+        document.getElementById('go-home-404').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentAuthUser) {
+                showPage('dashboard');
+            } else {
+                showPage('login');
+            }
+        });
+
+        // Mobile burger menu toggle
+        burgerButton.addEventListener('click', () => {
+            const isOpen = navMenu.classList.toggle('mobile-menu-open');
+            navMenu.classList.toggle('mobile-menu-closed', !isOpen);
+            burgerButton.setAttribute('aria-expanded', isOpen);
+            burgerLines.forEach(line => line.classList.toggle('open', isOpen));
+        });
+
+        // --- Authentication Logic ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const loginButton = document.getElementById('login-button');
+            toggleLoading(loginButton, true, 'შესვლა');
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showToast('წარმატებით შეხვედით!');
+                showPage('dashboard'); // Auth state change will handle this
+            } catch (error) {
+                showToast('შესვლის შეცდომა: ' + error.message, 'error');
+                console.error('Login error:', error);
+            } finally {
+                toggleLoading(loginButton, false, 'შესვლა');
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const registerButton = document.getElementById('register-button');
+
+            if (password !== confirmPassword) {
+                showToast('პაროლები არ ემთხვევა!', 'error');
+                return;
+            }
+
+            toggleLoading(registerButton, true, 'რეგისტრაცია');
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Create a user document in Firestore (optional)
+                await db.collection('users').doc(user.uid).set({
+                    email: user.email,
+                    createdAt: serverTimestamp(),
+                });
+
+                showToast('რეგისტრაცია წარმატებით დასრულდა! გთხოვთ შეხვიდეთ.');
+                showPage('login');
+                clearForm(registerForm);
+            } catch (error) {
+                showToast('რეგისტრაციის შეცდომა: ' + error.message, 'error');
+                console.error('Registration error:', error);
+            } finally {
+                toggleLoading(registerButton, false, 'რეგისტრაცია');
+            }
+        });
+
+        // --- Create Site Logic ---
+        document.getElementById('add-service-btn').addEventListener('click', () => {
+            const servicesContainer = document.getElementById('services-container');
+            const newServicePair = document.createElement('div');
+            newServicePair.className = 'service-pair flex flex-col sm:flex-row gap-4 items-start';
+            newServicePair.innerHTML = `
+                <input type="text" class="service-name flex-1 w-full sm:w-auto p-3 text-sm" placeholder="მომსახურების სახელი">
+                <textarea class="service-description flex-1 w-full sm:w-auto min-h-[70px] p-3 text-sm" placeholder="კონკრეტული მოკლე აღწერა"></textarea>
+                <button type="button" class="remove-service-btn text-red-500 hover:text-red-700 p-2 text-xl self-center" aria-label="მომსახურების წაშლა">
+                    &times;
+                </button>
+            `;
+            servicesContainer.appendChild(newServicePair);
+
+            newServicePair.querySelector('.remove-service-btn').addEventListener('click', (e) => {
+                e.target.closest('.service-pair').remove();
+            });
+        });
+
+        document.getElementById('services-container').addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-service-btn')) {
+                e.target.closest('.service-pair').remove();
+            }
+        });
+
+        createSiteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('name');
+            const aboutInput = document.getElementById('about');
+            const aboutDetailInput = document.getElementById('aboutDetail');
+            const addressInput = document.getElementById('address');
+            const contactInput = document.getElementById('contact');
+            const createSiteButton = document.getElementById('create-site-button');
+
+            const nameError = document.getElementById('nameError');
+            const aboutError = document.getElementById('aboutError');
+            const contactError = document.getElementById('contactError');
+
+            let isValid = true;
+
+            function showError(element, message) {
+                element.textContent = message;
+                element.classList.add('show');
+            }
+
+            function clearError(element) {
+                element.textContent = '';
+                element.classList.remove('show');
+            }
+
+            clearError(nameError);
+            clearError(aboutError);
+            clearError(contactError);
+
+            if (!nameInput.value.trim()) {
+                showError(nameError, 'გთხოვთ შეიყვანოთ ბიზნესის დასახელება.');
+                isValid = false;
+            }
+            if (!aboutInput.value.trim()) {
+                showError(aboutError, 'გთხოვთ შეიყვანოთ მოკლე აღწერა (ჰერო სექციისთვის).');
+                isValid = false;
+            }
+            if (!contactInput.value.trim()) {
+                showError(contactError, 'გთხოვთ შეიყვანოთ საკონტაქტო ინფორმაცია.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                showToast('გთხოვთ შეავსოთ ყველა აუცილებელი ველი.', 'error');
+                return;
+            }
+
+            const services = [];
+            document.querySelectorAll('.service-pair').forEach(pair => {
+                const name = pair.querySelector('.service-name').value.trim();
+                const description = pair.querySelector('.service-description').value.trim();
+                if (name) { // Only add if service name is not empty
+                    services.push({ name, description });
+                }
+            });
+
+            toggleLoading(createSiteButton, true, 'გამოქვეყნება');
+
+            try {
+                const siteData = {
+                    name: nameInput.value.trim(),
+                    about: aboutInput.value.trim(),
+                    aboutDetail: aboutDetailInput.value.trim(),
+                    address: addressInput.value.trim(),
+                    contact: contactInput.value.trim(),
+                    services: services,
+                    userId: currentAuthUser.uid,
+                    createdAt: serverTimestamp(),
+                };
+
+                const docRef = await db.collection('sites').add(siteData);
+                const siteId = docRef.id;
+
+                showToast(`✅ შენი საიტი წარმატებით გაიშვა!`);
+                // Optionally show the generated site immediately or go to dashboard
+                // For simplicity, we'll go to the dashboard and let them click "View"
+                showPage('dashboard');
+                clearForm(createSiteForm);
+            } catch (error) {
+                showToast('შეცდომა მოხდა საიტის გამოქვეყნებისას: ' + error.message, 'error');
+                console.error('Error creating site:', error);
+            } finally {
+                toggleLoading(createSiteButton, false, 'გამოქვეყნება');
+            }
+        });
+
+        // --- Dashboard Logic ---
+        async function fetchUserSites() {
+            if (!currentAuthUser) {
+                userSitesList.innerHTML = '';
+                noSitesMessage.classList.add('hidden');
+                dashboardLoading.classList.add('hidden');
+                return;
+            }
+
+            userSitesList.innerHTML = '';
+            noSitesMessage.classList.add('hidden');
+            dashboardLoading.classList.remove('hidden');
+
+            try {
+                const q = db.collection('sites')
+                            .where('userId', '==', currentAuthUser.uid)
+                            .orderBy('createdAt', 'desc');
+                const querySnapshot = await q.get();
+                const sites = [];
+                querySnapshot.forEach(doc => {
+                    sites.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (sites.length === 0) {
+                    noSitesMessage.classList.remove('hidden');
+                } else {
+                    sites.forEach(site => {
+                        const siteCard = document.createElement('div');
+                        siteCard.className = 'bg-white p-6 rounded-xl shadow-md border border-border flex flex-col justify-between';
+                        siteCard.innerHTML = `
+                            <div>
+                                <h3 class="text-xl font-bold text-primary mb-2">${escapeHtml(site.name)}</h3>
+                                <p class="text-text-light text-sm mb-4 line-clamp-3">${escapeHtml(site.about)}</p>
+                            </div>
+                            <div class="flex flex-wrap gap-3 mt-4">
+                                <button data-site-id="${site.id}" class="view-site-btn bg-blue-500 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-600 transition-colors">
+                                    ნახვა
+                                </button>
+                                <button data-site-id="${site.id}" data-site-name="${escapeHtml(site.name)}" class="delete-site-btn bg-red-500 text-white px-4 py-2 rounded-full text-sm hover:bg-red-600 transition-colors">
+                                    წაშლა
+                                </button>
+                            </div>
+                        `;
+                        userSitesList.appendChild(siteCard);
+                    });
+                }
+            } catch (error) {
+                showToast('საიტების ჩატვირთვის შეცდომა: ' + error.message, 'error');
+                console.error('Error fetching user sites:', error);
+            } finally {
+                dashboardLoading.classList.add('hidden');
+            }
+        }
+
+        userSitesList.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('view-site-btn')) {
+                const siteId = e.target.dataset.siteId;
+                await loadAndShowGeneratedSite(siteId);
+            } else if (e.target.classList.contains('delete-site-btn')) {
+                const siteId = e.target.dataset.siteId;
+                const siteName = e.target.dataset.siteName;
+                if (confirm(`ნამდვილად გსურთ "${siteName}" საიტის წაშლა?`)) {
+                    try {
+                        await db.collection('sites').doc(siteId).delete();
+                        showToast(`"${siteName}" საიტი წარმატებით წაიშალა.`);
+                        fetchUserSites(); // Reload dashboard
+                    } catch (error) {
+                        showToast('საიტის წაშლის შეცდომა: ' + error.message, 'error');
+                        console.error('Error deleting site:', error);
+                    }
+                }
+            }
+        });
+
+        // --- Generated Site View Logic ---
+        async function loadAndShowGeneratedSite(siteId) {
+            pages.generatedSite.classList.add('hidden');
+            document.getElementById('site-loading-error').classList.add('hidden');
+            showToast('საიტი იტვირთება...', 'info', 10000); // Persistent toast
+
+            try {
+                const docRef = db.collection('sites').doc(siteId);
+                const docSnap = await docRef.get();
+
+                if (docSnap.exists) {
+                    const siteData = docSnap.data();
+                    showPage('generatedSite', siteData);
+                    showToast('საიტი წარმატებით ჩაიტვირთა!', 'success');
+                    document.title = `${siteData.name || 'MyBusiness'} • შენი ვებსაიტი`;
+                } else {
+                    document.getElementById('site-loading-error').classList.remove('hidden');
+                    showPage('generatedSite'); // Show the container, but with error
+                    showToast('ვებსაიტი არ მოიძებნა.', 'error');
+                    document.title = "404 • MyBusiness";
+                }
+            } catch (e) {
+                document.getElementById('site-loading-error').classList.remove('hidden');
+                showPage('generatedSite'); // Show the container, but with error
+                showToast('შეცდომა მოხდა მონაცემების ჩატვირთვისას: ' + e.message, 'error');
+                console.error("Error fetching document:", e);
+                document.title = "შეცდომა • MyBusiness";
+            } finally {
+                 // Dismiss the loading toast
+                 Toastify({ text: "", duration: 0, close: false }).showToast(); // This hack clears the previous toast
+            }
+        }
+
+        function renderGeneratedSite(siteData) {
+            document.getElementById('generated-site-name').textContent = escapeHtml(siteData.name || 'ბიზნესის დასახელება');
+            document.getElementById('generated-site-about').textContent = escapeHtml(siteData.about || 'აღწერა არ არის მითითებული');
+            document.getElementById('generated-site-about-detail').textContent = escapeHtml(siteData.aboutDetail || siteData.about || 'დეტალური აღწერა არ არის მითითებული.');
+            document.getElementById('generated-site-contact-display').textContent = escapeHtml(siteData.contact || 'არ არის მითითებული');
+            document.getElementById('generated-site-address-display').textContent = escapeHtml(siteData.address || 'მისამართი არ არის მითითებული');
+
+            const servicesList = document.getElementById('generated-services-list');
+            servicesList.innerHTML = ''; // Clear previous services
+
+            if (siteData.services && siteData.services.length > 0) {
+                siteData.services.forEach(svc => {
+                    const serviceItem = document.createElement('div');
+                    serviceItem.className = 'feature-item bg-gray-50 p-6 rounded-radius shadow-lg border border-border transition-transform duration-300 hover:translate-y-[-6px] hover:shadow-xl hover:shadow-blue-200';
+                    serviceItem.setAttribute('role', 'article');
+                    serviceItem.setAttribute('tabindex', '0');
+                    serviceItem.innerHTML = `
+                        <h3 class="text-xl font-bold text-primary mb-3">${escapeHtml(svc.name)}</h3>
+                        <p class="text-text-light text-base leading-relaxed">${escapeHtml(svc.description)}</p>
+                    `;
+                    servicesList.appendChild(serviceItem);
+                });
+            } else {
+                servicesList.innerHTML = '<p class="col-span-full text-center text-lg italic text-text-light">მომსახურება არ არის მითითებული.</p>';
+            }
+        }
+
+        // Initial check on page load to set correct view
+        // The onAuthStateChanged listener handles the initial page display.
+    </script>
+</body>
 </html>
