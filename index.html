@@ -1,151 +1,115 @@
 <!DOCTYPE html>
-<html lang="ka">
+<html lang="ka" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyMiniSite • შენი ვებსაიტი</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <title>ჩასმის & ჩვენების საიტი</title>
   <style>
-    :root {
-      --primary: #4f46e5;
-      --bg: #f8fafc;
-      --text: #111827;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: start;
-      padding: 40px 20px;
-      min-height: 100vh;
-    }
-    .container {
-      background: white;
-      max-width: 500px;
-      width: 100%;
-      padding: 28px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    input, textarea, button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 12px;
-      font-size: 15px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background: var(--primary);
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover {
-      background: #3730a3;
-    }
-    .link {
-      margin-top: 20px;
-      text-align: center;
-      word-break: break-word;
-      font-weight: 500;
-    }
-    .hidden { display: none; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    textarea { width: 100%; height: 200px; font-family: monospace; font-size: 14px; }
+    input[type=text] { width: 100%; padding: 8px; font-size: 16px; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #previewFrame { width: 100%; height: 90vh; border: none; }
+    #result a { color: blue; word-break: break-all; }
   </style>
 </head>
 <body>
-  <!-- მთავარი ფორმის ბლოკი -->
-  <div class="container" id="formSection">
-    <h1>შექმენი შენი ვებსაიტი</h1>
-    <input type="text" id="username" placeholder="შეიყვანე შენი სახელი ან ბრენდი" />
-    <textarea id="about" placeholder="ბიზნესის აღწერა..."></textarea>
-    <input type="text" id="contact" placeholder="კონტაქტი (ტელეფონი ან ელ. ფოსტა)" />
-    <button onclick="createSite()">გამოქვეყნება</button>
-    <div class="link" id="linkOutput"></div>
-  </div>
 
-  <!-- საიტის ჩვენების ბლოკი -->
-  <div class="container hidden" id="siteSection">
-    <h1 id="siteName"></h1>
-    <p style="margin-top: 15px;" id="siteAbout"></p>
-    <p style="margin-top: 10px;"><strong>კონტაქტი:</strong> <span id="siteContact"></span></p>
-  </div>
+<div id="app"></div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNkJJKCbyiGsZtGnZW6pLEAO4hfGAhGn0",
-      authDomain: "busines-6009a.firebaseapp.com",
-      databaseURL: "https://busines-6009a-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "busines-6009a",
-      storageBucket: "busines-6009a.firebasestorage.app",
-      messagingSenderId: "1060456180737",
-      appId: "1:1060456180737:web:2a16c8a0b7a19740c7a400",
-      measurementId: "G-KRLDD9XV3V"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+  import { getDatabase, ref, push, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-    function createSite() {
-      const username = document.getElementById("username").value.trim();
-      const about = document.getElementById("about").value.trim();
-      const contact = document.getElementById("contact").value.trim();
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNkJJKCbyiGsZtGnZW6pLEAO4hfGAhGn0",
+    authDomain: "busines-6009a.firebaseapp.com",
+    databaseURL: "https://busines-6009a-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "busines-6009a",
+    storageBucket: "busines-6009a.firebasestorage.app",
+    messagingSenderId: "1060456180737",
+    appId: "1:1060456180737:web:2a16c8a0b7a400",
+    measurementId: "G-KRLDD9XV3V"
+  };
 
-      if (!username || !about || !contact) {
-        alert("გთხოვ შეავსე ყველა ველი!");
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const appDiv = document.getElementById('app');
+  const params = new URLSearchParams(window.location.search);
+  const projectId = params.get('id');
+
+  if (!projectId) {
+    // ჩასმის ფორმა
+    appDiv.innerHTML = `
+      <h1>ჩასვით თქვენი HTML კოდი</h1>
+      <form id="codeForm">
+        <label for="title">სათაური:</label><br>
+        <input type="text" id="title" required placeholder="სათაური" /><br><br>
+
+        <label for="htmlCode">HTML კოდი:</label><br>
+        <textarea id="htmlCode" placeholder="ჩასვით თქვენი HTML კოდი აქ" required></textarea><br><br>
+
+        <button type="submit">შენახვა და უნიკალური ლინკის მიღება</button>
+      </form>
+      <div id="result"></div>
+    `;
+
+    const form = document.getElementById('codeForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const htmlCode = document.getElementById('htmlCode').value.trim();
+
+      if (!title || !htmlCode) {
+        alert("გთხოვთ შეავსოთ სათაური და HTML კოდი");
         return;
       }
 
-      db.ref("sites/" + username).set({
-        name: username,
-        about: about,
-        contact: contact,
-        createdAt: Date.now()
-      }).then(() => {
-        document.getElementById("linkOutput").innerHTML =
-          `✅ შენი საიტი მზადაა:<br><a href="?user=${encodeURIComponent(username)}" target="_blank">ნახე ვებსაიტი</a>`;
-      });
-    }
-
-    function showSection(id) {
-      document.getElementById("formSection").classList.add("hidden");
-      document.getElementById("siteSection").classList.add("hidden");
-      document.getElementById(id).classList.remove("hidden");
-    }
-
-    // თუ ლინკში გვაქვს ?user=... → ვაჩვენოთ ვებსაიტი
-    window.addEventListener("DOMContentLoaded", () => {
-      const user = new URLSearchParams(location.search).get("user");
-      if (user) {
-        db.ref("sites/" + user).once("value").then(snapshot => {
-          const data = snapshot.val();
-          if (data) {
-            document.getElementById("siteName").innerText = data.name;
-            document.getElementById("siteAbout").innerText = data.about;
-            document.getElementById("siteContact").innerText = data.contact;
-            showSection("siteSection");
-          } else {
-            document.body.innerHTML = `
-              <div class="container">
-                <h1>😢 ვებსაიტი "${user}" არ მოიძებნა.</h1>
-                <p>დარწმუნდი, რომ სწორი ბმული გაქვს.</p>
-              </div>`;
-          }
+      try {
+        const projectsRef = ref(db, 'projects');
+        const newProjectRef = push(projectsRef);
+        await set(newProjectRef, {
+          title: title,
+          html: htmlCode,
+          createdAt: Date.now()
         });
+
+        const id = newProjectRef.key;
+        const url = `${window.location.origin}${window.location.pathname}?id=${id}`;
+
+        resultDiv.innerHTML = `<p>თქვენი საიტი მზადაა: <a href="${url}" target="_blank">${url}</a></p>`;
+      } catch (error) {
+        resultDiv.innerHTML = `<p style="color:red;">შეცდომა შენახვის დროს: ${error.message}</p>`;
       }
     });
-  </script>
+
+  } else {
+    // პროექტის ჩვენება iframe-ში
+    appDiv.innerHTML = `<iframe id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>`;
+
+    const iframe = document.getElementById('previewFrame');
+
+    async function loadProject(id) {
+      try {
+        const dbRef = ref(db);
+        const snapshot = await get(child(dbRef, `projects/${id}`));
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          iframe.srcdoc = data.html;
+        } else {
+          appDiv.innerHTML = "<h2>პროექტი არ არსებობს ან იდენტიფიკატორი არასწორია.</h2>";
+        }
+      } catch (error) {
+        appDiv.innerHTML = `<h2>შეცდომა მონაცემთა წამოღების დროს: ${error.message}</h2>`;
+      }
+    }
+
+    loadProject(projectId);
+  }
+</script>
+
 </body>
 </html>
