@@ -1,296 +1,1041 @@
 <!DOCTYPE html>
-<html lang="ka" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ჩასმის & ჩვენების საიტი</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovate & Share: Your Creative Canvas</title>
+    <meta name="description" content="Create, manage, and share your HTML projects easily with a beautiful, responsive web application.">
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f4f7fa;
-    color: #333;
-    padding: 20px;
-  }
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
-  h1, h2 {
-    margin-bottom: 20px;
-    font-weight: 600;
-    color: #1a202c;
-  }
+    <style>
+        /* --- Global Variables & Resets --- */
+        :root {
+            --primary-hue: 200; /* A cool blue */
+            --primary-color: hsl(var(--primary-hue), 80%, 45%); /* Main accent blue */
+            --primary-color-light: hsl(var(--primary-hue), 80%, 95%); /* Light background for highlights */
+            --primary-color-dark: hsl(var(--primary-hue), 80%, 35%); /* Darker blue for hover */
 
-  form {
-    background: #fff;
-    padding: 25px;
-    max-width: 600px;
-    margin: 0 auto 30px auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  }
+            --secondary-color: hsl(120, 50%, 45%); /* A soft green for success/positive actions */
+            --secondary-color-dark: hsl(120, 50%, 35%);
 
-  input[type=text],
-  input[type=email],
-  input[type=password],
-  textarea {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 6px;
-    margin-bottom: 16px;
-    transition: border 0.2s;
-  }
+            --danger-color: hsl(0, 70%, 55%); /* Red for destructive actions */
+            --danger-color-dark: hsl(0, 70%, 45%);
 
-  input:focus,
-  textarea:focus {
-    border-color: #2b6cb0;
-    outline: none;
-  }
+            --warning-color: hsl(40, 90%, 60%); /* Amber for edit/warning */
+            --warning-color-dark: hsl(40, 90%, 50%);
 
-  textarea {
-    height: 200px;
-    font-family: monospace;
-    resize: vertical;
-  }
+            --background-body: #f7f9fc; /* Off-white, soft background */
+            --background-card: #ffffff; /* Pure white for cards */
+            --text-color-primary: #2c3e50; /* Darker grey for main text */
+            --text-color-secondary: #7f8c8d; /* Lighter grey for secondary text */
+            --border-color: #e0e6eb; /* Light grey for borders */
+            --input-background: #fdfefe; /* Very light background for inputs */
 
-  button {
-    padding: 12px 20px;
-    font-size: 16px;
-    background: #2b6cb0;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.12);
 
-  button:hover {
-    background: #2c5282;
-  }
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+        }
 
-  #logoutBtn {
-    display: block;
-    margin: 0 auto 20px auto;
-    background: #e53e3e;
-  }
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  #logoutBtn:hover {
-    background: #c53030;
-  }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-body);
+            color: var(--text-color-primary);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+            transition: background-color 0.3s ease;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
 
-  #auth-section,
-  #app {
-    max-width: 700px;
-    margin: 40px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.05);
-  }
+        /* --- Container & Layout --- */
+        .container {
+            background-color: var(--background-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 40px;
+            width: 100%;
+            max-width: 760px; /* Slightly wider for better content display */
+            text-align: center;
+            animation: fadeInScale 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            margin: 20px;
+            overflow: hidden; /* Contains child shadows */
+        }
 
-  #result a {
-    color: #2b6cb0;
-    font-weight: bold;
-    text-decoration: underline;
-    word-break: break-all;
-  }
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+                max-width: 95%; /* Adjust for smaller screens */
+            }
+        }
 
-  #authMsg {
-    color: red;
-    margin-top: 10px;
-    text-align: center;
-  }
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+                border-radius: var(--border-radius-sm);
+            }
+        }
 
-  iframe {
-    width: 100%;
-    height: 90vh;
-    border: 2px solid #ccc;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.08);
-  }
+        /* --- Headings & Typography --- */
+        h1, h2 {
+            font-family: 'Playfair Display', serif; /* A touch of elegance */
+            color: var(--primary-color-dark);
+            margin-bottom: 30px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
 
-  .hidden {
-    display: none;
-  }
+        h1 {
+            font-size: 2.5em; /* Larger for main titles */
+        }
 
-  @media (max-width: 600px) {
-    form, #auth-section, #app {
-      padding: 15px;
-    }
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+        }
 
-    button {
-      width: 100%;
-      margin-top: 10px;
-    }
-  }
-</style>
+        h3 {
+            font-size: 1.2em;
+            color: var(--text-color-primary);
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: var(--text-color-secondary);
+            margin-bottom: 18px;
+            font-size: 1.05em;
+        }
+
+        /* --- Forms & Inputs --- */
+        .form-group {
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color-primary);
+            font-size: 0.95em;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 1em;
+            color: var(--text-color-primary);
+            background-color: var(--input-background);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            appearance: none; /* Reset browser default styles */
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px var(--primary-color-light); /* Focus ring */
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 180px;
+            line-height: 1.5;
+            font-family: 'Inter', sans-serif; /* Ensure consistent font */
+        }
+
+        /* --- Buttons --- */
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            width: 100%;
+            margin-top: 15px; /* Spacing below forms */
+            letter-spacing: 0.02em;
+            box-shadow: var(--shadow-sm); /* Subtle shadow for buttons */
+        }
+
+        button.primary-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        button.primary-button:hover {
+            background-color: var(--primary-color-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        button.secondary-button {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        button.secondary-button:hover {
+            background-color: var(--secondary-color-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        button.danger-button {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        button.danger-button:hover {
+            background-color: var(--danger-color-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        button.warning-button {
+            background-color: var(--warning-color);
+            color: var(--text-color-primary); /* Dark text for amber button */
+        }
+        button.warning-button:hover {
+            background-color: var(--warning-color-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Pressed effect */
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.8;
+        }
+
+        .toggle-form {
+            background: none;
+            color: var(--primary-color);
+            border: none;
+            font-size: 1em;
+            margin-top: 25px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-weight: 500;
+            padding: 0; /* Remove default button padding */
+            width: auto; /* Reset width */
+            box-shadow: none; /* Remove button shadow */
+        }
+
+        .toggle-form:hover {
+            color: var(--primary-color-dark);
+            text-decoration: underline;
+            transform: none; /* No transform for text buttons */
+        }
+
+        /* --- Messages & Alerts --- */
+        .message {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+            opacity: 0; /* Start hidden */
+            animation-fill-mode: forwards; /* Keep final state */
+            font-size: 0.95em;
+        }
+
+        .message.error {
+            background-color: hsl(0, 80%, 95%);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .message.success {
+            background-color: hsl(120, 80%, 95%);
+            color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Section Layouts --- */
+        .auth-section, .dashboard-section, .project-list-section, .edit-project-section {
+            padding-top: 15px; /* Adjust internal padding */
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            gap: 15px; /* More space between header items */
+        }
+
+        .dashboard-header h2 {
+            margin-bottom: 0;
+            color: var(--text-color-primary); /* Header text color */
+            flex-grow: 1;
+            text-align: left;
+            font-size: 1.6em; /* Slightly smaller for section headers */
+        }
+
+        .dashboard-header .header-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .dashboard-header button {
+            width: auto;
+            margin-top: 0;
+            padding: 10px 20px; /* Smaller padding for header buttons */
+            font-size: 0.9em;
+            box-shadow: var(--shadow-sm); /* Subtle shadow for header buttons */
+        }
+
+        /* --- Project Link Container --- */
+        .project-link-container {
+            margin-top: 30px;
+            background-color: var(--primary-color-light);
+            padding: 20px;
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+            border: 1px solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .project-link-container p {
+            font-weight: 500;
+            margin-bottom: 0;
+            color: var(--text-color-primary);
+            font-size: 0.95em;
+        }
+
+        .project-link-container a {
+            word-break: break-all;
+            color: var(--primary-color-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .project-link-container a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        /* --- Project List Styling --- */
+        .project-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .project-item {
+            background-color: var(--input-background);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .project-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .project-item-info {
+            flex-grow: 1;
+        }
+
+        .project-item-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.3em;
+            line-height: 1.3;
+        }
+
+        .project-item-info p {
+            font-size: 0.9em;
+            color: var(--text-color-secondary);
+            margin-bottom: 5px;
+        }
+
+        .project-item-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .project-item-actions button {
+            width: auto;
+            margin-top: 0;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* --- Fullscreen iframe for project viewing --- */
+        .project-viewer-iframe {
+            border: none;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            background-color: #fff;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Media Queries for Responsiveness --- */
+        @media (min-width: 768px) {
+            .project-item {
+                flex-direction: row;
+                align-items: center;
+            }
+            .project-item-actions {
+                margin-top: 0;
+            }
+            .dashboard-header h2 {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            button {
+                padding: 12px 20px;
+                font-size: 0.95em;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start; /* Align header items to start on small screens */
+            }
+            .dashboard-header .header-buttons {
+                width: 100%; /* Make buttons take full width */
+                justify-content: flex-start; /* Align buttons to start */
+                flex-direction: row; /* Keep row for buttons if space allows */
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .dashboard-header button {
+                width: auto; /* Allow buttons to size content, they'll wrap */
+            }
+            .project-item-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .project-item-actions button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 380px) {
+             .dashboard-header .header-buttons {
+                flex-direction: column; /* Stack header buttons vertically on very small screens */
+             }
+        }
+
+    </style>
 </head>
 <body>
+    <div class="container" id="appContainer">
+        <section id="authSection" class="auth-section">
+            <h1 id="authTitle">Welcome Back.</h1>
+            <p>Log in or register to manage your creative projects.</p>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="your.email@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <button id="authButton" class="primary-button">Login</button>
+            <p class="message" id="authMessage"></p>
+            <button class="toggle-form" id="toggleAuthMode">New user? Register an account.</button>
+        </section>
 
-<div id="auth-section">
-  <h2>ავტორიზაცია ან რეგისტრაცია</h2>
-  <input type="email" id="email" placeholder="ელფოსტა" /><br>
-  <input type="password" id="password" placeholder="პაროლი" /><br>
-  <button id="registerBtn">რეგისტრაცია</button>
-  <button id="loginBtn">შესვლა</button>
-  <p id="authMsg"></p>
-</div>
+        <section id="dashboardSection" class="dashboard-section hidden">
+            <div class="dashboard-header">
+                <h2>Hello, <span id="userEmailDisplay"></span>!</h2>
+                <div class="header-buttons">
+                    <button id="myProjectsButton" class="secondary-button">My Projects</button>
+                    <button id="logoutButton" class="primary-button">Logout</button>
+                </div>
+            </div>
 
-<div id="app" class="hidden"></div>
-<button id="logoutBtn" class="hidden">გასვლა</button>
+            <h2>Create New Project</h2>
+            <div class="form-group">
+                <label for="projectTitle">Project Title</label>
+                <input type="text" id="projectTitle" placeholder="My Awesome Project" required>
+            </div>
+            <div class="form-group">
+                <label for="htmlCode">HTML Code</label>
+                <textarea id="htmlCode" placeholder="" required></textarea>
+            </div>
+            <button id="saveProjectButton" class="primary-button">Save Project</button>
+            <p class="message" id="projectMessage"></p>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-  import { getDatabase, ref, push, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+            <div id="projectLinkContainer" class="project-link-container hidden">
+                <p>Your project is live! Share this unique link:</p>
+                <a id="projectShareLink" href="#" target="_blank"></a>
+            </div>
+        </section>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBNkJJKCbyiGsZtGnZW6pLEAO4hfGAhGn0",
-    authDomain: "busines-6009a.firebaseapp.com",
-    databaseURL: "https://busines-6009a-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "busines-6009a",
-    storageBucket: "busines-6009a.appspot.com",
-    messagingSenderId: "1060456180737",
-    appId: "1:1060456180737:web:2a16c8a0b7a400",
-    measurementId: "G-KRLDD9XV3V"
-  };
+        <section id="projectListSection" class="project-list-section hidden">
+            <div class="dashboard-header">
+                <h2>Your Projects</h2>
+                <div class="header-buttons">
+                    <button id="backToDashboardButton" class="secondary-button">Back to Create</button>
+                    <button id="logoutButtonProjectsPage" class="primary-button">Logout</button>
+                </div>
+            </div>
+            <ul id="projectsList" class="project-list">
+                </ul>
+            <p class="message" id="projectListMessage"></p>
+        </section>
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const auth = getAuth();
+        <section id="editProjectSection" class="edit-project-section hidden">
+            <div class="dashboard-header">
+                <h2>Edit Project</h2>
+                <div class="header-buttons">
+                    <button id="cancelEditButton" class="secondary-button">Cancel</button>
+                    <button id="logoutButtonEditPage" class="primary-button">Logout</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="editProjectTitle">Project Title</label>
+                <input type="text" id="editProjectTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="editHtmlCode">HTML Code</label>
+                <textarea id="editHtmlCode" required></textarea>
+            </div>
+            <button id="updateProjectButton" class="primary-button">Update Project</button>
+            <p class="message" id="editProjectMessage"></p>
+        </section>
+    </div>
 
-  const authSection = document.getElementById('auth-section');
-  const appDiv = document.getElementById('app');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const registerBtn = document.getElementById('registerBtn');
-  const loginBtn = document.getElementById('loginBtn');
-  const authMsg = document.getElementById('authMsg');
+    <div id="projectViewer" class="hidden">
+        <iframe id="projectIframe" class="project-viewer-iframe" sandbox="allow-scripts allow-forms allow-popups allow-modals allow-same-origin"></iframe>
+    </div>
 
-  // რეგისტრაცია
-  registerBtn.addEventListener('click', async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-    } catch (error) {
-      authMsg.innerText = "შეცდომა რეგისტრაციის დროს: " + error.message;
-    }
-  });
+    <script>
+        // Firebase Configuration (provided by the user)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBNkJJKCbyiGsZtGnZW6pLEAO4hfGAhGn0",
+            authDomain: "busines-6009a.firebaseapp.com",
+            databaseURL: "https://busines-6009a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "busines-6009a",
+            storageBucket: "busines-6009a.appspot.com",
+            messagingSenderId: "1060456180737",
+            appId: "1:1060456180737:web:2a16c8a0b7a400",
+            measurementId: "G-KRLDD9XV3V"
+        };
 
-  // შესვლა
-  loginBtn.addEventListener('click', async () => {
-    try {
-      await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-    } catch (error) {
-      authMsg.innerText = "შეცდომა შესვლის დროს: " + error.message;
-    }
-  });
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
 
-  // გამოსვლა
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth);
-  });
+        // --- DOM Elements ---
+        const appContainer = document.getElementById('appContainer');
+        const authSection = document.getElementById('authSection');
+        const authTitle = document.getElementById('authTitle');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const authButton = document.getElementById('authButton');
+        const authMessage = document.getElementById('authMessage');
+        const toggleAuthModeButton = document.getElementById('toggleAuthMode');
 
-  // ავტორიზაციის მდგომარეობის ცვლილება
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      authSection.classList.add('hidden');
-      appDiv.classList.remove('hidden');
-      logoutBtn.classList.remove('hidden');
-      initApp(); // ჩატვირთე მთავარი აპლიკაცია
-    } else {
-      authSection.classList.remove('hidden');
-      appDiv.classList.add('hidden');
-      logoutBtn.classList.add('hidden');
-    }
-  });
+        const dashboardSection = document.getElementById('dashboardSection');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const logoutButton = document.getElementById('logoutButton');
+        const myProjectsButton = document.getElementById('myProjectsButton');
+        const projectTitleInput = document.getElementById('projectTitle');
+        const htmlCodeTextarea = document.getElementById('htmlCode');
+        const saveProjectButton = document.getElementById('saveProjectButton');
+        const projectMessage = document.getElementById('projectMessage');
+        const projectLinkContainer = document.getElementById('projectLinkContainer');
+        const projectShareLink = document.getElementById('projectShareLink');
 
-  // აპლიკაციის ლოგიკა მხოლოდ ავტორიზებულისთვის
-  function initApp() {
-    const params = new URLSearchParams(window.location.search);
-    const projectId = params.get('id');
+        const projectListSection = document.getElementById('projectListSection');
+        const projectsList = document.getElementById('projectsList');
+        const projectListMessage = document.getElementById('projectListMessage');
+        const backToDashboardButton = document.getElementById('backToDashboardButton');
+        const logoutButtonProjectsPage = document.getElementById('logoutButtonProjectsPage');
 
-    if (!projectId) {
-      // ჩასმის ფორმა
-      appDiv.innerHTML = `
-        <h1>ჩასვით თქვენი HTML კოდი</h1>
-        <form id="codeForm">
-          <label for="title">სათაური:</label><br>
-          <input type="text" id="title" required placeholder="სათაური" /><br><br>
+        const editProjectSection = document.getElementById('editProjectSection');
+        const editProjectTitleInput = document.getElementById('editProjectTitle');
+        const editHtmlCodeTextarea = document.getElementById('editHtmlCode');
+        const updateProjectButton = document.getElementById('updateProjectButton');
+        const editProjectMessage = document.getElementById('editProjectMessage');
+        const cancelEditButton = document.getElementById('cancelEditButton');
+        const logoutButtonEditPage = document.getElementById('logoutButtonEditPage');
 
-          <label for="htmlCode">HTML კოდი:</label><br>
-          <textarea id="htmlCode" placeholder="ჩასვით თქვენი HTML კოდი აქ" required></textarea><br><br>
+        const projectViewer = document.getElementById('projectViewer');
+        const projectIframe = document.getElementById('projectIframe');
 
-          <button type="submit">შენახვა და უნიკალური ლინკის მიღება</button>
-        </form>
-        <div id="result"></div>
-      `;
+        // --- State Variables ---
+        let isRegisterMode = false;
+        let currentEditingProjectId = null;
 
-      const form = document.getElementById('codeForm');
-      const resultDiv = document.getElementById('result');
-
-      form.addEventListener('submit', async e => {
-        e.preventDefault();
-        const title = document.getElementById('title').value.trim();
-        const htmlCode = document.getElementById('htmlCode').value.trim();
-
-        if (!title || !htmlCode) {
-          alert("გთხოვთ შეავსოთ სათაური და HTML კოდი");
-          return;
+        // --- Utility Functions ---
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
+            // Re-apply animation for subsequent messages
+            element.style.animation = 'none';
+            element.offsetHeight; /* Trigger reflow */
+            element.style.animation = null;
+            setTimeout(() => {
+                element.classList.add('hidden');
+                element.textContent = '';
+            }, 5000);
         }
 
-        try {
-          const projectsRef = ref(db, 'projects');
-          const newProjectRef = push(projectsRef);
-          await set(newProjectRef, {
-            title: title,
-            html: htmlCode,
-            createdAt: Date.now(),
-            uid: auth.currentUser.uid
-          });
-
-          const id = newProjectRef.key;
-          const url = `${window.location.origin}${window.location.pathname}?id=${id}`;
-
-          resultDiv.innerHTML = `<p>თქვენი საიტი მზადაა: <a href="${url}" target="_blank">${url}</a></p>`;
-        } catch (error) {
-          resultDiv.innerHTML = `<p style="color:red;">შეცდომა შენახვის დროს: ${error.message}</p>`;
+        function clearFormFields() {
+            emailInput.value = '';
+            passwordInput.value = '';
+            projectTitleInput.value = '';
+            htmlCodeTextarea.value = '';
+            editProjectTitleInput.value = '';
+            editHtmlCodeTextarea.value = '';
         }
-      });
 
-    } else {
-      // პროექტის ჩვენება iframe-ში
-      appDiv.innerHTML = `<iframe id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>`;
-
-      const iframe = document.getElementById('previewFrame');
-
-      async function loadProject(id) {
-        try {
-          const dbRef = ref(db);
-          const snapshot = await get(child(dbRef, `projects/${id}`));
-          if (snapshot.exists()) {
-            const data = snapshot.val();
-            iframe.srcdoc = data.html;
-          } else {
-            appDiv.innerHTML = "<h2>პროექტი არ არსებობს ან იდენტიფიკატორი არასწორია.</h2>";
-          }
-        } catch (error) {
-          appDiv.innerHTML = `<h2>შეცდომა მონაცემთა წამოღების დროს: ${error.message}</h2>`;
+        function hideAllSections() {
+            authSection.classList.add('hidden');
+            dashboardSection.classList.add('hidden');
+            projectListSection.classList.add('hidden');
+            editProjectSection.classList.add('hidden');
+            projectViewer.classList.add('hidden');
+            appContainer.classList.remove('hidden'); // Ensure app container is visible by default for sections
+            document.body.style.overflow = ''; // Restore body scrollbar
         }
-      }
 
-      loadProject(projectId);
-    }
-  }
-</script>
+        function showAuthSection() {
+            hideAllSections();
+            authSection.classList.remove('hidden');
+        }
 
+        function showDashboardSection(userEmail) {
+            hideAllSections();
+            dashboardSection.classList.remove('hidden');
+            userEmailDisplay.textContent = userEmail;
+            projectLinkContainer.classList.add('hidden'); // Hide any previous share link
+            projectMessage.classList.add('hidden'); // Hide any previous message
+            clearFormFields();
+        }
+
+        function showProjectListSection() {
+            hideAllSections();
+            projectListSection.classList.remove('hidden');
+            loadUserProjects(); // Load projects when this section is shown
+        }
+
+        function showEditProjectSection(projectId, title, htmlCode) {
+            hideAllSections();
+            editProjectSection.classList.remove('hidden');
+            currentEditingProjectId = projectId;
+            editProjectTitleInput.value = title;
+            editHtmlCodeTextarea.value = htmlCode;
+            editProjectMessage.classList.add('hidden'); // Clear previous messages
+        }
+
+        function showProjectViewer(projectId) {
+            hideAllSections();
+            projectViewer.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent main body scrollbar
+            loadProjectForViewer(projectId);
+        }
+
+        // --- Authentication Functions ---
+        async function handleAuth() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) {
+                showMessage(authMessage, 'Please enter both email and password.', 'error');
+                return;
+            }
+
+            authButton.disabled = true;
+            authMessage.classList.add('hidden');
+
+            try {
+                if (isRegisterMode) {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                    showMessage(authMessage, 'Registration successful! You are now logged in.', 'success');
+                } else {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    showMessage(authMessage, 'Login successful!', 'success');
+                }
+                clearFormFields();
+            } catch (error) {
+                console.error("Auth error:", error.code, error.message);
+                let errorMessage = 'An unknown error occurred.';
+                switch (error.code) {
+                    case 'auth/email-already-in-use': errorMessage = 'This email is already registered.'; break;
+                    case 'auth/invalid-email': errorMessage = 'The email address is not valid.'; break;
+                    case 'auth/operation-not-allowed': errorMessage = 'Email/password authentication is not enabled. Contact support.'; break;
+                    case 'auth/weak-password': errorMessage = 'Password is too weak (min 6 characters).'; break;
+                    case 'auth/user-disabled': errorMessage = 'This account has been disabled.'; break;
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password': errorMessage = 'Invalid email or password.'; break;
+                    default: errorMessage = error.message;
+                }
+                showMessage(authMessage, errorMessage, 'error');
+            } finally {
+                authButton.disabled = false;
+            }
+        }
+
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            if (isRegisterMode) {
+                authTitle.textContent = 'Join Innovate & Share.';
+                authButton.textContent = 'Register';
+                authButton.classList.remove('primary-button');
+                authButton.classList.add('secondary-button'); // Green for register
+                toggleAuthModeButton.textContent = 'Already have an account? Login.';
+            } else {
+                authTitle.textContent = 'Welcome Back.';
+                authButton.textContent = 'Login';
+                authButton.classList.remove('secondary-button');
+                authButton.classList.add('primary-button'); // Blue for login
+                toggleAuthModeButton.textContent = 'New user? Register an account.';
+            }
+            authMessage.classList.add('hidden');
+            clearFormFields();
+        }
+
+        async function handleLogout() {
+            try {
+                await auth.signOut();
+                // UI will be updated by onAuthStateChanged listener
+            } catch (error) {
+                console.error("Logout error:", error);
+                alert("Failed to log out. Please try again.");
+            }
+        }
+
+        // --- Project Management Functions ---
+        async function saveProject() {
+            const user = auth.currentUser;
+            if (!user) {
+                showMessage(projectMessage, 'You must be logged in to save a project.', 'error');
+                return;
+            }
+
+            const title = projectTitleInput.value.trim();
+            const htmlCode = htmlCodeTextarea.value.trim();
+
+            if (!title || !htmlCode) {
+                showMessage(projectMessage, 'Please provide both a **Title** and **HTML Code** for your project.', 'error');
+                return;
+            }
+
+            saveProjectButton.disabled = true;
+            projectMessage.classList.add('hidden');
+            projectLinkContainer.classList.add('hidden');
+
+            try {
+                const newProjectRef = database.ref('projects').push();
+                const projectId = newProjectRef.key;
+
+                await newProjectRef.set({
+                    title: title,
+                    htmlCode: htmlCode,
+                    userId: user.uid,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                const projectUrl = `${window.location.origin}/?id=${projectId}`;
+                projectShareLink.href = projectUrl;
+                projectShareLink.textContent = projectUrl;
+                projectLinkContainer.classList.remove('hidden');
+
+                showMessage(projectMessage, 'Project saved successfully! You can now share it.', 'success');
+                clearFormFields();
+            } catch (error) {
+                console.error("Save project error:", error);
+                showMessage(projectMessage, 'Failed to save project: ' + error.message, 'error');
+            } finally {
+                saveProjectButton.disabled = false;
+            }
+        }
+
+        async function loadProjectForViewer(projectId) {
+            try {
+                const snapshot = await database.ref(`projects/${projectId}`).once('value');
+                const projectData = snapshot.val();
+
+                if (projectData && projectData.htmlCode) {
+                    const iframeDoc = projectIframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(projectData.htmlCode);
+                    iframeDoc.close();
+                } else {
+                    alert('Project not found or an invalid link was used.');
+                    window.location.href = window.location.origin;
+                }
+            } catch (error) {
+                console.error("Error loading project:", error);
+                alert('An error occurred while loading the project.');
+                window.location.href = window.location.origin;
+            }
+        }
+
+        async function loadUserProjects() {
+            const user = auth.currentUser;
+            if (!user) {
+                projectsList.innerHTML = '';
+                showMessage(projectListMessage, 'You must be logged in to view your projects.', 'error');
+                return;
+            }
+
+            projectsList.innerHTML = '';
+            projectListMessage.classList.add('hidden');
+
+            try {
+                const snapshot = await database.ref('projects')
+                                                .orderByChild('userId')
+                                                .equalTo(user.uid)
+                                                .once('value');
+                const projects = snapshot.val();
+
+                if (projects) {
+                    const projectEntries = Object.entries(projects).map(([id, data]) => ({ id, ...data }));
+                    // Sort by timestamp descending (latest first)
+                    projectEntries.sort((a, b) => b.timestamp - a.timestamp);
+
+                    projectEntries.forEach(project => {
+                        const li = document.createElement('li');
+                        li.className = 'project-item';
+
+                        const formattedDate = new Date(project.timestamp).toLocaleDateString(undefined, {
+                            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        });
+
+                        li.innerHTML = `
+                            <div class="project-item-info">
+                                <h3>${project.title}</h3>
+                                <p>Created: ${formattedDate}</p>
+                                <p>Share Link: <a href="${window.location.origin}/?id=${project.id}" target="_blank">${window.location.origin}/?id=${project.id}</a></p>
+                            </div>
+                            <div class="project-item-actions">
+                                <button class="warning-button" data-id="${project.id}" data-title="${encodeURIComponent(project.title)}" data-html="${encodeURIComponent(project.htmlCode)}">Edit</button>
+                                <button class="danger-button" data-id="${project.id}">Delete</button>
+                            </div>
+                        `;
+                        projectsList.appendChild(li);
+                    });
+
+                    projectsList.querySelectorAll('.warning-button').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const projectId = event.target.dataset.id;
+                            const title = decodeURIComponent(event.target.dataset.title);
+                            const htmlCode = decodeURIComponent(event.target.dataset.html);
+                            showEditProjectSection(projectId, title, htmlCode);
+                        });
+                    });
+
+                    projectsList.querySelectorAll('.danger-button').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const projectId = event.target.dataset.id;
+                            if (confirm('Are you sure you want to permanently delete this project? This action cannot be undone.')) {
+                                deleteProject(projectId);
+                            }
+                        });
+                    });
+
+                } else {
+                    showMessage(projectListMessage, 'It looks like you haven\'t created any projects yet. Start by creating one!', 'secondary'); // Use secondary for info
+                }
+            } catch (error) {
+                console.error("Error loading user projects:", error);
+                showMessage(projectListMessage, 'Failed to load projects: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteProject(projectId) {
+            try {
+                await database.ref(`projects/${projectId}`).remove();
+                showMessage(projectListMessage, 'Project deleted successfully!', 'success');
+                loadUserProjects(); // Reload list after deletion
+            } catch (error) {
+                console.error("Error deleting project:", error);
+                showMessage(projectListMessage, 'Failed to delete project: ' + error.message, 'error');
+            }
+        }
+
+        async function updateProject() {
+            const user = auth.currentUser;
+            if (!user) {
+                showMessage(editProjectMessage, 'You must be logged in to update a project.', 'error');
+                return;
+            }
+
+            const title = editProjectTitleInput.value.trim();
+            const htmlCode = editHtmlCodeTextarea.value.trim();
+
+            if (!title || !htmlCode) {
+                showMessage(editProjectMessage, 'Please ensure both **Title** and **HTML Code** are filled.', 'error');
+                return;
+            }
+
+            if (!currentEditingProjectId) {
+                showMessage(editProjectMessage, 'No project selected for editing.', 'error');
+                return;
+            }
+
+            updateProjectButton.disabled = true;
+            editProjectMessage.classList.add('hidden');
+
+            try {
+                await database.ref(`projects/${currentEditingProjectId}`).update({
+                    title: title,
+                    htmlCode: htmlCode,
+                    // Optionally update timestamp: updatedTimestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+                showMessage(editProjectMessage, 'Project updated successfully!', 'success');
+                setTimeout(() => {
+                    showProjectListSection();
+                }, 1500);
+            } catch (error) {
+                console.error("Error updating project:", error);
+                showMessage(editProjectMessage, 'Failed to update project: ' + error.message, 'error');
+            } finally {
+                updateProjectButton.disabled = false;
+            }
+        }
+
+
+        // --- Event Listeners ---
+        authButton.addEventListener('click', handleAuth);
+        toggleAuthModeButton.addEventListener('click', toggleAuthMode);
+
+        // Dashboard buttons
+        logoutButton.addEventListener('click', handleLogout);
+        myProjectsButton.addEventListener('click', showProjectListSection);
+        saveProjectButton.addEventListener('click', saveProject);
+
+        // Project List Page buttons
+        backToDashboardButton.addEventListener('click', () => showDashboardSection(auth.currentUser.email));
+        logoutButtonProjectsPage.addEventListener('click', handleLogout);
+
+        // Edit Project Page buttons
+        cancelEditButton.addEventListener('click', showProjectListSection);
+        updateProjectButton.addEventListener('click', updateProject);
+        logoutButtonEditPage.addEventListener('click', handleLogout);
+
+
+        // Handle Enter key for authentication inputs
+        emailInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleAuth();
+        });
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleAuth();
+        });
+
+        // --- Firebase Auth State Listener ---
+        auth.onAuthStateChanged(user => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+
+            if (projectId) {
+                showProjectViewer(projectId);
+            } else {
+                if (user) {
+                    showDashboardSection(user.email);
+                } else {
+                    showAuthSection();
+                }
+            }
+        });
+
+        // Initial check on page load to see if a project ID is present in the URL
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+
+            if (projectId) {
+                showProjectViewer(projectId);
+            } else {
+                // onAuthStateChanged will handle displaying the correct section
+            }
+        });
+    </script>
 </body>
 </html>
