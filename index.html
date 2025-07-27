@@ -4,29 +4,160 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ჩასმის & ჩვენების საიტი</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    textarea { width: 100%; height: 200px; font-family: monospace; font-size: 14px; }
-    input[type=text] { width: 100%; padding: 8px; font-size: 16px; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    #previewFrame { width: 100%; height: 90vh; border: none; }
-    #result a { color: blue; word-break: break-all; }
-  </style>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    padding: 20px;
+  }
+
+  h1, h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #1a202c;
+  }
+
+  form {
+    background: #fff;
+    padding: 25px;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+
+  input[type=text],
+  input[type=email],
+  input[type=password],
+  textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    transition: border 0.2s;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #2b6cb0;
+    outline: none;
+  }
+
+  textarea {
+    height: 200px;
+    font-family: monospace;
+    resize: vertical;
+  }
+
+  button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:hover {
+    background: #2c5282;
+  }
+
+  #logoutBtn {
+    display: block;
+    margin: 0 auto 20px auto;
+    background: #e53e3e;
+  }
+
+  #logoutBtn:hover {
+    background: #c53030;
+  }
+
+  #auth-section,
+  #app {
+    max-width: 700px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.05);
+  }
+
+  #result a {
+    color: #2b6cb0;
+    font-weight: bold;
+    text-decoration: underline;
+    word-break: break-all;
+  }
+
+  #authMsg {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  iframe {
+    width: 100%;
+    height: 90vh;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    form, #auth-section, #app {
+      padding: 15px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+</style>
 </head>
 <body>
 
-<div id="app"></div>
+<div id="auth-section">
+  <h2>ავტორიზაცია ან რეგისტრაცია</h2>
+  <input type="email" id="email" placeholder="ელფოსტა" /><br>
+  <input type="password" id="password" placeholder="პაროლი" /><br>
+  <button id="registerBtn">რეგისტრაცია</button>
+  <button id="loginBtn">შესვლა</button>
+  <p id="authMsg"></p>
+</div>
+
+<div id="app" class="hidden"></div>
+<button id="logoutBtn" class="hidden">გასვლა</button>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
   import { getDatabase, ref, push, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBNkJJKCbyiGsZtGnZW6pLEAO4hfGAhGn0",
     authDomain: "busines-6009a.firebaseapp.com",
     databaseURL: "https://busines-6009a-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "busines-6009a",
-    storageBucket: "busines-6009a.firebasestorage.app",
+    storageBucket: "busines-6009a.appspot.com",
     messagingSenderId: "1060456180737",
     appId: "1:1060456180737:web:2a16c8a0b7a400",
     measurementId: "G-KRLDD9XV3V"
@@ -34,80 +165,130 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+  const auth = getAuth();
 
+  const authSection = document.getElementById('auth-section');
   const appDiv = document.getElementById('app');
-  const params = new URLSearchParams(window.location.search);
-  const projectId = params.get('id');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const registerBtn = document.getElementById('registerBtn');
+  const loginBtn = document.getElementById('loginBtn');
+  const authMsg = document.getElementById('authMsg');
 
-  if (!projectId) {
-    // ჩასმის ფორმა
-    appDiv.innerHTML = `
-      <h1>ჩასვით თქვენი HTML კოდი</h1>
-      <form id="codeForm">
-        <label for="title">სათაური:</label><br>
-        <input type="text" id="title" required placeholder="სათაური" /><br><br>
-
-        <label for="htmlCode">HTML კოდი:</label><br>
-        <textarea id="htmlCode" placeholder="ჩასვით თქვენი HTML კოდი აქ" required></textarea><br><br>
-
-        <button type="submit">შენახვა და უნიკალური ლინკის მიღება</button>
-      </form>
-      <div id="result"></div>
-    `;
-
-    const form = document.getElementById('codeForm');
-    const resultDiv = document.getElementById('result');
-
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const title = document.getElementById('title').value.trim();
-      const htmlCode = document.getElementById('htmlCode').value.trim();
-
-      if (!title || !htmlCode) {
-        alert("გთხოვთ შეავსოთ სათაური და HTML კოდი");
-        return;
-      }
-
-      try {
-        const projectsRef = ref(db, 'projects');
-        const newProjectRef = push(projectsRef);
-        await set(newProjectRef, {
-          title: title,
-          html: htmlCode,
-          createdAt: Date.now()
-        });
-
-        const id = newProjectRef.key;
-        const url = `${window.location.origin}${window.location.pathname}?id=${id}`;
-
-        resultDiv.innerHTML = `<p>თქვენი საიტი მზადაა: <a href="${url}" target="_blank">${url}</a></p>`;
-      } catch (error) {
-        resultDiv.innerHTML = `<p style="color:red;">შეცდომა შენახვის დროს: ${error.message}</p>`;
-      }
-    });
-
-  } else {
-    // პროექტის ჩვენება iframe-ში
-    appDiv.innerHTML = `<iframe id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>`;
-
-    const iframe = document.getElementById('previewFrame');
-
-    async function loadProject(id) {
-      try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, `projects/${id}`));
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          iframe.srcdoc = data.html;
-        } else {
-          appDiv.innerHTML = "<h2>პროექტი არ არსებობს ან იდენტიფიკატორი არასწორია.</h2>";
-        }
-      } catch (error) {
-        appDiv.innerHTML = `<h2>შეცდომა მონაცემთა წამოღების დროს: ${error.message}</h2>`;
-      }
+  // რეგისტრაცია
+  registerBtn.addEventListener('click', async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+    } catch (error) {
+      authMsg.innerText = "შეცდომა რეგისტრაციის დროს: " + error.message;
     }
+  });
 
-    loadProject(projectId);
+  // შესვლა
+  loginBtn.addEventListener('click', async () => {
+    try {
+      await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+    } catch (error) {
+      authMsg.innerText = "შეცდომა შესვლის დროს: " + error.message;
+    }
+  });
+
+  // გამოსვლა
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth);
+  });
+
+  // ავტორიზაციის მდგომარეობის ცვლილება
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      authSection.classList.add('hidden');
+      appDiv.classList.remove('hidden');
+      logoutBtn.classList.remove('hidden');
+      initApp(); // ჩატვირთე მთავარი აპლიკაცია
+    } else {
+      authSection.classList.remove('hidden');
+      appDiv.classList.add('hidden');
+      logoutBtn.classList.add('hidden');
+    }
+  });
+
+  // აპლიკაციის ლოგიკა მხოლოდ ავტორიზებულისთვის
+  function initApp() {
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get('id');
+
+    if (!projectId) {
+      // ჩასმის ფორმა
+      appDiv.innerHTML = `
+        <h1>ჩასვით თქვენი HTML კოდი</h1>
+        <form id="codeForm">
+          <label for="title">სათაური:</label><br>
+          <input type="text" id="title" required placeholder="სათაური" /><br><br>
+
+          <label for="htmlCode">HTML კოდი:</label><br>
+          <textarea id="htmlCode" placeholder="ჩასვით თქვენი HTML კოდი აქ" required></textarea><br><br>
+
+          <button type="submit">შენახვა და უნიკალური ლინკის მიღება</button>
+        </form>
+        <div id="result"></div>
+      `;
+
+      const form = document.getElementById('codeForm');
+      const resultDiv = document.getElementById('result');
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const title = document.getElementById('title').value.trim();
+        const htmlCode = document.getElementById('htmlCode').value.trim();
+
+        if (!title || !htmlCode) {
+          alert("გთხოვთ შეავსოთ სათაური და HTML კოდი");
+          return;
+        }
+
+        try {
+          const projectsRef = ref(db, 'projects');
+          const newProjectRef = push(projectsRef);
+          await set(newProjectRef, {
+            title: title,
+            html: htmlCode,
+            createdAt: Date.now(),
+            uid: auth.currentUser.uid
+          });
+
+          const id = newProjectRef.key;
+          const url = `${window.location.origin}${window.location.pathname}?id=${id}`;
+
+          resultDiv.innerHTML = `<p>თქვენი საიტი მზადაა: <a href="${url}" target="_blank">${url}</a></p>`;
+        } catch (error) {
+          resultDiv.innerHTML = `<p style="color:red;">შეცდომა შენახვის დროს: ${error.message}</p>`;
+        }
+      });
+
+    } else {
+      // პროექტის ჩვენება iframe-ში
+      appDiv.innerHTML = `<iframe id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>`;
+
+      const iframe = document.getElementById('previewFrame');
+
+      async function loadProject(id) {
+        try {
+          const dbRef = ref(db);
+          const snapshot = await get(child(dbRef, `projects/${id}`));
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            iframe.srcdoc = data.html;
+          } else {
+            appDiv.innerHTML = "<h2>პროექტი არ არსებობს ან იდენტიფიკატორი არასწორია.</h2>";
+          }
+        } catch (error) {
+          appDiv.innerHTML = `<h2>შეცდომა მონაცემთა წამოღების დროს: ${error.message}</h2>`;
+        }
+      }
+
+      loadProject(projectId);
+    }
   }
 </script>
 
